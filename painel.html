@@ -38,7 +38,7 @@ nav{padding:16px 32px;border-bottom:1px solid var(--border);display:flex;align-i
 .sidebar-section{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;padding:0 8px}
 .sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;font-size:13px;color:var(--muted);cursor:pointer;transition:all .15s;margin-bottom:2px}
 .sidebar-item:hover{background:var(--bg3);color:var(--text)}
-.sidebar-item.active{background:rgba(200,164,90,.08);color:var(--gold);border:1px solid var(--border)}
+.sidebar-item.active{background:rgba(200,164,90,.08);color:var(--gold);border:1px solid var(--gold-b)}
 .sidebar-item span{font-size:16px}
 .sidebar-divider{height:1px;background:var(--border);margin:16px 0}
 .sidebar-plan{margin-top:auto;padding:12px;background:rgba(200,164,90,.06);border:1px solid var(--border);border-radius:10px;margin-top:16px}
@@ -186,7 +186,7 @@ nav{padding:16px 32px;border-bottom:1px solid var(--border);display:flex;align-i
 
         <div id="q-loading" class="q-loading">
           <div class="q-spinner"></div>
-          Gerando questão com IA...
+          Gerando questão com IA — pode levar alguns segundos...
         </div>
 
         <div id="q-content" style="display:none">
@@ -277,13 +277,13 @@ Responda APENAS em JSON válido, sem texto antes ou depois, sem markdown, neste 
 
   try {
     const resp = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.7, maxOutputTokens: 800 }
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.7, maxOutputTokens: 1024, responseMimeType: "application/json" }
         })
       }
     );
@@ -312,7 +312,7 @@ Responda APENAS em JSON válido, sem texto antes ou depois, sem markdown, neste 
   } catch(err) {
     document.getElementById('q-loading').style.display = 'none';
     document.getElementById('q-content').style.display = 'block';
-    document.getElementById('q-text').textContent = 'Erro ao gerar questão. Tente novamente em instantes.';
+    document.getElementById('q-text').textContent = 'Erro ao gerar questão. Verifique se o Gemini está ativo e tente novamente.'; console.error('Gemini error:', err);
     console.error(err);
   }
 
