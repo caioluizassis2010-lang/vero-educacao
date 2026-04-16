@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vero Educação - Seleção de Jornada</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080808;
+      --card: #111111;
+      --gold: #d4af37;
+      --gold-soft: #c9a227;
+      --text: #f5f5f5;
+      --muted: #c9c9c9;
+      --border: rgba(212, 175, 55, 0.28);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Playfair Display", serif;
+      background: radial-gradient(circle at top, #101010 0%, var(--bg) 58%);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      padding: 32px 20px;
+    }
+
+    .container {
+      width: min(1080px, 100%);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100vh;
+      gap: 20px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin: 0 auto 6px;
+    }
+
+    .brand-mark {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      border: 1px solid var(--gold);
+      background: #050505;
+      color: var(--gold);
+      display: grid;
+      place-items: center;
+      font-size: 1.65rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .brand-text {
+      text-align: left;
+      line-height: 1;
+    }
+
+    .brand-text strong {
+      display: block;
+      color: var(--gold);
+      letter-spacing: 2px;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .brand-text span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-top: 4px;
+    }
+
+    .title {
+      color: var(--text);
+      font-weight: 500;
+      font-size: clamp(1.7rem, 1.5vw + 1.2rem, 2.7rem);
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+      line-height: 1.15;
+    }
+
+    .title-emphasis {
+      display: block;
+      color: var(--gold);
+      font-style: italic;
+      font-weight: 700;
+      font-size: clamp(2.6rem, 2.2vw + 1.7rem, 4rem);
+      margin-top: 4px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(200px, 1fr));
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      text-align: left;
+      text-decoration: none;
+      color: inherit;
+      background: linear-gradient(145deg, #161616 0%, var(--card) 100%);
+      border: 1px solid rgba(212, 175, 55, 0.18);
+      border-radius: 14px;
+      min-height: 340px;
+      padding: 30px 24px;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      cursor: pointer;
+    }
+
+    .card:hover,
+    .card:focus-visible {
+      transform: translateY(-4px);
+      border-color: rgba(212, 175, 55, 0.8);
+      box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15);
+      outline: none;
+    }
+
+    .icon {
+      font-size: 2.15rem;
+      color: inherit;
+      margin-bottom: 14px;
+      line-height: 1;
+      align-self: center;
+    }
+
+    .card h2 {
+      font-size: 1.55rem;
+      color: var(--gold);
+      margin-bottom: 8px;
+      font-weight: 600;
+      align-self: center;
+    }
+
+    .card p {
+      color: #e0e0e0;
+      font-size: 0.98rem;
+      line-height: 1.45;
+      max-width: 30ch;
+      margin-bottom: 14px;
+      text-align: center;
+      align-self: center;
+    }
+
+    .highlights {
+      list-style-position: outside;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.55;
+      display: grid;
+      gap: 4px;
+      width: 100%;
+      max-width: 100%;
+      padding-left: 18px;
+      margin-bottom: 18px;
+    }
+
+    .card-cta {
+      margin-top: auto;
+      width: 100%;
+      border: 1px solid var(--gold);
+      background: var(--gold);
+      color: #101010;
+      border-radius: 9px;
+      padding: 11px 14px;
+      font-family: "Playfair Display", serif;
+      font-size: 1rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .footer {
+      border-top: 1px solid rgba(212, 175, 55, 0.55);
+      margin-top: 8px;
+      padding-top: 14px;
+      color: var(--gold);
+      font-size: 0.96rem;
+      letter-spacing: 0.3px;
+    }
+
+    @media (max-width: 860px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        min-height: 280px;
+      }
+
+      .brand {
+        margin-bottom: 2px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <header class="brand" aria-label="Logo Vero Educação">
+      <div class="brand-mark" aria-hidden="true">V</div>
+      <div class="brand-text">
+        <strong>VERO</strong>
+        <span>Educação</span>
+      </div>
+    </header>
+
+    <h1 class="title">Escolha sua <span class="title-emphasis">Jornada</span></h1>
+
+    <section class="cards" aria-label="Seleção de jornada">
+      <a class="card" href="enem.html" aria-label="Jornada ENEM">
+        <span class="icon" aria-hidden="true">📘</span>
+        <h2>ENEM</h2>
+        <p>Estratégia completa para alcançar alta performance no exame.</p>
+        <ul class="highlights" aria-label="Diferenciais ENEM">
+          <li>Correção de redação por IA</li>
+          <li>Simulados no padrão INEP</li>
+          <li>Plano por competência</li>
+        </ul>
+        <span class="card-cta">Começar agora →</span>
+      </a>
+
+      <a class="card" href="medicina.html" aria-label="Jornada Medicina">
+        <span class="icon" aria-hidden="true">🩺</span>
+        <h2>Medicina</h2>
+        <p>Preparação de excelência para conquistar a vaga dos sonhos.</p>
+        <ul class="highlights" aria-label="Diferenciais Medicina">
+          <li>Fuvest, USP, Unicamp e Einstein</li>
+          <li>Biologia e Química avançados</li>
+          <li>Plano por nota de corte</li>
+        </ul>
+        <span class="card-cta">Começar agora →</span>
+      </a>
+
+      <a class="card" href="concursos.html" aria-label="Jornada Concursos">
+        <span class="icon" aria-hidden="true">⚖️</span>
+        <h2>Concursos</h2>
+        <p>Plano de estudos inteligente para aprovação com consistência.</p>
+        <ul class="highlights" aria-label="Diferenciais Concursos">
+          <li>CESPE, FCC, FGV e mais</li>
+          <li>Diagnóstico cirúrgico de erros</li>
+          <li>Plano por edital</li>
+        </ul>
+        <span class="card-cta">Começar agora →</span>
+      </a>
+    </section>
+
+    <footer class="footer">Estudo de verdade. Aprovação de verdade.</footer>
+  </main>
+</body>
+</html>
