@@ -214,7 +214,7 @@
       <div class="brand-mark">V</div>
       <div class="brand-text"><strong>VERO</strong><span>Educação</span></div>
     </a>
-    <div class="nav-right">
+    <div class="nav-right" id="nav-auth">
       
 <a href="login.html" style="font-size:13px;color:var(--muted);padding:9px 18px;border:1px solid var(--border2);border-radius:6px;margin-right:8px;font-family:Outfit,sans-serif;font-weight:400;text-decoration:none;transition:all .18s">Entrar</a>
       <a href="cadastro.html" class="btn btn-gold">Começar grátis</a>
@@ -429,5 +429,30 @@ const obs = new IntersectionObserver((entries) => {
 },{threshold:0.08});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const { createClient } = supabase;
+const sb = createClient(
+  'https://lklmzhunhiwqsbhnymaw.supabase.co',
+  'sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU'
+);
+
+async function checkSession() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+
+  // User is logged in — update nav
+  const nome = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
+  const navRight = document.getElementById('nav-auth');
+  navRight.innerHTML = `
+    <span style="font-size:13px;color:var(--muted);margin-right:4px">Olá, <strong style="color:var(--gold)">${nome}</strong></span>
+    <a href="painel.html" style="font-size:13px;font-weight:600;padding:9px 18px;background:var(--gold);color:#111;border-radius:8px;text-decoration:none;transition:all .2s" onmouseover="this.style.background='var(--gold2)'" onmouseout="this.style.background='var(--gold)'">Meu painel →</a>
+  `;
+}
+
+checkSession();
+</script>
+
 </body>
 </html>

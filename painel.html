@@ -9,139 +9,269 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#090909;--bg2:#0f0f0f;--bg3:#141414;
+  --bg:#090909;--bg2:#0f0f0f;--bg3:#141414;--bg4:#181818;
   --gold:#c8a45a;--gold2:#d6b772;
-  --text:#f6f3ec;--muted:#a09890;--muted2:rgba(246,243,236,0.35);
-  --border:rgba(200,164,90,0.18);--border2:rgba(200,164,90,0.32);
+  --text:#f6f3ec;--muted:#8a8278;--muted2:rgba(246,243,236,0.28);
+  --border:rgba(200,164,90,0.14);--border2:rgba(200,164,90,0.28);
   --green:#0fa968;--red:#e05454;
+  --radius:12px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
 a{text-decoration:none;color:inherit}
 
-nav{padding:14px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg2);position:sticky;top:0;z-index:50}
+/* NAV */
+nav{
+  padding:0 28px;height:56px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(9,9,9,0.95);backdrop-filter:blur(12px);
+  position:sticky;top:0;z-index:100;
+}
 .brand{display:inline-flex;align-items:center;gap:10px}
-.brand-mark{width:32px;height:32px;border-radius:7px;border:1px solid var(--border2);background:#060606;color:var(--gold);display:grid;place-items:center;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700}
-.brand-text strong{display:block;font-family:'Playfair Display',serif;color:var(--text);letter-spacing:1.4px;font-size:.88rem;line-height:1.1}
-.brand-text span{display:block;color:var(--muted);font-size:.65rem;margin-top:1px;letter-spacing:.08em}
-.nav-right{display:flex;align-items:center;gap:10px}
-.nav-user{font-size:13px;color:var(--muted)}
-.btn-sair{font-size:12px;color:var(--muted);padding:5px 11px;border:1px solid var(--border);border-radius:6px;cursor:pointer;background:none;font-family:'Outfit',sans-serif;transition:all .15s}
-.btn-sair:hover{color:var(--gold);border-color:var(--gold)}
+.brand-mark{
+  width:30px;height:30px;border-radius:7px;
+  border:1px solid var(--border2);background:#050505;
+  color:var(--gold);display:grid;place-items:center;
+  font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;
+}
+.brand-name{font-family:'Playfair Display',serif;color:var(--text);letter-spacing:2px;font-size:.9rem;font-weight:600}
+.nav-right{display:flex;align-items:center;gap:14px}
+.nav-user{font-size:12px;color:var(--muted);letter-spacing:.02em}
+.btn-sair{
+  font-size:11px;color:var(--muted);
+  padding:5px 12px;border:1px solid var(--border);
+  border-radius:6px;cursor:pointer;background:none;
+  font-family:'Outfit',sans-serif;transition:all .15s;letter-spacing:.02em;
+}
+.btn-sair:hover{color:var(--gold);border-color:var(--border2)}
 
-.layout{display:grid;grid-template-columns:200px 1fr;min-height:calc(100vh - 61px)}
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:188px 1fr;min-height:calc(100vh - 56px)}
 
-.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:20px 14px;display:flex;flex-direction:column}
-.sidebar-section{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);margin-bottom:8px;padding:0 8px}
-.sidebar-item{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:8px;font-size:13px;color:var(--muted);cursor:pointer;transition:all .15s;margin-bottom:2px;border:1px solid transparent}
-.sidebar-item:hover{background:var(--bg3);color:var(--text)}
-.sidebar-item.active{background:rgba(200,164,90,.08);color:var(--gold);border-color:var(--border)}
-.sidebar-item span{font-size:15px}
-.sidebar-divider{height:1px;background:var(--border);margin:14px 0}
-.sidebar-plan{padding:11px;background:rgba(200,164,90,.06);border:1px solid var(--border);border-radius:10px;margin-top:auto}
-.sp-label{font-size:10px;color:var(--muted2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
-.sp-plan{font-size:13px;font-weight:600;color:var(--gold)}
-.sp-btn{display:block;text-align:center;margin-top:9px;padding:7px;background:var(--gold);color:#111;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;border:none;width:100%;font-family:'Outfit',sans-serif}
-.sp-btn:hover{opacity:.88}
+/* SIDEBAR */
+.sidebar{
+  background:var(--bg);border-right:1px solid var(--border);
+  padding:24px 12px;display:flex;flex-direction:column;gap:2px;
+}
+.sb-section{
+  font-size:9px;font-weight:600;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted2);
+  padding:0 10px;margin:16px 0 6px;
+}
+.sb-section:first-child{margin-top:0}
+.sb-item{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 10px;border-radius:8px;
+  font-size:12px;color:var(--muted);
+  cursor:pointer;transition:all .15s;
+  border:1px solid transparent;
+}
+.sb-item:hover{background:var(--bg2);color:var(--text)}
+.sb-item.active{background:rgba(200,164,90,.07);color:var(--gold);border-color:var(--border)}
+.sb-item-icon{font-size:14px;opacity:.8}
+.sb-divider{height:1px;background:var(--border);margin:10px 0}
+.sb-spacer{flex:1}
+.sb-plan{
+  padding:12px;background:rgba(200,164,90,.05);
+  border:1px solid var(--border);border-radius:10px;
+}
+.sb-plan-label{font-size:9px;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+.sb-plan-name{font-size:13px;font-weight:600;color:var(--gold);margin-bottom:9px}
+.sb-plan-btn{
+  width:100%;padding:7px;background:var(--gold);color:#111;
+  border-radius:6px;font-size:11px;font-weight:700;
+  cursor:pointer;border:none;font-family:'Outfit',sans-serif;
+  letter-spacing:.02em;transition:opacity .15s;
+}
+.sb-plan-btn:hover{opacity:.85}
 
-.main{padding:28px;overflow-y:auto}
-.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
-.page-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700}
+/* MAIN */
+.main{padding:24px 28px;overflow-y:auto}
+
+/* PAGE HEADER */
+.page-hd{margin-bottom:20px}
+.page-title{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:700;line-height:1.1}
 .page-title em{font-style:italic;color:var(--gold)}
-.page-sub{font-size:12px;color:var(--muted);margin-top:3px;font-weight:300}
+.page-sub{font-size:12px;color:var(--muted);margin-top:4px;font-weight:300;letter-spacing:.01em}
 
-/* FILTROS */
-.filters{display:flex;gap:8px;flex-wrap:wrap}
-.filter-select{background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:7px 12px;font-size:12px;font-family:'Outfit',sans-serif;cursor:pointer;outline:none;transition:border-color .15s}
-.filter-select:focus{border-color:var(--gold)}
-.filter-select option{background:var(--bg2)}
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.metric{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:16px 18px;
+  transition:border-color .2s;
+}
+.metric:hover{border-color:var(--border2)}
+.metric-label{
+  font-size:9px;color:var(--muted2);
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;
+}
+.metric-value{
+  font-family:'Playfair Display',serif;
+  font-size:1.9rem;font-weight:700;color:var(--gold);line-height:1;
+}
+.metric-sub{font-size:11px;color:var(--muted2);margin-top:4px;font-weight:300}
 
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
-.metric{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;transition:border-color .15s}
-.metric:hover{border-color:var(--gold-bdr)}
-.metric-label{font-size:10px;color:var(--muted2);letter-spacing:.04em;margin-bottom:5px;text-transform:uppercase}
-.metric-value{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:700;color:var(--gold);line-height:1}
-.metric-sub{font-size:11px;color:var(--muted2);margin-top:3px}
-.metric-badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:100px;margin-top:4px}
-.badge-green{background:rgba(15,169,104,.12);color:#0fa968}
-.badge-red{background:rgba(224,84,84,.12);color:#e05454}
+/* GRID */
+.content-grid{display:grid;grid-template-columns:1fr 300px;gap:16px}
 
-.q-section{display:grid;grid-template-columns:1fr 340px;gap:18px}
+/* QUESTÃO */
+.q-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;
+}
+.q-top{
+  padding:16px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.q-top-left{display:flex;align-items:center;gap:10px}
+.q-label{
+  font-size:9px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted2);
+}
+.q-filters{display:flex;gap:6px}
+.q-filter{
+  background:var(--bg3);color:var(--muted);
+  border:1px solid var(--border);border-radius:6px;
+  padding:5px 10px;font-size:11px;font-family:'Outfit',sans-serif;
+  cursor:pointer;outline:none;transition:all .15s;
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg width='8' height='5' viewBox='0 0 8 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L4 4L7 1' stroke='%238a8278' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 8px center;
+  padding-right:22px;
+}
+.q-filter:focus,.q-filter:hover{border-color:var(--border2);color:var(--text)}
+.q-filter option{background:var(--bg2)}
+.q-tags{display:flex;gap:5px}
+.q-tag{
+  font-size:10px;padding:3px 9px;border-radius:100px;
+  border:1px solid var(--border);color:var(--muted2);
+  background:var(--bg3);letter-spacing:.03em;
+}
+.q-tag.gold{border-color:var(--border2);color:var(--gold);background:rgba(200,164,90,.06)}
 
-.q-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px}
-.q-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.q-title{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);opacity:.7}
-.q-tags{display:flex;gap:6px}
-.q-tag{display:inline-block;background:rgba(200,164,90,.08);border:1px solid var(--border);border-radius:100px;padding:2px 10px;font-size:10px;color:var(--gold);letter-spacing:.04em}
-.q-disciplina-tag{background:rgba(200,164,90,.05);border-color:var(--border);color:var(--muted2)}
-
-.q-text{font-size:.93rem;line-height:1.75;color:var(--text);margin-bottom:20px;min-height:60px}
-.q-loading{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;padding:20px 0}
-.q-spinner{width:18px;height:18px;border:2px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+.q-body{padding:20px}
+.q-loading{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px;padding:12px 0}
+.q-spinner{width:16px;height:16px;border:1.5px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-.opcoes{display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
-.opcao{display:flex;align-items:flex-start;gap:11px;padding:11px 13px;border:1px solid var(--border);border-radius:9px;cursor:pointer;transition:all .18s;font-size:.88rem;color:var(--text);background:transparent}
-.opcao:hover{border-color:var(--gold);background:rgba(200,164,90,.04)}
-.opcao.certa{background:rgba(15,169,104,.08);border-color:rgba(15,169,104,.4);color:#0fa968}
-.opcao.errada{background:rgba(224,84,84,.08);border-color:rgba(224,84,84,.4);color:var(--red)}
+.q-text{
+  font-size:.9rem;line-height:1.8;color:var(--text);
+  margin-bottom:20px;min-height:48px;font-weight:300;
+}
+
+.opcoes{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.opcao{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:11px 14px;border:1px solid var(--border);
+  border-radius:9px;cursor:pointer;
+  transition:all .18s;font-size:.87rem;color:var(--text);background:transparent;
+}
+.opcao:hover{border-color:var(--border2);background:rgba(200,164,90,.03)}
+.opcao.certa{background:rgba(15,169,104,.07);border-color:rgba(15,169,104,.35);color:#0fa968}
+.opcao.errada{background:rgba(224,84,84,.07);border-color:rgba(224,84,84,.35);color:var(--red)}
 .opcao.disabled{pointer-events:none}
-.opcao-letra{font-weight:700;min-width:18px;flex-shrink:0;margin-top:1px;font-size:.88rem}
+.opcao-letra{
+  font-weight:600;min-width:16px;flex-shrink:0;
+  margin-top:1px;font-size:.85rem;color:var(--muted);
+}
+.opcao.certa .opcao-letra,.opcao.errada .opcao-letra{color:inherit}
 
-.q-footer{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.btn-nova{padding:10px 18px;background:var(--gold);color:#111;border:none;border-radius:8px;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .18s;font-family:'Outfit',sans-serif}
+.gabarito{
+  background:rgba(200,164,90,.05);border:1px solid var(--border);
+  border-radius:9px;padding:14px;margin-top:14px;display:none;
+}
+.gab-label{
+  font-size:9px;font-weight:700;color:var(--gold);
+  text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px;
+}
+.gab-text{font-size:.83rem;color:var(--muted);line-height:1.75;font-weight:300}
+
+.q-footer{
+  padding:14px 20px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.btn-nova{
+  padding:9px 18px;background:var(--gold);color:#111;
+  border:none;border-radius:7px;font-size:.83rem;font-weight:700;
+  cursor:pointer;transition:all .18s;font-family:'Outfit',sans-serif;letter-spacing:.01em;
+}
 .btn-nova:hover{background:var(--gold2);transform:translateY(-1px)}
-.btn-nova:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.q-counter{font-size:11px;color:var(--muted2);margin-left:auto}
+.btn-nova:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.q-counter{font-size:11px;color:var(--muted2)}
 
-.gabarito{background:rgba(200,164,90,.06);border:1px solid var(--border2);border-radius:10px;padding:14px;margin-top:14px;display:none}
-.gab-label{font-size:9px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px}
-.gab-text{font-size:.85rem;color:var(--muted);line-height:1.70}
+/* DESEMPENHO */
+.disc-wrap{
+  margin-top:14px;padding:16px 20px;
+  border-top:1px solid var(--border);
+}
+.disc-title{
+  font-size:9px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted2);margin-bottom:14px;
+}
+.disc-list{display:flex;flex-direction:column;gap:10px}
+.disc-row{display:flex;justify-content:space-between;margin-bottom:4px;font-size:11px}
+.disc-name{color:var(--muted);font-weight:300}
+.disc-pct{font-weight:500}
+.disc-bar-bg{height:3px;background:var(--border);border-radius:2px}
+.disc-bar-fill{height:3px;border-radius:2px;transition:width .6s ease}
+.disc-empty{font-size:11px;color:var(--muted2);font-weight:300;padding:4px 0}
 
-/* SIDEBAR DIREITA */
-.right-col{display:flex;flex-direction:column;gap:14px}
+/* COLUNA DIREITA */
+.right-col{display:flex;flex-direction:column;gap:12px}
 
-.plan-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px}
-.plan-card-title{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:14px}
-.plan-name{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:3px}
-.plan-desc{font-size:12px;color:var(--muted);font-weight:300;margin-bottom:14px;line-height:1.5}
-.progress-label{display:flex;justify-content:space-between;font-size:10px;color:var(--muted2);margin-bottom:5px}
-.progress-bg{height:4px;background:var(--border);border-radius:2px;margin-bottom:14px}
-.progress-fill{height:4px;border-radius:2px;background:var(--gold);transition:width .5s ease}
-.plan-items{display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
-.plan-item{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted)}
-.pi-check{width:14px;height:14px;border-radius:50%;background:rgba(200,164,90,.1);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0}
-.upgrade-btn{display:block;text-align:center;padding:10px;background:var(--gold);color:#111;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;border:none;width:100%;font-family:'Outfit',sans-serif}
+.r-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:18px;
+}
+.r-card-title{
+  font-size:9px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted2);margin-bottom:14px;
+}
+
+/* PLANO */
+.plan-name{
+  font-family:'Playfair Display',serif;
+  font-size:1.3rem;font-weight:700;color:var(--text);margin-bottom:3px;
+}
+.plan-desc{font-size:11px;color:var(--muted);font-weight:300;margin-bottom:14px;line-height:1.55}
+.prog-label{display:flex;justify-content:space-between;font-size:10px;color:var(--muted2);margin-bottom:5px}
+.prog-bg{height:3px;background:var(--border);border-radius:2px;margin-bottom:14px}
+.prog-fill{height:3px;border-radius:2px;background:var(--gold);transition:width .5s ease}
+.plan-feats{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.pf{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted);font-weight:300}
+.pf-dot{width:12px;height:12px;border-radius:50%;background:rgba(200,164,90,.1);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;flex-shrink:0}
+.upgrade-btn{
+  width:100%;padding:10px;background:var(--gold);color:#111;
+  border-radius:8px;font-size:12px;font-weight:700;
+  cursor:pointer;border:none;font-family:'Outfit',sans-serif;
+  transition:all .18s;letter-spacing:.01em;
+}
 .upgrade-btn:hover{background:var(--gold2)}
 
 /* HISTÓRICO */
-.hist-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px}
-.hist-title{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:14px}
-.hist-list{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto}
-.hist-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;background:var(--bg3);font-size:11px}
-.hist-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}
-.hist-ok{background:rgba(15,169,104,.15);color:#0fa968}
-.hist-err{background:rgba(224,84,84,.15);color:#e05454}
-.hist-disc{flex:1;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hist-banca{font-size:10px;color:var(--muted2);flex-shrink:0}
-.hist-empty{font-size:12px;color:var(--muted2);text-align:center;padding:20px 0}
+.hist-list{display:flex;flex-direction:column;gap:5px;max-height:200px;overflow-y:auto}
+.hist-item{
+  display:flex;align-items:center;gap:8px;
+  padding:7px 9px;border-radius:7px;background:var(--bg3);font-size:11px;
+}
+.hist-ico{
+  width:16px;height:16px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:8px;font-weight:700;flex-shrink:0;
+}
+.h-ok{background:rgba(15,169,104,.13);color:#0fa968}
+.h-err{background:rgba(224,84,84,.13);color:#e05454}
+.hist-disc{flex:1;color:var(--muted);font-weight:300;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist-banca{font-size:10px;color:var(--muted2)}
+.hist-empty{font-size:11px;color:var(--muted2);font-weight:300;text-align:center;padding:16px 0}
 
-/* DESEMPENHO POR DISCIPLINA */
-.disc-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px;margin-top:18px}
-.disc-title{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:14px}
-.disc-list{display:flex;flex-direction:column;gap:10px}
-.disc-item{}
-.disc-row{display:flex;justify-content:space-between;margin-bottom:4px;font-size:12px}
-.disc-name{color:var(--muted)}
-.disc-pct{color:var(--gold);font-weight:500}
-.disc-bar-bg{height:4px;background:var(--border);border-radius:2px}
-.disc-bar-fill{height:4px;border-radius:2px;transition:width .5s ease}
-
-@media(max-width:900px){
+@media(max-width:960px){
   .layout{grid-template-columns:1fr}
   .sidebar{display:none}
   .metrics{grid-template-columns:1fr 1fr}
-  .q-section{grid-template-columns:1fr}
+  .content-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -150,59 +280,37 @@ nav{padding:14px 28px;border-bottom:1px solid var(--border);display:flex;align-i
 <nav>
   <a href="index.html" class="brand">
     <div class="brand-mark">V</div>
-    <div class="brand-text"><strong>VERO</strong><span>Educação</span></div>
+    <div class="brand-name">VERO</div>
   </a>
   <div class="nav-right">
-    <span class="nav-user" id="nav-user">Carregando...</span>
+    <span class="nav-user" id="nav-user"></span>
     <button class="btn-sair" onclick="sair()">Sair</button>
   </div>
 </nav>
 
 <div class="layout">
   <aside class="sidebar">
-    <div class="sidebar-section">Menu</div>
-    <div class="sidebar-item active"><span>📊</span>Dashboard</div>
-    <div class="sidebar-item" onclick="alert('Em breve!')"><span>❓</span>Questões</div>
-    <div class="sidebar-item" onclick="alert('Em breve!')"><span>📅</span>Meu plano</div>
-    <div class="sidebar-item" onclick="alert('Em breve!')"><span>🏆</span>Simulados</div>
-    <div class="sidebar-item" onclick="alert('Em breve!')"><span>📈</span>Desempenho</div>
-    <div class="sidebar-divider"></div>
-    <div class="sidebar-section">Jornada</div>
-    <div class="sidebar-item active"><span>⚖️</span>Concursos</div>
-    <div class="sidebar-divider"></div>
-    <div class="sidebar-plan">
-      <div class="sp-label">Plano atual</div>
-      <div class="sp-plan">Grátis</div>
-      <button class="sp-btn" onclick="abrirPlanos()">Fazer upgrade →</button>
+    <div class="sb-section">Menu</div>
+    <div class="sb-item active"><span class="sb-item-icon">📊</span>Dashboard</div>
+    <div class="sb-item" onclick="alert('Em breve!')"><span class="sb-item-icon">❓</span>Questões</div>
+    <div class="sb-item" onclick="alert('Em breve!')"><span class="sb-item-icon">📅</span>Meu plano</div>
+    <div class="sb-item" onclick="alert('Em breve!')"><span class="sb-item-icon">🏆</span>Simulados</div>
+    <div class="sb-item" onclick="alert('Em breve!')"><span class="sb-item-icon">📈</span>Desempenho</div>
+    <div class="sb-divider"></div>
+    <div class="sb-section">Jornada</div>
+    <div class="sb-item active"><span class="sb-item-icon">⚖️</span>Concursos</div>
+    <div class="sb-spacer"></div>
+    <div class="sb-plan">
+      <div class="sb-plan-label">Plano atual</div>
+      <div class="sb-plan-name">Grátis</div>
+      <button class="sb-plan-btn" onclick="abrirPlanos()">Fazer upgrade →</button>
     </div>
   </aside>
 
   <main class="main">
-    <div class="page-header">
-      <div>
-        <h1 class="page-title">Bom estudo, <em id="nome-aluno">aluno</em>.</h1>
-        <p class="page-sub">Continue de onde parou. Cada questão te aproxima da aprovação.</p>
-      </div>
-      <div class="filters">
-        <select class="filter-select" id="sel-disciplina" onchange="atualizarFiltros()">
-          <option value="">Todas as disciplinas</option>
-          <option value="Direito Constitucional">Dir. Constitucional</option>
-          <option value="Direito Administrativo">Dir. Administrativo</option>
-          <option value="Raciocínio Lógico">Raciocínio Lógico</option>
-          <option value="Português">Português</option>
-          <option value="Direito Penal">Direito Penal</option>
-          <option value="Direito Civil">Direito Civil</option>
-          <option value="Informática">Informática</option>
-        </select>
-        <select class="filter-select" id="sel-banca" onchange="atualizarFiltros()">
-          <option value="">Todas as bancas</option>
-          <option value="CESPE">CESPE</option>
-          <option value="FCC">FCC</option>
-          <option value="FGV">FGV</option>
-          <option value="VUNESP">VUNESP</option>
-          <option value="IBFC">IBFC</option>
-        </select>
-      </div>
+    <div class="page-hd">
+      <h1 class="page-title">Bom estudo, <em id="nome-aluno">aluno</em>.</h1>
+      <p class="page-sub">Continue de onde parou — cada questão te aproxima da aprovação.</p>
     </div>
 
     <div class="metrics">
@@ -223,32 +331,57 @@ nav{padding:14px 28px;border-bottom:1px solid var(--border);display:flex;align-i
       </div>
       <div class="metric">
         <div class="metric-label">Última disciplina</div>
-        <div class="metric-value" style="font-size:1rem;margin-top:4px" id="ultima-disc">—</div>
+        <div class="metric-value" id="ultima-disc" style="font-size:.95rem;margin-top:4px">—</div>
         <div class="metric-sub" id="ultima-banca">—</div>
       </div>
     </div>
 
-    <div class="q-section">
+    <div class="content-grid">
+
+      <!-- QUESTÃO -->
       <div class="q-card">
-        <div class="q-header">
-          <div class="q-title">Questão do dia</div>
-          <div class="q-tags">
-            <span class="q-tag q-disciplina-tag" id="q-disciplina">—</span>
-            <span class="q-tag" id="q-banca">—</span>
+        <div class="q-top">
+          <div class="q-top-left">
+            <div class="q-label">Questão do dia</div>
+            <div class="q-tags">
+              <span class="q-tag" id="q-disciplina">—</span>
+              <span class="q-tag gold" id="q-banca">—</span>
+            </div>
+          </div>
+          <div class="q-filters">
+            <select class="q-filter" id="sel-disciplina" onchange="atualizarFiltros()">
+              <option value="">Disciplina</option>
+              <option value="Direito Constitucional">Dir. Constitucional</option>
+              <option value="Direito Administrativo">Dir. Administrativo</option>
+              <option value="Raciocínio Lógico">Raciocínio Lógico</option>
+              <option value="Português">Português</option>
+              <option value="Direito Penal">Direito Penal</option>
+              <option value="Direito Civil">Direito Civil</option>
+              <option value="Informática">Informática</option>
+            </select>
+            <select class="q-filter" id="sel-banca" onchange="atualizarFiltros()">
+              <option value="">Banca</option>
+              <option value="CESPE">CESPE</option>
+              <option value="FCC">FCC</option>
+              <option value="FGV">FGV</option>
+              <option value="VUNESP">VUNESP</option>
+              <option value="IBFC">IBFC</option>
+            </select>
           </div>
         </div>
 
-        <div id="q-loading" class="q-loading">
-          <div class="q-spinner"></div>
-          Gerando questão com IA...
-        </div>
-
-        <div id="q-content" style="display:none">
-          <p class="q-text" id="q-text"></p>
-          <div class="opcoes" id="opcoes"></div>
-          <div class="gabarito" id="gabarito">
-            <div class="gab-label">Explicação da IA</div>
-            <p class="gab-text" id="gab-text"></p>
+        <div class="q-body">
+          <div id="q-loading" class="q-loading">
+            <div class="q-spinner"></div>
+            Gerando questão com IA...
+          </div>
+          <div id="q-content" style="display:none">
+            <p class="q-text" id="q-text"></p>
+            <div class="opcoes" id="opcoes"></div>
+            <div class="gabarito" id="gabarito">
+              <div class="gab-label">Explicação da IA</div>
+              <p class="gab-text" id="gab-text"></p>
+            </div>
           </div>
         </div>
 
@@ -257,92 +390,94 @@ nav{padding:14px 28px;border-bottom:1px solid var(--border);display:flex;align-i
           <span class="q-counter" id="q-counter"></span>
         </div>
 
-        <div class="disc-card">
+        <div class="disc-wrap">
           <div class="disc-title">Desempenho por disciplina</div>
           <div class="disc-list" id="disc-list">
-            <div class="hist-empty">Responda questões para ver seu desempenho</div>
+            <div class="disc-empty">Responda questões para ver seu desempenho</div>
           </div>
         </div>
       </div>
 
+      <!-- COLUNA DIREITA -->
       <div class="right-col">
-        <div class="plan-card">
-          <div class="plan-card-title">Seu plano atual</div>
+        <div class="r-card">
+          <div class="r-card-title">Plano atual</div>
           <div class="plan-name">Grátis</div>
-          <p class="plan-desc">20 questões por dia. Faça upgrade para ilimitadas.</p>
-          <div class="progress-label">
+          <p class="plan-desc">20 questões por dia. Faça upgrade para questões ilimitadas e diagnóstico avançado.</p>
+          <div class="prog-label">
             <span>Questões hoje</span>
             <span id="prog-label">0 / 20</span>
           </div>
-          <div class="progress-bg"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
-          <div class="plan-items">
-            <div class="plan-item"><div class="pi-check">✓</div>20 questões por dia</div>
-            <div class="plan-item"><div class="pi-check">✓</div>Gabarito comentado por IA</div>
-            <div class="plan-item"><div class="pi-check">✓</div>1 simulado por mês</div>
+          <div class="prog-bg"><div class="prog-fill" id="progress-fill" style="width:0%"></div></div>
+          <div class="plan-feats">
+            <div class="pf"><div class="pf-dot">✓</div>20 questões por dia</div>
+            <div class="pf"><div class="pf-dot">✓</div>Gabarito comentado por IA</div>
+            <div class="pf"><div class="pf-dot">✓</div>1 simulado por mês</div>
           </div>
           <button class="upgrade-btn" onclick="abrirPlanos()">Fazer upgrade para Pro →</button>
         </div>
 
-        <div class="hist-card">
-          <div class="hist-title">Histórico da sessão</div>
+        <div class="r-card">
+          <div class="r-card-title">Histórico da sessão</div>
           <div class="hist-list" id="hist-list">
             <div class="hist-empty">Nenhuma questão respondida ainda</div>
           </div>
         </div>
       </div>
+
     </div>
   </main>
 </div>
 
 <!-- MODAL PLANOS -->
-<div id="planos-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;overflow-y:auto;padding:40px 20px">
-  <div style="max-width:860px;margin:0 auto">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px">
-      <div style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:#f6f3ec">Invista na sua <em style="color:#c8a45a">aprovação</em></div>
-      <button onclick="fecharPlanos()" style="background:none;border:1px solid rgba(246,243,236,0.18);color:#a09890;padding:8px 16px;border-radius:6px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px">✕ Fechar</button>
+<div id="planos-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:200;overflow-y:auto;padding:40px 20px">
+  <div style="max-width:820px;margin:0 auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px">
+      <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:#f6f3ec">Invista na sua <em style="color:#c8a45a;font-style:italic">aprovação</em></div>
+      <button onclick="fecharPlanos()" style="background:none;border:1px solid rgba(246,243,236,0.14);color:#8a8278;padding:7px 14px;border-radius:6px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:12px">✕ Fechar</button>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(200,164,90,0.18);border:1px solid rgba(200,164,90,0.18);border-radius:14px;overflow:hidden">
-      <div style="background:#0f0f0f;padding:32px 24px">
-        <div style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(246,243,236,0.35);margin-bottom:14px">Grátis</div>
-        <div style="font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:700;color:#f6f3ec;line-height:1"><sup style="font-size:1rem;font-family:'Outfit',sans-serif;font-weight:300">R$</sup>0</div>
-        <div style="font-size:.82rem;color:rgba(246,243,236,0.35);margin:8px 0 20px;padding-bottom:20px;border-bottom:1px solid rgba(200,164,90,0.18)">Plano atual</div>
-        <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px">
-          <li style="font-size:.85rem;color:#a09890">✓ 20 questões por dia</li>
-          <li style="font-size:.85rem;color:#a09890">✓ Diagnóstico básico</li>
-          <li style="font-size:.85rem;color:#a09890">✓ 1 simulado por mês</li>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(200,164,90,0.14);border:1px solid rgba(200,164,90,0.14);border-radius:14px;overflow:hidden">
+      <div style="background:#0f0f0f;padding:28px 22px">
+        <div style="font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(246,243,236,0.28);margin-bottom:12px">Grátis</div>
+        <div style="font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:700;color:#f6f3ec;line-height:1"><sup style="font-size:.9rem;font-family:'Outfit',sans-serif;font-weight:300">R$</sup>0</div>
+        <div style="font-size:.8rem;color:rgba(246,243,236,0.28);margin:8px 0 18px;padding-bottom:18px;border-bottom:1px solid rgba(200,164,90,0.14)">Plano atual</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+          <li style="font-size:.82rem;color:#8a8278;font-weight:300">✓ 20 questões por dia</li>
+          <li style="font-size:.82rem;color:#8a8278;font-weight:300">✓ Diagnóstico básico</li>
+          <li style="font-size:.82rem;color:#8a8278;font-weight:300">✓ 1 simulado por mês</li>
         </ul>
-        <button style="width:100%;padding:12px;border-radius:7px;background:none;border:1px solid rgba(246,243,236,0.18);color:#f6f3ec;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:600;cursor:default">Plano atual</button>
+        <button style="width:100%;padding:10px;border-radius:7px;background:none;border:1px solid rgba(246,243,236,0.14);color:#f6f3ec;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:default;opacity:.5">Plano atual</button>
       </div>
-      <div style="background:#0f0f0f;padding:32px 24px">
-        <div style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(246,243,236,0.35);margin-bottom:14px">Basic</div>
-        <div style="font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:700;color:#f6f3ec;line-height:1"><sup style="font-size:1rem;font-family:'Outfit',sans-serif;font-weight:300">R$</sup>29<sub style="font-size:.8rem;color:rgba(246,243,236,0.35);font-family:'Outfit',sans-serif;font-weight:300">,99/mês</sub></div>
-        <div style="font-size:.82rem;color:rgba(246,243,236,0.35);margin:8px 0 20px;padding-bottom:20px;border-bottom:1px solid rgba(200,164,90,0.18)">Para quem quer estudar com método</div>
-        <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px">
-          <li style="font-size:.85rem;color:#a09890">✓ 100 questões por dia</li>
-          <li style="font-size:.85rem;color:#a09890">✓ Diagnóstico avançado</li>
-          <li style="font-size:.85rem;color:#a09890">✓ 4 simulados por mês</li>
-          <li style="font-size:.85rem;color:#a09890">✓ Revisão espaçada (SRS)</li>
+      <div style="background:#0f0f0f;padding:28px 22px">
+        <div style="font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(246,243,236,0.28);margin-bottom:12px">Basic</div>
+        <div style="font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:700;color:#f6f3ec;line-height:1"><sup style="font-size:.9rem;font-family:'Outfit',sans-serif;font-weight:300">R$</sup>29<sub style="font-size:.75rem;color:rgba(246,243,236,0.28);font-family:'Outfit',sans-serif;font-weight:300">,99/mês</sub></div>
+        <div style="font-size:.8rem;color:rgba(246,243,236,0.28);margin:8px 0 18px;padding-bottom:18px;border-bottom:1px solid rgba(200,164,90,0.14)">Para estudar com método</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+          <li style="font-size:.82rem;color:#8a8278;font-weight:300">✓ 100 questões por dia</li>
+          <li style="font-size:.82rem;color:#8a8278;font-weight:300">✓ Diagnóstico avançado</li>
+          <li style="font-size:.82rem;color:#8a8278;font-weight:300">✓ 4 simulados por mês</li>
+          <li style="font-size:.82rem;color:#8a8278;font-weight:300">✓ Revisão espaçada SRS</li>
         </ul>
-        <button style="width:100%;padding:12px;border-radius:7px;background:none;border:1px solid rgba(200,164,90,0.32);color:#f6f3ec;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer" onclick="alert('Em breve!')">Assinar Basic</button>
+        <button style="width:100%;padding:10px;border-radius:7px;background:none;border:1px solid rgba(200,164,90,0.28);color:#f6f3ec;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer" onclick="alert('Em breve!')">Assinar Basic</button>
       </div>
-      <div style="background:#141414;padding:32px 24px;border-top:2px solid #c8a45a">
-        <div style="display:inline-block;background:#c8a45a;color:#111;font-size:.7rem;font-weight:700;padding:3px 12px;border-radius:100px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px">Mais popular</div>
-        <div style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(246,243,236,0.35);margin-bottom:14px">Pro</div>
-        <div style="font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:700;color:#f6f3ec;line-height:1"><sup style="font-size:1rem;font-family:'Outfit',sans-serif;font-weight:300">R$</sup>45<sub style="font-size:.8rem;color:rgba(246,243,236,0.35);font-family:'Outfit',sans-serif;font-weight:300">,90/mês</sub></div>
-        <div style="font-size:.82rem;color:rgba(246,243,236,0.35);margin:8px 0 20px;padding-bottom:20px;border-bottom:1px solid rgba(200,164,90,0.18)">Para quem quer passar logo e no topo</div>
-        <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px">
-          <li style="font-size:.85rem;color:#a09890">✓ Questões ilimitadas</li>
-          <li style="font-size:.85rem;color:#a09890">✓ Diagnóstico em tempo real</li>
-          <li style="font-size:.85rem;color:#a09890">✓ Simulados ilimitados</li>
-          <li style="font-size:.85rem;color:#a09890">✓ Todas as bancas</li>
-          <li style="font-size:.85rem;color:#a09890">✓ Suporte prioritário</li>
+      <div style="background:#111;padding:28px 22px;border-top:2px solid #c8a45a">
+        <div style="display:inline-block;background:#c8a45a;color:#111;font-size:.62rem;font-weight:700;padding:2px 10px;border-radius:100px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">Popular</div>
+        <div style="font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(246,243,236,0.28);margin-bottom:12px">Pro</div>
+        <div style="font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:700;color:#f6f3ec;line-height:1"><sup style="font-size:.9rem;font-family:'Outfit',sans-serif;font-weight:300">R$</sup>45<sub style="font-size:.75rem;color:rgba(246,243,236,0.28);font-family:'Outfit',sans-serif;font-weight:300">,90/mês</sub></div>
+        <div style="font-size:.8rem;color:rgba(246,243,236,0.28);margin:8px 0 18px;padding-bottom:18px;border-bottom:1px solid rgba(200,164,90,0.14)">Para passar logo e no topo</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+          <li style="font-size:.82rem;color:#8a8278;font-weight:300">✓ Questões ilimitadas</li>
+          <li style="font-size:.82rem;color:#8a8278;font-weight:300">✓ Diagnóstico em tempo real</li>
+          <li style="font-size:.82rem;color:#8a8278;font-weight:300">✓ Simulados ilimitados</li>
+          <li style="font-size:.82rem;color:#8a8278;font-weight:300">✓ Todas as bancas</li>
+          <li style="font-size:.82rem;color:#8a8278;font-weight:300">✓ Suporte prioritário</li>
         </ul>
-        <button style="width:100%;padding:12px;border-radius:7px;background:#c8a45a;color:#111;border:none;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer" onclick="alert('Em breve!')">Começar 7 dias grátis</button>
-        <div style="font-size:.7rem;color:rgba(246,243,236,0.35);text-align:center;margin-top:10px">Cancele quando quiser</div>
+        <button style="width:100%;padding:10px;border-radius:7px;background:#c8a45a;color:#111;border:none;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer" onclick="alert('Em breve!')">Começar 7 dias grátis</button>
+        <div style="font-size:.68rem;color:rgba(246,243,236,0.28);text-align:center;margin-top:8px">Cancele quando quiser</div>
       </div>
     </div>
-    <div style="text-align:center;margin-top:20px">
-      <button onclick="fecharPlanos()" style="background:none;border:none;color:#a09890;font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif">← Voltar para o painel</button>
+    <div style="text-align:center;margin-top:18px">
+      <button onclick="fecharPlanos()" style="background:none;border:none;color:#8a8278;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">← Voltar para o painel</button>
     </div>
   </div>
 </div>
@@ -355,192 +490,138 @@ const sb = createClient(
   'sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU'
 );
 
-let questoesHoje = 0;
-let acertos = 0;
-let respondidas = 0;
-let questaoAtual = null;
-let disciplinaAtual = '';
-let bancaAtual = '';
-let historico = [];
-let desempenhoPorDisc = {};
+let questoesHoje=0,acertos=0,respondidas=0,questaoAtual=null;
+let disciplinaAtual='',bancaAtual='';
+let historico=[];
+let desempenhoPorDisc={};
 
-async function init() {
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) { window.location.href = 'login.html'; return; }
-  const nome = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
-  document.getElementById('nome-aluno').textContent = nome;
-  document.getElementById('nav-user').textContent = nome;
+async function init(){
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){window.location.href='login.html';return;}
+  const nome=session.user.user_metadata?.full_name||session.user.email.split('@')[0];
+  document.getElementById('nome-aluno').textContent=nome;
+  document.getElementById('nav-user').textContent=nome;
   gerarQuestao();
 }
 
-function atualizarFiltros() {
-  // Apenas atualiza os valores — aplica na próxima questão
-  const disc = document.getElementById('sel-disciplina').value;
-  const banca = document.getElementById('sel-banca').value;
-  if (disc || banca) {
-    document.getElementById('q-counter').textContent = 
-      `Próxima: ${disc || 'aleatória'} · ${banca || 'qualquer banca'}`;
-  } else {
-    document.getElementById('q-counter').textContent = '';
-  }
+function atualizarFiltros(){
+  const d=document.getElementById('sel-disciplina').value;
+  const b=document.getElementById('sel-banca').value;
+  document.getElementById('q-counter').textContent=
+    d||b ? `Próxima: ${d||'aleatória'} · ${b||'qualquer'}` : '';
 }
 
-async function gerarQuestao() {
-  const btn = document.getElementById('btn-nova');
-  btn.disabled = true;
-  document.getElementById('q-loading').style.display = 'flex';
-  document.getElementById('q-content').style.display = 'none';
-  document.getElementById('gabarito').style.display = 'none';
+async function gerarQuestao(){
+  const btn=document.getElementById('btn-nova');
+  btn.disabled=true;
+  document.getElementById('q-loading').style.display='flex';
+  document.getElementById('q-content').style.display='none';
+  document.getElementById('gabarito').style.display='none';
 
-  const disciplinas = ['Direito Constitucional','Direito Administrativo','Raciocínio Lógico','Português','Direito Penal','Direito Civil','Informática'];
-  const bancas = ['CESPE','FCC','FGV','VUNESP','IBFC'];
+  const disciplinas=['Direito Constitucional','Direito Administrativo','Raciocínio Lógico','Português','Direito Penal','Direito Civil','Informática'];
+  const bancas=['CESPE','FCC','FGV','VUNESP','IBFC'];
+  disciplinaAtual=document.getElementById('sel-disciplina').value||disciplinas[Math.floor(Math.random()*disciplinas.length)];
+  bancaAtual=document.getElementById('sel-banca').value||bancas[Math.floor(Math.random()*bancas.length)];
 
-  const selDisc = document.getElementById('sel-disciplina').value;
-  const selBanca = document.getElementById('sel-banca').value;
+  document.getElementById('q-banca').textContent=bancaAtual;
+  document.getElementById('q-disciplina').textContent=disciplinaAtual;
 
-  disciplinaAtual = selDisc || disciplinas[Math.floor(Math.random() * disciplinas.length)];
-  bancaAtual = selBanca || bancas[Math.floor(Math.random() * bancas.length)];
-
-  document.getElementById('q-banca').textContent = bancaAtual;
-  document.getElementById('q-disciplina').textContent = disciplinaAtual;
-
-  try {
-    const resp = await fetch('/api/questao', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ disciplina: disciplinaAtual, banca: bancaAtual })
+  try{
+    const resp=await fetch('/api/questao',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({disciplina:disciplinaAtual,banca:bancaAtual})
     });
-
-    if (!resp.ok) throw new Error('Erro ' + resp.status);
-    questaoAtual = await resp.json();
-
-    document.getElementById('q-text').textContent = questaoAtual.enunciado;
-
-    const opcoesEl = document.getElementById('opcoes');
-    opcoesEl.innerHTML = '';
-    questaoAtual.opcoes.forEach((op) => {
-      const letra = op.charAt(0);
-      const div = document.createElement('div');
-      div.className = 'opcao';
-      div.innerHTML = `<span class="opcao-letra">${letra}</span><span>${op.substring(3)}</span>`;
-      div.onclick = () => responder(div, letra);
+    if(!resp.ok) throw new Error('Erro '+resp.status);
+    questaoAtual=await resp.json();
+    document.getElementById('q-text').textContent=questaoAtual.enunciado;
+    const opcoesEl=document.getElementById('opcoes');
+    opcoesEl.innerHTML='';
+    questaoAtual.opcoes.forEach(op=>{
+      const letra=op.charAt(0);
+      const div=document.createElement('div');
+      div.className='opcao';
+      div.innerHTML=`<span class="opcao-letra">${letra}</span><span>${op.substring(3)}</span>`;
+      div.onclick=()=>responder(div,letra);
       opcoesEl.appendChild(div);
     });
-
-    document.getElementById('q-loading').style.display = 'none';
-    document.getElementById('q-content').style.display = 'block';
-
-  } catch(err) {
-    document.getElementById('q-loading').style.display = 'none';
-    document.getElementById('q-content').style.display = 'block';
-    document.getElementById('q-text').textContent = 'Erro ao gerar questão: ' + err.message;
+    document.getElementById('q-loading').style.display='none';
+    document.getElementById('q-content').style.display='block';
+  }catch(err){
+    document.getElementById('q-loading').style.display='none';
+    document.getElementById('q-content').style.display='block';
+    document.getElementById('q-text').textContent='Erro ao gerar questão: '+err.message;
   }
-
-  btn.disabled = false;
+  btn.disabled=false;
 }
 
-function responder(el, letra) {
-  if (!questaoAtual) return;
-  document.querySelectorAll('.opcao').forEach(o => o.classList.add('disabled'));
-
+function responder(el,letra){
+  if(!questaoAtual)return;
+  document.querySelectorAll('.opcao').forEach(o=>o.classList.add('disabled'));
   respondidas++;
-  const acertou = letra === questaoAtual.gabarito;
-  if (acertou) {
-    el.classList.add('certa');
-    acertos++;
-  } else {
+  const acertou=letra===questaoAtual.gabarito;
+  if(acertou){el.classList.add('certa');acertos++;}
+  else{
     el.classList.add('errada');
-    document.querySelectorAll('.opcao').forEach(o => {
-      if (o.querySelector('.opcao-letra').textContent === questaoAtual.gabarito) o.classList.add('certa');
+    document.querySelectorAll('.opcao').forEach(o=>{
+      if(o.querySelector('.opcao-letra').textContent===questaoAtual.gabarito)o.classList.add('certa');
     });
   }
+  document.getElementById('gab-text').textContent=questaoAtual.explicacao;
+  document.getElementById('gabarito').style.display='block';
 
-  document.getElementById('gab-text').textContent = questaoAtual.explicacao;
-  document.getElementById('gabarito').style.display = 'block';
-
-  // Atualiza métricas
   questoesHoje++;
-  const pct = Math.min((questoesHoje / 20) * 100, 100);
-  document.getElementById('qtd-hoje').textContent = questoesHoje;
-  document.getElementById('prog-label').textContent = questoesHoje + ' / 20';
-  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('qtd-hoje').textContent=questoesHoje;
+  document.getElementById('prog-label').textContent=questoesHoje+' / 20';
+  document.getElementById('progress-fill').style.width=Math.min(questoesHoje/20*100,100)+'%';
+  const taxa=Math.round(acertos/respondidas*100);
+  document.getElementById('taxa-acerto').textContent=taxa+'%';
+  document.getElementById('taxa-sub').textContent=acertos+' de '+respondidas+' certas';
+  const ud=disciplinaAtual;
+  document.getElementById('ultima-disc').textContent=ud.length>14?ud.substring(0,14)+'…':ud;
+  document.getElementById('ultima-banca').textContent=bancaAtual;
 
-  const taxa = Math.round((acertos / respondidas) * 100);
-  document.getElementById('taxa-acerto').textContent = taxa + '%';
-  document.getElementById('taxa-sub').textContent = acertos + ' de ' + respondidas + ' certas';
-
-  document.getElementById('ultima-disc').textContent = disciplinaAtual.length > 12
-    ? disciplinaAtual.substring(0, 12) + '...' : disciplinaAtual;
-  document.getElementById('ultima-banca').textContent = bancaAtual;
-
-  // Adiciona ao histórico
-  historico.unshift({ disciplina: disciplinaAtual, banca: bancaAtual, acertou });
+  historico.unshift({disciplina:disciplinaAtual,banca:bancaAtual,acertou});
   renderHistorico();
 
-  // Atualiza desempenho por disciplina
-  if (!desempenhoPorDisc[disciplinaAtual]) {
-    desempenhoPorDisc[disciplinaAtual] = { acertos: 0, total: 0 };
-  }
+  if(!desempenhoPorDisc[disciplinaAtual])desempenhoPorDisc[disciplinaAtual]={acertos:0,total:0};
   desempenhoPorDisc[disciplinaAtual].total++;
-  if (acertou) desempenhoPorDisc[disciplinaAtual].acertos++;
+  if(acertou)desempenhoPorDisc[disciplinaAtual].acertos++;
   renderDesempenho();
 }
 
-function renderHistorico() {
-  const el = document.getElementById('hist-list');
-  if (historico.length === 0) {
-    el.innerHTML = '<div class="hist-empty">Nenhuma questão respondida ainda</div>';
-    return;
-  }
-  el.innerHTML = historico.slice(0, 10).map(h => `
+function renderHistorico(){
+  const el=document.getElementById('hist-list');
+  if(!historico.length){el.innerHTML='<div class="hist-empty">Nenhuma questão respondida ainda</div>';return;}
+  el.innerHTML=historico.slice(0,10).map(h=>`
     <div class="hist-item">
-      <div class="hist-icon ${h.acertou ? 'hist-ok' : 'hist-err'}">${h.acertou ? '✓' : '✗'}</div>
+      <div class="hist-ico ${h.acertou?'h-ok':'h-err'}">${h.acertou?'✓':'✗'}</div>
       <div class="hist-disc">${h.disciplina}</div>
       <div class="hist-banca">${h.banca}</div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-function renderDesempenho() {
-  const el = document.getElementById('disc-list');
-  const discs = Object.entries(desempenhoPorDisc);
-  if (discs.length === 0) {
-    el.innerHTML = '<div class="hist-empty">Responda questões para ver seu desempenho</div>';
-    return;
-  }
-
-  const cores = ['#c8a45a','#0fa968','#378add','#e05454','#7B6FE8','#0F6E56','#BA7517'];
-  el.innerHTML = discs.map(([disc, dados], i) => {
-    const pct = Math.round((dados.acertos / dados.total) * 100);
-    const cor = cores[i % cores.length];
-    return `
-      <div class="disc-item">
-        <div class="disc-row">
-          <span class="disc-name">${disc}</span>
-          <span class="disc-pct" style="color:${cor}">${pct}%</span>
-        </div>
-        <div class="disc-bar-bg">
-          <div class="disc-bar-fill" style="width:${pct}%;background:${cor}"></div>
-        </div>
+function renderDesempenho(){
+  const el=document.getElementById('disc-list');
+  const cores=['#c8a45a','#0fa968','#378add','#e05454','#7B6FE8','#0F6E56','#BA7517'];
+  const discs=Object.entries(desempenhoPorDisc);
+  if(!discs.length){el.innerHTML='<div class="disc-empty">Responda questões para ver seu desempenho</div>';return;}
+  el.innerHTML=discs.map(([disc,d],i)=>{
+    const pct=Math.round(d.acertos/d.total*100);
+    const cor=cores[i%cores.length];
+    return`<div class="disc-item">
+      <div class="disc-row">
+        <span class="disc-name">${disc}</span>
+        <span class="disc-pct" style="color:${cor}">${pct}%</span>
       </div>
-    `;
+      <div class="disc-bar-bg"><div class="disc-bar-fill" style="width:${pct}%;background:${cor}"></div></div>
+    </div>`;
   }).join('');
 }
 
-async function sair() {
-  await sb.auth.signOut();
-  window.location.href = 'index.html';
-}
-
-function abrirPlanos() {
-  document.getElementById('planos-modal').style.display = 'block';
-  document.body.style.overflow = 'hidden';
-}
-function fecharPlanos() {
-  document.getElementById('planos-modal').style.display = 'none';
-  document.body.style.overflow = '';
-}
-
+async function sair(){await sb.auth.signOut();window.location.href='index.html';}
+function abrirPlanos(){document.getElementById('planos-modal').style.display='block';document.body.style.overflow='hidden';}
+function fecharPlanos(){document.getElementById('planos-modal').style.display='none';document.body.style.overflow='';}
 init();
 </script>
 </body>
