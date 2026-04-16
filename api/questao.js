@@ -7,11 +7,17 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { disciplina, banca } = req.body;
-
-    if (!disciplina || !banca) {
-      return res.status(400).json({ error: 'disciplina e banca são obrigatórios' });
+    // Parse body manually if needed
+    let body = req.body;
+    if (typeof body === 'string') {
+      body = JSON.parse(body);
     }
+    if (!body) {
+      return res.status(400).json({ error: 'Body vazio' });
+    }
+
+    const disciplina = body.disciplina || 'Direito Constitucional';
+    const banca = body.banca || 'CESPE';
 
     const prompt = `Crie uma questão de concurso público de ${disciplina} no estilo da banca ${banca}. Responda APENAS em JSON puro sem markdown, neste formato exato: {"enunciado":"texto da questão aqui","opcoes":["A) opção 1","B) opção 2","C) opção 3","D) opção 4","E) opção 5"],"gabarito":"A","explicacao":"explicação detalhada da resposta correta"}`;
 
