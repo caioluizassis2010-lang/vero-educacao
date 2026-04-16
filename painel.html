@@ -270,20 +270,20 @@ async function gerarQuestao() {
 
   document.getElementById('q-banca').textContent = banca;
 
-  const GEMINI_KEY = 'AIzaSyAQ.Ab8RN6Jc5w5CkxpmhcqwMQe-VqB6DnInahziXZ55iOn1Hvq8aA';
+  const GEMINI_KEY = 'AQ.Ab8RN6K4TjZbsx6VBVpFA4T7U_9n6nqR60sBmo_sOtdAoZqDqw';
   const prompt = `Crie uma questão de concurso público de ${disciplina} no estilo da banca ${banca}.
 Responda APENAS em JSON válido, sem texto antes ou depois, sem markdown, neste formato exato:
 {"enunciado":"texto da questão aqui","opcoes":["A) opção 1","B) opção 2","C) opção 3","D) opção 4","E) opção 5"],"gabarito":"A","explicacao":"explicação detalhada da resposta correta"}`;
 
   try {
     const resp = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-latest:generateContent',
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-goog-api-key': GEMINI_KEY },
         body: JSON.stringify({
           contents: [{ role: "user", parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.7, maxOutputTokens: 1024, responseMimeType: "application/json" }
+          generationConfig: { temperature: 0.7, maxOutputTokens: 1024 }
         })
       }
     );
