@@ -18,8 +18,6 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
 a{text-decoration:none;color:inherit}
-
-/* NAV */
 nav{padding:16px 32px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg2);position:sticky;top:0;z-index:50}
 .brand{display:inline-flex;align-items:center;gap:10px}
 .brand-mark{width:34px;height:34px;border-radius:7px;border:1px solid var(--border2);background:#060606;color:var(--gold);display:grid;place-items:center;font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700}
@@ -29,48 +27,36 @@ nav{padding:16px 32px;border-bottom:1px solid var(--border);display:flex;align-i
 .nav-user{font-size:13px;color:var(--muted)}
 .btn-sair{font-size:12px;color:var(--muted);padding:6px 12px;border:1px solid var(--border);border-radius:6px;cursor:pointer;background:none;font-family:'Outfit',sans-serif;transition:all .15s}
 .btn-sair:hover{color:var(--gold);border-color:var(--gold)}
-
-/* LAYOUT */
 .layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 65px)}
-
-/* SIDEBAR */
 .sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:24px 16px}
 .sidebar-section{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;padding:0 8px}
 .sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;font-size:13px;color:var(--muted);cursor:pointer;transition:all .15s;margin-bottom:2px}
 .sidebar-item:hover{background:var(--bg3);color:var(--text)}
-.sidebar-item.active{background:rgba(200,164,90,.08);color:var(--gold);border:1px solid var(--gold-b)}
+.sidebar-item.active{background:rgba(200,164,90,.08);color:var(--gold);border:1px solid var(--border2)}
 .sidebar-item span{font-size:16px}
 .sidebar-divider{height:1px;background:var(--border);margin:16px 0}
-.sidebar-plan{margin-top:auto;padding:12px;background:rgba(200,164,90,.06);border:1px solid var(--border);border-radius:10px;margin-top:16px}
+.sidebar-plan{padding:12px;background:rgba(200,164,90,.06);border:1px solid var(--border);border-radius:10px;margin-top:16px}
 .sp-label{font-size:10px;color:var(--muted2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
 .sp-plan{font-size:13px;font-weight:600;color:var(--gold)}
-.sp-btn{display:block;text-align:center;margin-top:10px;padding:8px;background:var(--gold);color:#111;border-radius:6px;font-size:12px;font-weight:700;transition:opacity .15s}
+.sp-btn{display:block;text-align:center;margin-top:10px;padding:8px;background:var(--gold);color:#111;border-radius:6px;font-size:12px;font-weight:700;transition:opacity .15s;cursor:pointer;border:none;width:100%;font-family:'Outfit',sans-serif}
 .sp-btn:hover{opacity:.85}
-
-/* MAIN */
 .main{padding:32px;overflow-y:auto}
 .page-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;margin-bottom:4px}
 .page-title em{font-style:italic;color:var(--gold)}
 .page-sub{font-size:13px;color:var(--muted);margin-bottom:28px;font-weight:300}
-
-/* METRICS */
 .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px}
 .metric{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
 .metric-label{font-size:11px;color:var(--muted2);letter-spacing:.04em;margin-bottom:6px}
 .metric-value{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--gold);line-height:1}
 .metric-sub{font-size:11px;color:var(--muted2);margin-top:3px}
-
-/* QUESTAO */
 .q-section{display:grid;grid-template-columns:1fr 360px;gap:20px}
 .q-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:28px}
 .q-card-title{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);opacity:.7;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
 .q-banca{display:inline-block;background:rgba(200,164,90,.08);border:1px solid var(--border);border-radius:100px;padding:2px 10px;font-size:10px;color:var(--gold);letter-spacing:.04em}
-
 .q-text{font-size:.95rem;line-height:1.75;color:var(--text);margin-bottom:22px;min-height:60px}
 .q-loading{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;padding:20px 0}
 .q-spinner{width:18px;height:18px;border:2px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
-
 .opcoes{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
 .opcao{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:9px;cursor:pointer;transition:all .18s;font-size:.9rem;color:var(--text);background:transparent}
 .opcao:hover{border-color:var(--gold);background:rgba(200,164,90,.04)}
@@ -78,18 +64,13 @@ nav{padding:16px 32px;border-bottom:1px solid var(--border);display:flex;align-i
 .opcao.errada{background:rgba(224,84,84,.08);border-color:rgba(224,84,84,.4);color:var(--red)}
 .opcao.disabled{pointer-events:none}
 .opcao-letra{font-weight:700;min-width:18px;flex-shrink:0;margin-top:1px}
-
 .q-footer{display:flex;gap:10px;margin-top:4px}
 .btn-nova{padding:11px 20px;background:var(--gold);color:#111;border:none;border-radius:8px;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .18s;font-family:'Outfit',sans-serif}
 .btn-nova:hover{background:var(--gold2);transform:translateY(-1px)}
 .btn-nova:disabled{opacity:.5;cursor:not-allowed;transform:none}
-
-/* GABARITO */
 .gabarito{background:rgba(200,164,90,.06);border:1px solid var(--border2);border-radius:10px;padding:16px;margin-top:16px;display:none}
 .gab-label{font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
 .gab-text{font-size:.88rem;color:var(--muted);line-height:1.70}
-
-/* PLANO SIDEBAR */
 .plan-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:22px}
 .plan-card-title{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:16px}
 .plan-name{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--text);margin-bottom:4px}
@@ -100,9 +81,8 @@ nav{padding:16px 32px;border-bottom:1px solid var(--border);display:flex;align-i
 .plan-items{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
 .plan-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
 .pi-check{width:15px;height:15px;border-radius:50%;background:rgba(200,164,90,.1);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0}
-.upgrade-btn{display:block;text-align:center;padding:11px;background:var(--gold);color:#111;border-radius:8px;font-size:13px;font-weight:700;transition:all .18s}
-.upgrade-btn:hover{background:var(--gold2);transform:translateY(-1px)}
-
+.upgrade-btn{display:block;text-align:center;padding:11px;background:var(--gold);color:#111;border-radius:8px;font-size:13px;font-weight:700;transition:all .18s;cursor:pointer;border:none;width:100%;font-family:'Outfit',sans-serif}
+.upgrade-btn:hover{background:var(--gold2)}
 @media(max-width:900px){
   .layout{grid-template-columns:1fr}
   .sidebar{display:none}
@@ -125,15 +105,13 @@ nav{padding:16px 32px;border-bottom:1px solid var(--border);display:flex;align-i
 </nav>
 
 <div class="layout">
-
-  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-section">Menu</div>
     <div class="sidebar-item active"><span>📊</span>Dashboard</div>
-    <div class="sidebar-item" onclick="alert('Em breve! Estamos construindo esta funcionalidade.')"><span>❓</span>Questões</div>
-    <div class="sidebar-item" onclick="alert('Em breve! Estamos construindo esta funcionalidade.')"><span>📅</span>Meu plano</div>
-    <div class="sidebar-item" onclick="alert('Em breve! Estamos construindo esta funcionalidade.')"><span>🏆</span>Simulados</div>
-    <div class="sidebar-item" onclick="alert('Em breve! Estamos construindo esta funcionalidade.')"><span>📈</span>Desempenho</div>
+    <div class="sidebar-item" onclick="alert('Em breve!')"><span>❓</span>Questões</div>
+    <div class="sidebar-item" onclick="alert('Em breve!')"><span>📅</span>Meu plano</div>
+    <div class="sidebar-item" onclick="alert('Em breve!')"><span>🏆</span>Simulados</div>
+    <div class="sidebar-item" onclick="alert('Em breve!')"><span>📈</span>Desempenho</div>
     <div class="sidebar-divider"></div>
     <div class="sidebar-section">Jornada</div>
     <div class="sidebar-item active"><span>⚖️</span>Concursos</div>
@@ -141,16 +119,14 @@ nav{padding:16px 32px;border-bottom:1px solid var(--border);display:flex;align-i
     <div class="sidebar-plan">
       <div class="sp-label">Plano atual</div>
       <div class="sp-plan">Grátis</div>
-      <a href="#planos-modal" onclick="abrirPlanos()" class="sp-btn">Fazer upgrade →</a>
+      <button class="sp-btn" onclick="abrirPlanos()">Fazer upgrade →</button>
     </div>
   </aside>
 
-  <!-- MAIN -->
   <main class="main">
     <h1 class="page-title">Bom estudo, <em id="nome-aluno">aluno</em>.</h1>
     <p class="page-sub">Continue de onde parou. Cada questão te aproxima da aprovação.</p>
 
-    <!-- MÉTRICAS -->
     <div class="metrics">
       <div class="metric">
         <div class="metric-label">Questões hoje</div>
@@ -174,21 +150,16 @@ nav{padding:16px 32px;border-bottom:1px solid var(--border);display:flex;align-i
       </div>
     </div>
 
-    <!-- QUESTÃO + PLANO -->
     <div class="q-section">
-
-      <!-- QUESTÃO -->
       <div class="q-card">
         <div class="q-card-title">
           Questão do dia
           <span class="q-banca" id="q-banca">CESPE</span>
         </div>
-
         <div id="q-loading" class="q-loading">
           <div class="q-spinner"></div>
-          Gerando questão com IA — pode levar alguns segundos...
+          Gerando questão com IA — aguarde alguns segundos...
         </div>
-
         <div id="q-content" style="display:none">
           <p class="q-text" id="q-text"></p>
           <div class="opcoes" id="opcoes"></div>
@@ -197,13 +168,11 @@ nav{padding:16px 32px;border-bottom:1px solid var(--border);display:flex;align-i
             <p class="gab-text" id="gab-text"></p>
           </div>
         </div>
-
         <div class="q-footer">
           <button class="btn-nova" id="btn-nova" onclick="gerarQuestao()">Nova questão →</button>
         </div>
       </div>
 
-      <!-- PLANO -->
       <div class="plan-card">
         <div class="plan-card-title">Seu plano atual</div>
         <div class="plan-name">Grátis</div>
@@ -215,24 +184,68 @@ nav{padding:16px 32px;border-bottom:1px solid var(--border);display:flex;align-i
           <div class="plan-item"><div class="pi-check">✓</div>Gabarito comentado por IA</div>
           <div class="plan-item"><div class="pi-check">✓</div>1 simulado por mês</div>
         </div>
-        <a href="#" onclick="abrirPlanos();return false;" class="upgrade-btn">Fazer upgrade para Pro →</a>
+        <button class="upgrade-btn" onclick="abrirPlanos()">Fazer upgrade para Pro →</button>
       </div>
-
     </div>
   </main>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-function abrirPlanos() {
-  document.getElementById('planos-modal').style.display = 'block';
-  document.body.style.overflow = 'hidden';
-}
-function fecharPlanos() {
-  document.getElementById('planos-modal').style.display = 'none';
-  document.body.style.overflow = '';
-}
+<!-- MODAL PLANOS -->
+<div id="planos-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;overflow-y:auto;padding:40px 20px">
+  <div style="max-width:860px;margin:0 auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px">
+      <div style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:#f6f3ec">Invista na sua <em style="color:#c8a45a">aprovação</em></div>
+      <button onclick="fecharPlanos()" style="background:none;border:1px solid rgba(246,243,236,0.18);color:#a09890;padding:8px 16px;border-radius:6px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px">✕ Fechar</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(200,164,90,0.18);border:1px solid rgba(200,164,90,0.18);border-radius:14px;overflow:hidden">
+      <div style="background:#0f0f0f;padding:32px 24px">
+        <div style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(246,243,236,0.35);margin-bottom:14px">Grátis</div>
+        <div style="font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:700;color:#f6f3ec;line-height:1"><sup style="font-size:1rem;font-family:'Outfit',sans-serif;font-weight:300">R$</sup>0</div>
+        <div style="font-size:.82rem;color:rgba(246,243,236,0.35);margin:8px 0 20px;padding-bottom:20px;border-bottom:1px solid rgba(200,164,90,0.18)">Plano atual</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px">
+          <li style="font-size:.85rem;color:#a09890">✓ 20 questões por dia</li>
+          <li style="font-size:.85rem;color:#a09890">✓ Diagnóstico básico</li>
+          <li style="font-size:.85rem;color:#a09890">✓ 1 simulado por mês</li>
+        </ul>
+        <button style="width:100%;padding:12px;border-radius:7px;background:none;border:1px solid rgba(246,243,236,0.18);color:#f6f3ec;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:600;cursor:default">Plano atual</button>
+      </div>
+      <div style="background:#0f0f0f;padding:32px 24px">
+        <div style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(246,243,236,0.35);margin-bottom:14px">Basic</div>
+        <div style="font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:700;color:#f6f3ec;line-height:1"><sup style="font-size:1rem;font-family:'Outfit',sans-serif;font-weight:300">R$</sup>29<sub style="font-size:.8rem;color:rgba(246,243,236,0.35);font-family:'Outfit',sans-serif;font-weight:300">,99/mês</sub></div>
+        <div style="font-size:.82rem;color:rgba(246,243,236,0.35);margin:8px 0 20px;padding-bottom:20px;border-bottom:1px solid rgba(200,164,90,0.18)">Para quem quer estudar com método</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px">
+          <li style="font-size:.85rem;color:#a09890">✓ 100 questões por dia</li>
+          <li style="font-size:.85rem;color:#a09890">✓ Diagnóstico avançado</li>
+          <li style="font-size:.85rem;color:#a09890">✓ Plano personalizado</li>
+          <li style="font-size:.85rem;color:#a09890">✓ 4 simulados por mês</li>
+          <li style="font-size:.85rem;color:#a09890">✓ Revisão espaçada (SRS)</li>
+        </ul>
+        <button style="width:100%;padding:12px;border-radius:7px;background:none;border:1px solid rgba(200,164,90,0.32);color:#f6f3ec;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer" onclick="alert('Em breve! Integração com pagamento chegando.')">Assinar Basic</button>
+      </div>
+      <div style="background:#141414;padding:32px 24px;border-top:2px solid #c8a45a">
+        <div style="display:inline-block;background:#c8a45a;color:#111;font-size:.7rem;font-weight:700;padding:3px 12px;border-radius:100px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px">Mais popular</div>
+        <div style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(246,243,236,0.35);margin-bottom:14px">Pro</div>
+        <div style="font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:700;color:#f6f3ec;line-height:1"><sup style="font-size:1rem;font-family:'Outfit',sans-serif;font-weight:300">R$</sup>45<sub style="font-size:.8rem;color:rgba(246,243,236,0.35);font-family:'Outfit',sans-serif;font-weight:300">,90/mês</sub></div>
+        <div style="font-size:.82rem;color:rgba(246,243,236,0.35);margin:8px 0 20px;padding-bottom:20px;border-bottom:1px solid rgba(200,164,90,0.18)">Para quem quer passar logo e no topo</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px">
+          <li style="font-size:.85rem;color:#a09890">✓ Questões ilimitadas por IA</li>
+          <li style="font-size:.85rem;color:#a09890">✓ Diagnóstico em tempo real</li>
+          <li style="font-size:.85rem;color:#a09890">✓ Plano adaptativo completo</li>
+          <li style="font-size:.85rem;color:#a09890">✓ Simulados ilimitados</li>
+          <li style="font-size:.85rem;color:#a09890">✓ Todas as bancas</li>
+          <li style="font-size:.85rem;color:#a09890">✓ Suporte prioritário</li>
+        </ul>
+        <button style="width:100%;padding:12px;border-radius:7px;background:#c8a45a;color:#111;border:none;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer" onclick="alert('Em breve! Integração com pagamento chegando.')">Começar 7 dias grátis</button>
+        <div style="font-size:.7rem;color:rgba(246,243,236,0.35);text-align:center;margin-top:10px">Cancele quando quiser · Sem fidelidade</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px">
+      <button onclick="fecharPlanos()" style="background:none;border:none;color:#a09890;font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif">← Voltar para o painel</button>
+    </div>
+  </div>
+</div>
 
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const { createClient } = supabase;
 const sb = createClient(
@@ -248,11 +261,9 @@ let questaoAtual = null;
 async function init() {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { window.location.href = 'login.html'; return; }
-
   const nome = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
   document.getElementById('nome-aluno').textContent = nome;
   document.getElementById('nav-user').textContent = nome;
-
   gerarQuestao();
 }
 
@@ -267,31 +278,21 @@ async function gerarQuestao() {
   const bancas = ['CESPE','FCC','FGV','VUNESP'];
   const disciplina = disciplinas[Math.floor(Math.random() * disciplinas.length)];
   const banca = bancas[Math.floor(Math.random() * bancas.length)];
-
   document.getElementById('q-banca').textContent = banca;
 
-  const GEMINI_KEY = 'AQ.Ab8RN6K4TjZbsx6VBVpFA4T7U_9n6nqR60sBmo_sOtdAoZqDqw';
-  const prompt = `Crie uma questão de concurso público de ${disciplina} no estilo da banca ${banca}.
-Responda APENAS em JSON válido, sem texto antes ou depois, sem markdown, neste formato exato:
-{"enunciado":"texto da questão aqui","opcoes":["A) opção 1","B) opção 2","C) opção 3","D) opção 4","E) opção 5"],"gabarito":"A","explicacao":"explicação detalhada da resposta correta"}`;
-
   try {
-    const resp = await fetch(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-latest:generateContent',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-goog-api-key': GEMINI_KEY },
-        body: JSON.stringify({
-          contents: [{ role: "user", parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.7, maxOutputTokens: 1024 }
-        })
-      }
-    );
+    const resp = await fetch('/api/questao', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ disciplina, banca })
+    });
 
-    const data = await resp.json();
-    const raw = data.candidates[0].content.parts[0].text
-      .replace(/```json|```/g,'').trim();
-    questaoAtual = JSON.parse(raw);
+    if (!resp.ok) {
+      const err = await resp.json();
+      throw new Error(err.error || 'Erro ' + resp.status);
+    }
+
+    questaoAtual = await resp.json();
 
     document.getElementById('q-text').textContent = questaoAtual.enunciado;
 
@@ -312,8 +313,8 @@ Responda APENAS em JSON válido, sem texto antes ou depois, sem markdown, neste 
   } catch(err) {
     document.getElementById('q-loading').style.display = 'none';
     document.getElementById('q-content').style.display = 'block';
-    document.getElementById('q-text').textContent = 'Erro ao gerar questão. Verifique se o Gemini está ativo e tente novamente.'; console.error('Gemini error:', err);
-    console.error(err);
+    document.getElementById('q-text').textContent = 'Erro ao gerar questão: ' + err.message;
+    console.error('Erro:', err);
   }
 
   btn.disabled = false;
@@ -322,7 +323,6 @@ Responda APENAS em JSON válido, sem texto antes ou depois, sem markdown, neste 
 function responder(el, letra) {
   if (!questaoAtual) return;
   document.querySelectorAll('.opcao').forEach(o => o.classList.add('disabled'));
-
   respondidas++;
   if (letra === questaoAtual.gabarito) {
     el.classList.add('certa');
@@ -333,14 +333,12 @@ function responder(el, letra) {
       if (o.querySelector('.opcao-letra').textContent === questaoAtual.gabarito) o.classList.add('certa');
     });
   }
-
   document.getElementById('gab-text').textContent = questaoAtual.explicacao;
   document.getElementById('gabarito').style.display = 'block';
-
   questoesHoje++;
   const pct = Math.min((questoesHoje / 20) * 100, 100);
   document.getElementById('qtd-hoje').textContent = questoesHoje;
-  document.getElementById('prog-label').textContent = `${questoesHoje} / 20`;
+  document.getElementById('prog-label').textContent = questoesHoje + ' / 20';
   document.getElementById('progress-fill').style.width = pct + '%';
   document.getElementById('taxa-acerto').textContent = Math.round((acertos/respondidas)*100) + '%';
 }
@@ -349,8 +347,6 @@ async function sair() {
   await sb.auth.signOut();
   window.location.href = 'index.html';
 }
-
-init();
 
 function abrirPlanos() {
   document.getElementById('planos-modal').style.display = 'block';
@@ -361,65 +357,7 @@ function fecharPlanos() {
   document.body.style.overflow = '';
 }
 
+init();
 </script>
-
-<!-- MODAL PLANOS -->
-<div id="planos-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;overflow-y:auto;padding:40px 20px">
-  <div style="max-width:860px;margin:0 auto">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px">
-      <div style="font-family:Playfair Display,serif;font-size:1.8rem;font-weight:700;color:#f6f3ec">Invista na sua <em style="color:#c8a45a">aprovação</em></div>
-      <button onclick="fecharPlanos()" style="background:none;border:1px solid rgba(246,243,236,0.18);color:#a09890;padding:8px 16px;border-radius:6px;cursor:pointer;font-family:Outfit,sans-serif;font-size:13px">✕ Fechar</button>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(200,164,90,0.18);border:1px solid rgba(200,164,90,0.18);border-radius:14px;overflow:hidden">
-      <!-- Grátis -->
-      <div style="background:#0f0f0f;padding:32px 24px">
-        <div style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(246,243,236,0.35);margin-bottom:14px">Grátis</div>
-        <div style="font-family:Playfair Display,serif;font-size:2.8rem;font-weight:700;color:#f6f3ec;line-height:1"><sup style="font-size:1rem;font-family:Outfit,sans-serif;font-weight:300">R$</sup>0</div>
-        <div style="font-size:.82rem;color:rgba(246,243,236,0.35);margin:8px 0 20px;padding-bottom:20px;border-bottom:1px solid rgba(200,164,90,0.18)">Plano atual</div>
-        <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px">
-          <li style="font-size:.85rem;color:#a09890">✓ 20 questões por dia</li>
-          <li style="font-size:.85rem;color:#a09890">✓ Diagnóstico básico</li>
-          <li style="font-size:.85rem;color:#a09890">✓ 1 simulado por mês</li>
-        </ul>
-        <button style="width:100%;padding:12px;border-radius:7px;background:none;border:1px solid rgba(246,243,236,0.18);color:#f6f3ec;font-family:Outfit,sans-serif;font-size:.88rem;font-weight:600;cursor:default">Plano atual</button>
-      </div>
-      <!-- Basic -->
-      <div style="background:#0f0f0f;padding:32px 24px">
-        <div style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(246,243,236,0.35);margin-bottom:14px">Basic</div>
-        <div style="font-family:Playfair Display,serif;font-size:2.8rem;font-weight:700;color:#f6f3ec;line-height:1"><sup style="font-size:1rem;font-family:Outfit,sans-serif;font-weight:300">R$</sup>29<sub style="font-size:.8rem;color:rgba(246,243,236,0.35);font-family:Outfit,sans-serif;font-weight:300">,99/mês</sub></div>
-        <div style="font-size:.82rem;color:rgba(246,243,236,0.35);margin:8px 0 20px;padding-bottom:20px;border-bottom:1px solid rgba(200,164,90,0.18)">Para quem quer estudar com método</div>
-        <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px">
-          <li style="font-size:.85rem;color:#a09890">✓ 100 questões por dia</li>
-          <li style="font-size:.85rem;color:#a09890">✓ Diagnóstico avançado</li>
-          <li style="font-size:.85rem;color:#a09890">✓ Plano personalizado</li>
-          <li style="font-size:.85rem;color:#a09890">✓ 4 simulados por mês</li>
-          <li style="font-size:.85rem;color:#a09890">✓ Revisão espaçada (SRS)</li>
-        </ul>
-        <button style="width:100%;padding:12px;border-radius:7px;background:none;border:1px solid rgba(200,164,90,0.32);color:#f6f3ec;font-family:Outfit,sans-serif;font-size:.88rem;font-weight:600;cursor:pointer" onclick="alert('Em breve! Integração com pagamento chegando.')">Assinar Basic</button>
-      </div>
-      <!-- Pro -->
-      <div style="background:#141414;padding:32px 24px;border-top:2px solid #c8a45a">
-        <div style="display:inline-block;background:#c8a45a;color:#111;font-size:.7rem;font-weight:700;padding:3px 12px;border-radius:100px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px">Mais popular</div>
-        <div style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(246,243,236,0.35);margin-bottom:14px">Pro</div>
-        <div style="font-family:Playfair Display,serif;font-size:2.8rem;font-weight:700;color:#f6f3ec;line-height:1"><sup style="font-size:1rem;font-family:Outfit,sans-serif;font-weight:300">R$</sup>45<sub style="font-size:.8rem;color:rgba(246,243,236,0.35);font-family:Outfit,sans-serif;font-weight:300">,90/mês</sub></div>
-        <div style="font-size:.82rem;color:rgba(246,243,236,0.35);margin:8px 0 20px;padding-bottom:20px;border-bottom:1px solid rgba(200,164,90,0.18)">Para quem quer passar logo e no topo</div>
-        <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px">
-          <li style="font-size:.85rem;color:#a09890">✓ Questões ilimitadas por IA</li>
-          <li style="font-size:.85rem;color:#a09890">✓ Diagnóstico em tempo real</li>
-          <li style="font-size:.85rem;color:#a09890">✓ Plano adaptativo completo</li>
-          <li style="font-size:.85rem;color:#a09890">✓ Simulados ilimitados</li>
-          <li style="font-size:.85rem;color:#a09890">✓ Todas as bancas</li>
-          <li style="font-size:.85rem;color:#a09890">✓ Suporte prioritário</li>
-        </ul>
-        <button style="width:100%;padding:12px;border-radius:7px;background:#c8a45a;color:#111;border:none;font-family:Outfit,sans-serif;font-size:.88rem;font-weight:700;cursor:pointer" onclick="alert('Em breve! Integração com pagamento chegando.')">Começar 7 dias grátis</button>
-        <div style="font-size:.7rem;color:rgba(246,243,236,0.35);text-align:center;margin-top:10px">Cancele quando quiser · Sem fidelidade</div>
-      </div>
-    </div>
-    <div style="text-align:center;margin-top:20px">
-      <button onclick="fecharPlanos()" style="background:none;border:none;color:#a09890;font-size:13px;cursor:pointer;font-family:Outfit,sans-serif">← Voltar para o painel</button>
-    </div>
-  </div>
-</div>
-
 </body>
 </html>
