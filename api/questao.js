@@ -1,29 +1,60 @@
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
   if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { disciplina, banca } = req.body;
+  try {
+    const { disciplina, banca } = req.body;
 
-  const prompt = `Crie uma questão de concurso público de ${disciplina} no estilo da banca ${banca}. Responda APENAS em JSON puro sem markdown: {"enunciado":"texto","opcoes":["A) texto","B) texto","C) texto","D) texto","E) texto"],"gabarito":"A","explicacao":"explicação"}`;
-
-  const resp = await fetch(
-    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-latest:generateContent',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-goog-api-key': 'AQ.Ab8RN6K4TjZbsx6VBVpFA4T7U_9n6nqR60sBmo_sOtdAoZqDqw'
-      },
-      body: JSON.stringify({
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.7, maxOutputTokens: 1024 }
-      })
+    if (!disciplina || !banca) {
+      return res.status(400).json({ error: 'disciplina e banca são obrigatórios' });
     }
-  );
 
-  const data = await resp.json();
-  const raw = data.candidates[0].content.parts[0].text.replace(/```json|```/g,'').trim();
-  res.status(200).json(JSON.parse(raw));
+    const prompt = `Crie uma questão de concurso público de ${disciplina} no estilo da banca ${banca}. Responda APENAS em JSON puro sem markdown, neste formato exato: {"enunciado":"texto da questão aqui","opcoes":["A) opção 1","B) opção 2","C) opção 3","D) opção 4","E) opção 5"],"gabarito":"A","explicacao":"explicação detalhada da resposta correta"}`;
+
+    const groqResp = await fetch(
+      'https://api.groq.com/openai/v1/chat/completions',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer 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'
+        },
+        body: JSON.stringify({
+          model: 'llama-3.3-70b-versatile',
+          messages: [
+            {
+              role: 'system',
+              content: 'Você é especialista em concursos públicos brasileiros. Responda APENAS com JSON puro e válido, sem texto adicional, sem markdown.'
+            },
+            {
+              role: 'user',
+              content: prompt
+            }
+          ],
+          temperature: 0.7,
+          max_tokens: 1024
+        })
+      }
+    );
+
+    const data = await groqResp.json();
+
+    if (!data.choices || !data.choices[0]) {
+      return res.status(500).json({ error: 'Sem resposta da IA', details: data });
+    }
+
+    const raw = data.choices[0].message.content
+      .replace(/```json|```/g, '').trim();
+
+    const questao = JSON.parse(raw);
+    return res.status(200).json(questao);
+
+  } catch (err) {
+    console.error('Erro:', err.message);
+    return res.status(500).json({ error: err.message });
+  }
 }
