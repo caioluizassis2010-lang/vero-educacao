@@ -181,7 +181,7 @@ nav{padding:0 28px;height:56px;border-bottom:1px solid var(--border);display:fle
     <div class="sb-item active">
       <div class="sb-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>Dashboard
     </div>
-    <div class="sb-item" onclick="alert('Em breve!')">
+    <div class="sb-item" onclick="window.location.href='questoes.html'">
       <div class="sb-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg></div>Questões
     </div>
     <div class="sb-item" onclick="alert('Em breve!')">
@@ -268,58 +268,16 @@ nav{padding:0 28px;height:56px;border-bottom:1px solid var(--border);display:fle
           </div>
         </div>
 
-        <!-- QUESTÃO DO DIA -->
-        <div class="questao-section">
-          <div class="q-card">
-            <div class="q-header">
-              <div class="q-header-left">
-                <div class="q-label">Questão do dia</div>
-                <div class="q-chips">
-                  <span class="q-chip" id="q-disciplina">—</span>
-                  <span class="q-chip gold" id="q-banca">—</span>
-                </div>
-              </div>
-              <div class="q-filters">
-                <select class="q-filter" id="sel-disciplina" onchange="atualizarFiltros()">
-                  <option value="">Disciplina</option>
-                  <option value="Direito Constitucional">Dir. Constitucional</option>
-                  <option value="Direito Administrativo">Dir. Administrativo</option>
-                  <option value="Raciocínio Lógico">Raciocínio Lógico</option>
-                  <option value="Português">Português</option>
-                  <option value="Direito Penal">Direito Penal</option>
-                  <option value="Direito Civil">Direito Civil</option>
-                  <option value="Informática">Informática</option>
-                </select>
-                <select class="q-filter" id="sel-banca" onchange="atualizarFiltros()">
-                  <option value="">Banca</option>
-                  <option value="CESPE">CESPE</option>
-                  <option value="FCC">FCC</option>
-                  <option value="FGV">FGV</option>
-                  <option value="VUNESP">VUNESP</option>
-                  <option value="IBFC">IBFC</option>
-                </select>
-              </div>
+        <!-- ACESSO RÁPIDO — QUESTÕES -->
+        <div style="margin-top:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+          <div style="padding:20px 22px;display:flex;align-items:center;justify-content:space-between">
+            <div>
+              <div style="font-family:Playfair Display,serif;font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:4px">Pronto para estudar?</div>
+              <div style="font-size:12px;color:var(--muted);font-weight:300">Você tem <strong style="color:var(--gold)" id="qtd-restantes">20</strong> questões disponíveis hoje.</div>
             </div>
-
-            <div class="q-body">
-              <div id="q-loading" class="q-loading">
-                <div class="q-spinner"></div>
-                Gerando questão com IA...
-              </div>
-              <div id="q-content" style="display:none">
-                <p class="q-text" id="q-text"></p>
-                <div class="opcoes" id="opcoes"></div>
-                <div class="gabarito" id="gabarito">
-                  <div class="gab-label">Explicação da IA</div>
-                  <p class="gab-text" id="gab-text"></p>
-                </div>
-              </div>
-            </div>
-
-            <div class="q-footer">
-              <button class="btn-nova" id="btn-nova" onclick="gerarQuestao()">Nova questão →</button>
-              <span class="q-count-txt" id="q-counter"></span>
-            </div>
+            <button onclick="irParaQuestoes()" style="padding:10px 20px;background:var(--gold);color:#111;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:Outfit,sans-serif;white-space:nowrap;transition:all .18s" onmouseover="this.style.background='var(--gold2)'" onmouseout="this.style.background='var(--gold)'">
+              Resolver questões →
+            </button>
           </div>
         </div>
       </div>
@@ -357,28 +315,7 @@ nav{padding:0 28px;height:56px;border-bottom:1px solid var(--border);display:fle
           </div>
         </div>
 
-        <!-- PLANO — SOMENTE NO FUNDO -->
-        <div class="plan-card">
-          <div class="plan-header">
-            <div class="plan-htitle">Seu plano</div>
-            <div class="plan-badge">Grátis</div>
-          </div>
-          <div class="plan-body">
-            <div class="plan-name">Plano Grátis</div>
-            <p class="plan-desc">Faça upgrade para questões ilimitadas, diagnóstico avançado e simulados completos.</p>
-            <div class="prog-row">
-              <span>Questões hoje</span>
-              <span id="prog-label">0 / 20</span>
-            </div>
-            <div class="prog-bg"><div class="prog-fill" id="progress-fill" style="width:0%"></div></div>
-            <div class="plan-feats">
-              <div class="pf"><div class="pf-dot">✓</div>20 questões por dia</div>
-              <div class="pf"><div class="pf-dot">✓</div>Gabarito comentado por IA</div>
-              <div class="pf"><div class="pf-dot">✓</div>1 simulado por mês</div>
-            </div>
-            <button class="upgrade-btn" onclick="abrirPlanos()">Fazer upgrade para Pro →</button>
-          </div>
-        </div>
+
 
       </div>
     </div>
@@ -561,8 +498,8 @@ function responder(el,letra){
   // Atualiza métricas
   questoesHoje++;
   document.getElementById('qtd-hoje').textContent=questoesHoje;
-  document.getElementById('prog-label').textContent=questoesHoje+' / 20';
-  document.getElementById('progress-fill').style.width=Math.min(questoesHoje/20*100,100)+'%';
+  if(document.getElementById('prog-label'))document.getElementById('prog-label').textContent=questoesHoje+' / 20';
+  if(document.getElementById('progress-fill'))document.getElementById('progress-fill').style.width=Math.min(questoesHoje/20*100,100)+'%';
   const taxa=Math.round(acertos/respondidas*100);
   document.getElementById('taxa-acerto').textContent=taxa+'%';
   document.getElementById('taxa-sub').textContent=acertos+' de '+respondidas+' certas';
@@ -647,6 +584,10 @@ function renderMelhorar(){
 
   if(!html)html='<div class="improve-empty">Continue respondendo para receber dicas personalizadas</div>';
   el.innerHTML=html;
+}
+
+function irParaQuestoes(){
+  window.location.href = "questoes.html";
 }
 
 async function sair(){await sb.auth.signOut();window.location.href='index.html';}
