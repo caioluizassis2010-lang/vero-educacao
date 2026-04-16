@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vero — Criar conta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#090909;--bg2:#0f0f0f;--bg3:#141414;
+  --gold:#c8a45a;--gold2:#d6b772;
+  --text:#f6f3ec;--muted:#a09890;--muted2:rgba(246,243,236,0.35);
+  --border:rgba(200,164,90,0.18);--border2:rgba(200,164,90,0.32);
+  --red:#e05454;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+a{text-decoration:none;color:inherit}
+
+nav{padding:20px 40px;border-bottom:1px solid var(--border);display:flex;align-items:center}
+.brand{display:inline-flex;align-items:center;gap:10px}
+.brand-mark{width:36px;height:36px;border-radius:8px;border:1px solid var(--border2);background:#060606;color:var(--gold);display:grid;place-items:center;font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700}
+.brand-text strong{display:block;font-family:'Playfair Display',serif;color:var(--text);letter-spacing:1.5px;font-size:.95rem;line-height:1.1}
+.brand-text span{display:block;color:var(--muted);font-size:.7rem;margin-top:1px;letter-spacing:.08em}
+
+.main{flex:1;display:flex;align-items:center;justify-content:center;padding:48px 24px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:40px 36px;width:100%;max-width:420px}
+
+.card-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;line-height:.95;margin-bottom:8px;text-align:center}
+.card-title em{display:block;font-style:italic;color:var(--gold)}
+.card-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:28px;font-weight:300}
+
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12px;font-weight:500;color:var(--muted);letter-spacing:.04em;margin-bottom:6px;text-transform:uppercase}
+.field input{
+  width:100%;background:#0c0c0c;color:var(--text);
+  border:1px solid var(--border);border-radius:8px;
+  padding:12px 14px;font-size:.92rem;font-family:'Outfit',sans-serif;outline:none;
+  transition:border-color .2s;
+}
+.field input:focus{border-color:var(--gold)}
+.field input::placeholder{color:var(--muted2)}
+
+.btn-submit{
+  width:100%;padding:13px;background:var(--gold);color:#111;
+  border:none;border-radius:8px;font-size:.92rem;font-weight:700;
+  cursor:pointer;transition:all .2s;font-family:'Outfit',sans-serif;
+  letter-spacing:.02em;margin-top:8px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-submit:hover{background:var(--gold2);transform:translateY(-1px)}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed;transform:none}
+
+.msg-error{background:rgba(224,84,84,.1);border:1px solid rgba(224,84,84,.3);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--red);margin-top:12px;display:none}
+.msg-success{background:rgba(15,169,104,.1);border:1px solid rgba(15,169,104,.3);border-radius:8px;padding:10px 14px;font-size:12px;color:#0fa968;margin-top:12px;display:none}
+
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0}
+.divider-line{flex:1;height:1px;background:var(--border)}
+.divider span{font-size:11px;color:var(--muted2)}
+
+.link-alt{text-align:center;font-size:13px;color:var(--muted)}
+.link-alt a{color:var(--gold);font-weight:500;transition:opacity .15s}
+.link-alt a:hover{opacity:.8}
+
+.spinner{width:16px;height:16px;border:2px solid rgba(17,17,17,.3);border-top-color:#111;border-radius:50%;animation:spin .7s linear infinite;display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+footer{padding:20px 40px;border-top:1px solid var(--border);text-align:center;font-size:11px;color:var(--muted2)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="brand">
+    <div class="brand-mark">V</div>
+    <div class="brand-text"><strong>VERO</strong><span>Educação</span></div>
+  </a>
+</nav>
+
+<main class="main">
+  <div class="card">
+    <h1 class="card-title">Comece sua jornada<em>é de graça.</em></h1>
+    <p class="card-sub">Crie sua conta e comece a estudar com inteligência hoje mesmo.</p>
+
+    <form id="form-cadastro">
+      <div class="field">
+        <label>Nome completo</label>
+        <input type="text" id="nome" placeholder="Seu nome" required>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="email" placeholder="seu@email.com" required>
+      </div>
+      <div class="field">
+        <label>Senha</label>
+        <input type="password" id="senha" placeholder="Mínimo 6 caracteres" required minlength="6">
+      </div>
+      <div class="field">
+        <label>Confirmar senha</label>
+        <input type="password" id="senha2" placeholder="Repita a senha" required>
+      </div>
+
+      <button type="submit" class="btn-submit" id="btn-submit">
+        <span id="btn-text">Criar minha conta</span>
+        <div class="spinner" id="spinner"></div>
+      </button>
+
+      <div class="msg-error" id="msg-error"></div>
+      <div class="msg-success" id="msg-success"></div>
+    </form>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span>ou</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="link-alt">Já tem conta? <a href="login.html">Entrar →</a></div>
+  </div>
+</main>
+
+<footer>© 2025 Vero Educação · Estudo de verdade. Aprovação de verdade.</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const { createClient } = supabase;
+const sb = createClient(
+  'https://lklmzhunhiwqsbhnymaw.supabase.co',
+  'sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU'
+);
+
+document.getElementById('form-cadastro').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const nome   = document.getElementById('nome').value.trim();
+  const email  = document.getElementById('email').value.trim();
+  const senha  = document.getElementById('senha').value;
+  const senha2 = document.getElementById('senha2').value;
+  const btn    = document.getElementById('btn-submit');
+  const txt    = document.getElementById('btn-text');
+  const spin   = document.getElementById('spinner');
+  const errEl  = document.getElementById('msg-error');
+  const okEl   = document.getElementById('msg-success');
+
+  errEl.style.display = 'none';
+  okEl.style.display  = 'none';
+
+  if (senha !== senha2) {
+    errEl.textContent = 'As senhas não coincidem.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  txt.textContent = 'Criando conta...';
+  spin.style.display = 'block';
+
+  const { data, error } = await sb.auth.signUp({
+    email,
+    password: senha,
+    options: { data: { full_name: nome } }
+  });
+
+  btn.disabled = false;
+  txt.textContent = 'Criar minha conta';
+  spin.style.display = 'none';
+
+  if (error) {
+    errEl.textContent = traduzirErro(error.message);
+    errEl.style.display = 'block';
+    return;
+  }
+
+  okEl.textContent = 'Conta criada! Verifique seu email para confirmar o cadastro.';
+  okEl.style.display = 'block';
+  setTimeout(() => window.location.href = 'painel.html', 2000);
+});
+
+function traduzirErro(msg) {
+  if (msg.includes('already registered')) return 'Este email já está cadastrado. Tente fazer login.';
+  if (msg.includes('Password should be')) return 'A senha deve ter pelo menos 6 caracteres.';
+  if (msg.includes('Invalid email')) return 'Email inválido. Verifique e tente novamente.';
+  return 'Erro ao criar conta. Tente novamente.';
+}
+</script>
+</body>
+</html>
