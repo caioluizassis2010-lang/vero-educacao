@@ -83,7 +83,7 @@ footer{padding:20px 40px;border-top:1px solid var(--border);text-align:center;fo
       </div>
       <div class="field">
         <label>Senha</label>
-        <input type="password" id="senha" placeholder="Sua senha" required>
+        <div style="position:relative"><input type="password" id="senha" placeholder="Sua senha" required style="padding-right:44px"><button type="button" onclick="toggleSenha('senha',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#a09890;font-size:13px;padding:0">ver</button></div>
       </div>
       <div class="forgot"><a href="#">Esqueci minha senha</a></div>
 
@@ -144,6 +144,13 @@ document.getElementById('form-login').addEventListener('submit', async (e) => {
 
   window.location.href = 'painel.html';
 });
+
+function toggleSenha(id, btn) {
+  const input = document.getElementById(id);
+  const show = input.type === "password";
+  input.type = show ? "text" : "password";
+  btn.textContent = show ? "ocultar" : "ver";
+}
 
 function traduzirErro(msg) {
   if (msg.includes('Invalid login')) return 'Email ou senha incorretos. Tente novamente.';

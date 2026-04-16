@@ -55,7 +55,7 @@ nav{padding:20px 40px;border-bottom:1px solid var(--border);display:flex;align-i
 .btn-submit:disabled{opacity:.6;cursor:not-allowed;transform:none}
 
 .msg-error{background:rgba(224,84,84,.1);border:1px solid rgba(224,84,84,.3);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--red);margin-top:12px;display:none}
-.msg-success{background:rgba(15,169,104,.1);border:1px solid rgba(15,169,104,.3);border-radius:8px;padding:10px 14px;font-size:12px;color:#0fa968;margin-top:12px;display:none}
+.msg-success{background:rgba(15,169,104,.1);border:1px solid rgba(15,169,104,.3);border-radius:8px;padding:16px;font-size:13px;color:#0fa968;margin-top:12px;display:none;line-height:1.7}
 
 .divider{display:flex;align-items:center;gap:12px;margin:20px 0}
 .divider-line{flex:1;height:1px;background:var(--border)}
@@ -96,11 +96,11 @@ footer{padding:20px 40px;border-top:1px solid var(--border);text-align:center;fo
       </div>
       <div class="field">
         <label>Senha</label>
-        <input type="password" id="senha" placeholder="Mínimo 6 caracteres" required minlength="6">
+        <div style="position:relative"><input type="password" id="senha" placeholder="Mínimo 6 caracteres" required minlength="6" style="padding-right:44px"><button type="button" onclick="toggleSenha('senha',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#a09890;font-size:13px;padding:0">ver</button></div>
       </div>
       <div class="field">
         <label>Confirmar senha</label>
-        <input type="password" id="senha2" placeholder="Repita a senha" required>
+        <div style="position:relative"><input type="password" id="senha2" placeholder="Repita a senha" required style="padding-right:44px"><button type="button" onclick="toggleSenha('senha2',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#a09890;font-size:13px;padding:0">ver</button></div>
       </div>
 
       <button type="submit" class="btn-submit" id="btn-submit">
@@ -174,10 +174,26 @@ document.getElementById('form-cadastro').addEventListener('submit', async (e) =>
     return;
   }
 
-  okEl.textContent = 'Conta criada! Verifique seu email para confirmar o cadastro.';
+  okEl.innerHTML = '✅ Conta criada com sucesso!<br><br>Enviamos um email de confirmação para <strong>' + email + '</strong>.<br>Abra seu email, procure a mensagem do Vero Educação e clique no link para ativar sua conta.<br><br>⚠️ Verifique também a pasta de <strong>spam</strong> caso não encontre na caixa de entrada.';
+  
+  // Show login button after confirmation message
+  setTimeout(() => {
+    const loginBtn = document.createElement('a');
+    loginBtn.href = 'login.html';
+    loginBtn.innerHTML = 'Já confirmei meu email → Entrar';
+    loginBtn.style.cssText = 'display:block;text-align:center;margin-top:14px;padding:12px;background:#c8a45a;color:#111;border-radius:8px;font-size:.9rem;font-weight:700;text-decoration:none';
+    okEl.appendChild(loginBtn);
+  }, 500);
   okEl.style.display = 'block';
-  setTimeout(() => window.location.href = 'painel.html', 2000);
+  
 });
+
+function toggleSenha(id, btn) {
+  const input = document.getElementById(id);
+  const show = input.type === "password";
+  input.type = show ? "text" : "password";
+  btn.textContent = show ? "ocultar" : "ver";
+}
 
 function traduzirErro(msg) {
   if (msg.includes('already registered')) return 'Este email já está cadastrado. Tente fazer login.';
