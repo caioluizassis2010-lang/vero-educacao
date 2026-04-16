@@ -158,6 +158,49 @@
       flex-wrap: wrap;
     }
 
+    .waitlist {
+      padding: 12px 0 10px;
+      text-align: center;
+    }
+
+    .waitlist-inner {
+      background: linear-gradient(160deg, #121212 0%, #0d0d0d 100%);
+      border: 1px solid rgba(200, 164, 90, 0.3);
+      border-radius: 14px;
+      padding: 26px 20px;
+    }
+
+    .waitlist h2 {
+      font-family: "Playfair Display", serif;
+      color: var(--gold);
+      font-size: clamp(1.25rem, 0.9vw + 1rem, 1.9rem);
+      margin-bottom: 14px;
+    }
+
+    .waitlist-form {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .waitlist-form input[type="email"] {
+      width: min(420px, 100%);
+      background: #0c0c0c;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 0.95rem;
+      font-family: "Outfit", sans-serif;
+      outline: none;
+    }
+
+    .waitlist-form input[type="email"]:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(200, 164, 90, 0.15);
+    }
+
     .ticker {
       border-top: 1px solid rgba(200, 164, 90, 0.65);
       border-bottom: 1px solid rgba(200, 164, 90, 0.65);
@@ -365,6 +408,16 @@
       <div class="hero-actions">
         <a href="#" class="btn btn-gold">Começar grátis</a>
         <a href="#" class="btn btn-ghost">Como funciona</a>
+      </div>
+    </section>
+
+    <section class="waitlist" aria-label="Lista de espera">
+      <div class="waitlist-inner">
+        <h2>Entre na lista de espera — acesso antecipado gratuito</h2>
+        <form class="waitlist-form" action="https://formspree.io/f/xzdyevjl" method="POST">
+          <input type="email" name="email" placeholder="Seu melhor email" required>
+          <button type="submit" class="btn btn-gold">Garantir meu acesso</button>
+        </form>
       </div>
     </section>
   </div>
