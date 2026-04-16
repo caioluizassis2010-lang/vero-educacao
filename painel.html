@@ -141,7 +141,7 @@ nav{padding:16px 32px;border-bottom:1px solid var(--border);display:flex;align-i
     <div class="sidebar-plan">
       <div class="sp-label">Plano atual</div>
       <div class="sp-plan">Grátis</div>
-      <a href="concursos.html#planos" target="_blank" class="sp-btn">Fazer upgrade →</a>
+      <a href="#planos-modal" onclick="abrirPlanos()" class="sp-btn">Fazer upgrade →</a>
     </div>
   </aside>
 
@@ -215,14 +215,24 @@ nav{padding:16px 32px;border-bottom:1px solid var(--border);display:flex;align-i
           <div class="plan-item"><div class="pi-check">✓</div>Gabarito comentado por IA</div>
           <div class="plan-item"><div class="pi-check">✓</div>1 simulado por mês</div>
         </div>
-        <a href="concursos.html#planos" target="_blank" class="upgrade-btn">Fazer upgrade para Pro →</a>
+        <a href="#" onclick="abrirPlanos();return false;" class="upgrade-btn">Fazer upgrade para Pro →</a>
       </div>
 
     </div>
   </main>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+function abrirPlanos() {
+  document.getElementById('planos-modal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+function fecharPlanos() {
+  document.getElementById('planos-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+</script>
 <script>
 const { createClient } = supabase;
 const sb = createClient(
@@ -341,6 +351,75 @@ async function sair() {
 }
 
 init();
+
+function abrirPlanos() {
+  document.getElementById('planos-modal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+function fecharPlanos() {
+  document.getElementById('planos-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
 </script>
+
+<!-- MODAL PLANOS -->
+<div id="planos-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;overflow-y:auto;padding:40px 20px">
+  <div style="max-width:860px;margin:0 auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px">
+      <div style="font-family:Playfair Display,serif;font-size:1.8rem;font-weight:700;color:#f6f3ec">Invista na sua <em style="color:#c8a45a">aprovação</em></div>
+      <button onclick="fecharPlanos()" style="background:none;border:1px solid rgba(246,243,236,0.18);color:#a09890;padding:8px 16px;border-radius:6px;cursor:pointer;font-family:Outfit,sans-serif;font-size:13px">✕ Fechar</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(200,164,90,0.18);border:1px solid rgba(200,164,90,0.18);border-radius:14px;overflow:hidden">
+      <!-- Grátis -->
+      <div style="background:#0f0f0f;padding:32px 24px">
+        <div style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(246,243,236,0.35);margin-bottom:14px">Grátis</div>
+        <div style="font-family:Playfair Display,serif;font-size:2.8rem;font-weight:700;color:#f6f3ec;line-height:1"><sup style="font-size:1rem;font-family:Outfit,sans-serif;font-weight:300">R$</sup>0</div>
+        <div style="font-size:.82rem;color:rgba(246,243,236,0.35);margin:8px 0 20px;padding-bottom:20px;border-bottom:1px solid rgba(200,164,90,0.18)">Plano atual</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px">
+          <li style="font-size:.85rem;color:#a09890">✓ 20 questões por dia</li>
+          <li style="font-size:.85rem;color:#a09890">✓ Diagnóstico básico</li>
+          <li style="font-size:.85rem;color:#a09890">✓ 1 simulado por mês</li>
+        </ul>
+        <button style="width:100%;padding:12px;border-radius:7px;background:none;border:1px solid rgba(246,243,236,0.18);color:#f6f3ec;font-family:Outfit,sans-serif;font-size:.88rem;font-weight:600;cursor:default">Plano atual</button>
+      </div>
+      <!-- Basic -->
+      <div style="background:#0f0f0f;padding:32px 24px">
+        <div style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(246,243,236,0.35);margin-bottom:14px">Basic</div>
+        <div style="font-family:Playfair Display,serif;font-size:2.8rem;font-weight:700;color:#f6f3ec;line-height:1"><sup style="font-size:1rem;font-family:Outfit,sans-serif;font-weight:300">R$</sup>29<sub style="font-size:.8rem;color:rgba(246,243,236,0.35);font-family:Outfit,sans-serif;font-weight:300">,99/mês</sub></div>
+        <div style="font-size:.82rem;color:rgba(246,243,236,0.35);margin:8px 0 20px;padding-bottom:20px;border-bottom:1px solid rgba(200,164,90,0.18)">Para quem quer estudar com método</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px">
+          <li style="font-size:.85rem;color:#a09890">✓ 100 questões por dia</li>
+          <li style="font-size:.85rem;color:#a09890">✓ Diagnóstico avançado</li>
+          <li style="font-size:.85rem;color:#a09890">✓ Plano personalizado</li>
+          <li style="font-size:.85rem;color:#a09890">✓ 4 simulados por mês</li>
+          <li style="font-size:.85rem;color:#a09890">✓ Revisão espaçada (SRS)</li>
+        </ul>
+        <button style="width:100%;padding:12px;border-radius:7px;background:none;border:1px solid rgba(200,164,90,0.32);color:#f6f3ec;font-family:Outfit,sans-serif;font-size:.88rem;font-weight:600;cursor:pointer" onclick="alert('Em breve! Integração com pagamento chegando.')">Assinar Basic</button>
+      </div>
+      <!-- Pro -->
+      <div style="background:#141414;padding:32px 24px;border-top:2px solid #c8a45a">
+        <div style="display:inline-block;background:#c8a45a;color:#111;font-size:.7rem;font-weight:700;padding:3px 12px;border-radius:100px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px">Mais popular</div>
+        <div style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(246,243,236,0.35);margin-bottom:14px">Pro</div>
+        <div style="font-family:Playfair Display,serif;font-size:2.8rem;font-weight:700;color:#f6f3ec;line-height:1"><sup style="font-size:1rem;font-family:Outfit,sans-serif;font-weight:300">R$</sup>45<sub style="font-size:.8rem;color:rgba(246,243,236,0.35);font-family:Outfit,sans-serif;font-weight:300">,90/mês</sub></div>
+        <div style="font-size:.82rem;color:rgba(246,243,236,0.35);margin:8px 0 20px;padding-bottom:20px;border-bottom:1px solid rgba(200,164,90,0.18)">Para quem quer passar logo e no topo</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px">
+          <li style="font-size:.85rem;color:#a09890">✓ Questões ilimitadas por IA</li>
+          <li style="font-size:.85rem;color:#a09890">✓ Diagnóstico em tempo real</li>
+          <li style="font-size:.85rem;color:#a09890">✓ Plano adaptativo completo</li>
+          <li style="font-size:.85rem;color:#a09890">✓ Simulados ilimitados</li>
+          <li style="font-size:.85rem;color:#a09890">✓ Todas as bancas</li>
+          <li style="font-size:.85rem;color:#a09890">✓ Suporte prioritário</li>
+        </ul>
+        <button style="width:100%;padding:12px;border-radius:7px;background:#c8a45a;color:#111;border:none;font-family:Outfit,sans-serif;font-size:.88rem;font-weight:700;cursor:pointer" onclick="alert('Em breve! Integração com pagamento chegando.')">Começar 7 dias grátis</button>
+        <div style="font-size:.7rem;color:rgba(246,243,236,0.35);text-align:center;margin-top:10px">Cancele quando quiser · Sem fidelidade</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px">
+      <button onclick="fecharPlanos()" style="background:none;border:none;color:#a09890;font-size:13px;cursor:pointer;font-family:Outfit,sans-serif">← Voltar para o painel</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
