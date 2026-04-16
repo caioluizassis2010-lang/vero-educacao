@@ -3,267 +3,431 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vero Educação - Seleção de Jornada</title>
+  <title>Vero Educação — Concurso não é sorte. É estratégia.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #080808;
-      --card: #111111;
-      --gold: #d4af37;
-      --gold-soft: #c9a227;
-      --text: #f5f5f5;
-      --muted: #c9c9c9;
-      --border: rgba(212, 175, 55, 0.28);
+      --bg:     #090909;
+      --bg2:    #0f0f0f;
+      --bg3:    #141414;
+      --gold:   #c8a45a;
+      --gold2:  #d6b772;
+      --text:   #f6f3ec;
+      --muted:  #a09890;
+      --muted2: rgba(246,243,236,0.35);
+      --border: rgba(200,164,90,0.18);
+      --border2:rgba(200,164,90,0.32);
     }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    a{text-decoration:none;color:inherit}
+    .container{width:min(1100px,100%);margin:0 auto;padding:0 28px}
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    /* FREE BAR */
+
+
+    /* NAV */
+    nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--border)}
+    .brand{display:inline-flex;align-items:center;gap:12px}
+    .brand-mark{width:40px;height:40px;border-radius:9px;border:1px solid var(--border2);background:#060606;color:var(--gold);display:grid;place-items:center;font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700}
+    .brand-text strong{display:block;font-family:'Playfair Display',serif;color:var(--text);letter-spacing:1.6px;font-size:1rem;line-height:1.1}
+    .brand-text span{display:block;color:var(--muted);font-size:.75rem;margin-top:2px;letter-spacing:.08em}
+    .nav-right{display:flex;align-items:center;gap:10px}
+    .nav-back{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:5px;transition:color .15s}
+    .nav-back:hover{color:var(--gold)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;border-radius:8px;padding:11px 20px;font-size:.9rem;font-weight:600;transition:all .2s;border:1px solid transparent;font-family:'Outfit',sans-serif;cursor:pointer}
+    .btn-gold{background:var(--gold);color:#111;border-color:var(--gold)}
+    .btn-gold:hover{background:var(--gold2);transform:translateY(-1px)}
+    .btn-ghost{background:transparent;color:var(--text);border-color:var(--border2)}
+    .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+
+    /* HERO */
+    .hero{padding:60px 0 48px;text-align:center;position:relative;overflow:hidden}
+    .hero-glow{position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:800px;height:600px;pointer-events:none;background:radial-gradient(ellipse at 50% 0%,rgba(200,164,90,.07) 0%,transparent 65%)}
+    .hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:28px;opacity:.8}
+    .ey-line{width:24px;height:1px;background:var(--gold);opacity:.4}
+    .hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,4vw + 1rem,5rem);font-weight:700;line-height:.95;margin-bottom:22px;position:relative}
+    .hero h1 em{display:block;color:var(--gold);font-style:italic;margin-top:6px}
+    .hero-div{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:18px}
+    .hd-line{width:44px;height:1px;background:var(--gold);opacity:.2}
+    .hd-dot{width:4px;height:4px;background:var(--gold);transform:rotate(45deg);opacity:.4}
+    .hero p{max-width:520px;margin:0 auto 32px;color:var(--muted);font-size:1.05rem;line-height:1.75;font-weight:300}
+    .hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+    .social-proof{display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;color:var(--muted2);margin-bottom:40px;flex-wrap:wrap}
+    .sp-sep{width:3px;height:3px;border-radius:50%;background:var(--muted2)}
+    .sp-stars{color:var(--gold);letter-spacing:2px;font-size:11px}
+    .stats-bar{display:inline-flex;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+    .stat{padding:16px 28px;text-align:center;border-right:1px solid var(--border)}
+    .stat:last-child{border-right:none}
+    .stat-n{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--gold);display:block;line-height:1}
+    .stat-l{font-size:11px;color:var(--muted2);letter-spacing:.04em;margin-top:4px}
+
+    /* WAITLIST */
+    .waitlist{padding:40px 0 10px;text-align:center}
+    .waitlist-inner{background:linear-gradient(160deg,#111 0%,#0d0d0d 100%);border:1px solid var(--border2);border-radius:14px;padding:28px 24px}
+    .waitlist h2{font-family:'Playfair Display',serif;color:var(--gold);font-size:clamp(1.1rem,.9vw + .9rem,1.6rem);margin-bottom:16px}
+    .waitlist-form{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    .waitlist-form input[type="email"]{width:min(400px,100%);background:#0c0c0c;color:var(--text);border:1px solid var(--border2);border-radius:8px;padding:12px 14px;font-size:.92rem;font-family:'Outfit',sans-serif;outline:none}
+    .waitlist-form input[type="email"]:focus{border-color:var(--gold)}
+
+    /* TICKER */
+    .ticker{border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);overflow:hidden;white-space:nowrap;padding:14px 0;margin:48px 0;background:var(--bg2)}
+    .ticker-track{display:inline-flex;gap:0;animation:slide 24s linear infinite}
+    .ticker span{color:var(--gold);font-family:'Playfair Display',serif;font-size:.9rem;letter-spacing:1.5px;text-transform:uppercase;padding:0 28px;border-right:1px solid var(--border)}
+    .ticker span:last-child{border-right:none}
+    @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+    /* SECTIONS */
+    .section-eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;opacity:.8}
+    .s-line{width:20px;height:1px;background:var(--gold);opacity:.4}
+    .section-title{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,1.2vw + 1.2rem,2.6rem);font-weight:700;margin-bottom:12px}
+    .section-title em{font-style:italic;color:var(--gold)}
+    .section-sub{font-size:.95rem;color:var(--muted);line-height:1.75;font-weight:300;max-width:480px}
+
+    /* FEATURES */
+    .features-wrap{margin-bottom:56px}
+    .features{display:grid;gap:1px;grid-template-columns:repeat(3,1fr);background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-top:36px}
+    .feat{background:var(--bg2);padding:32px 26px;transition:background .2s}
+    .feat:hover{background:var(--bg3)}
+    .feat-num{font-family:'Playfair Display',serif;font-size:38px;font-weight:700;color:var(--gold);opacity:.15;line-height:1;margin-bottom:16px;transition:opacity .2s}
+    .feat:hover .feat-num{opacity:.5}
+    .feat h3{font-size:.95rem;font-weight:600;color:var(--text);margin-bottom:8px}
+    .feat p{color:var(--muted);line-height:1.70;font-size:.88rem;font-weight:300}
+    .feat-tag{display:inline-block;font-size:.7rem;font-weight:600;padding:2px 9px;border-radius:100px;margin-top:14px;background:rgba(200,164,90,.08);color:var(--gold);border:1px solid var(--border);letter-spacing:.04em}
+
+    /* CONNECTIVITY */
+    .connect{margin-bottom:56px;padding:32px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg2);border-radius:14px}
+    .connect-label{text-align:center;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2);margin-bottom:24px}
+    .connect-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+    .ci{display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 16px;border-right:1px solid var(--border);transition:background .18s}
+    .ci:last-child{border-right:none}
+    .ci:hover{background:var(--bg3)}
+    .ci-icon{font-size:20px;margin-bottom:4px}
+    .ci-title{font-size:13px;font-weight:500;color:var(--text)}
+    .ci-desc{font-size:11px;color:var(--muted2);text-align:center;line-height:1.5}
+
+    /* STEPS */
+    .steps-wrap{margin-bottom:56px}
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:36px;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+    .step{padding:28px 22px;border-right:1px solid var(--border);transition:background .2s}
+    .step:last-child{border-right:none}
+    .step:hover{background:var(--bg2)}
+    .step-n{font-family:'Playfair Display',serif;font-size:44px;font-weight:700;color:var(--gold);opacity:.12;line-height:1;margin-bottom:14px;transition:opacity .2s}
+    .step:hover .step-n{opacity:.4}
+    .step h3{font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:7px}
+    .step p{font-size:.82rem;color:var(--muted);line-height:1.65;font-weight:300}
+
+    /* PROOF */
+    .proof-wrap{margin-bottom:56px}
+    .tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-top:36px}
+    .tc{background:var(--bg2);padding:28px;transition:background .2s}
+    .tc:hover{background:var(--bg3)}
+    .tc-stars{color:var(--gold);font-size:11px;letter-spacing:3px;margin-bottom:14px;opacity:.8}
+    .tc-rule{width:16px;height:1px;background:var(--gold);opacity:.3;margin-bottom:12px}
+    .tc-quote{font-family:'Playfair Display',serif;font-size:.88rem;font-style:italic;color:var(--muted);line-height:1.80;margin-bottom:20px}
+    .tc-author{display:flex;align-items:center;gap:10px}
+    .tc-av{width:34px;height:34px;border-radius:50%;background:rgba(200,164,90,.08);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:var(--gold);flex-shrink:0}
+    .tc-name{font-size:.82rem;font-weight:600;color:var(--text)}
+    .tc-role{font-size:.72rem;color:var(--muted2);margin-top:2px}
+
+    /* PLANS */
+    .plans-wrap{margin-bottom:56px}
+    .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-top:36px}
+    .plan{background:var(--bg2);padding:36px 28px;position:relative;transition:background .2s}
+    .plan:hover{background:var(--bg3)}
+    .plan.feat{background:var(--bg3);border-top:2px solid var(--gold)}
+    .p-badge{display:inline-block;background:var(--gold);color:#111;font-size:.7rem;font-weight:700;padding:3px 12px;border-radius:100px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px}
+    .p-name{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:var(--muted2);margin-bottom:14px}
+    .p-price{font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;color:var(--text);line-height:1}
+    .p-price sup{font-size:1.1rem;vertical-align:top;margin-top:10px;margin-right:1px;font-family:'Outfit',sans-serif;font-weight:300}
+    .p-price sub{font-size:.8rem;color:var(--muted2);font-family:'Outfit',sans-serif;font-weight:300}
+    .p-desc{font-size:.82rem;color:var(--muted2);margin:8px 0 20px;padding-bottom:20px;border-bottom:1px solid var(--border);font-weight:300}
+    .p-feats{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px}
+    .p-feats li{display:flex;align-items:flex-start;gap:8px;font-size:.85rem;color:var(--muted);font-weight:300}
+    .chk{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:8px;font-weight:700}
+    .cg{background:rgba(200,164,90,.1);color:var(--gold);border:1px solid var(--border2)}
+    .cd{background:rgba(246,243,236,.05);color:var(--muted2)}
+    .p-cta{width:100%;padding:12px;border-radius:7px;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;border:none;letter-spacing:.01em}
+    .cta-bdr{background:none;border:1px solid var(--border2);color:var(--text)}
+    .cta-bdr:hover{border-color:var(--gold);color:var(--gold)}
+    .cta-gld{background:var(--gold);color:#111}
+    .cta-gld:hover{background:var(--gold2);transform:translateY(-1px)}
+    .p-note{font-size:.7rem;color:var(--muted2);text-align:center;margin-top:10px}
+
+    /* CTA */
+    .cta-sec{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:80px 24px;text-align:center;position:relative;overflow:hidden}
+    .cta-glow{position:absolute;top:-150px;left:50%;transform:translateX(-50%);width:600px;height:600px;pointer-events:none;background:radial-gradient(circle,rgba(200,164,90,.07) 0%,transparent 60%)}
+    .cta-sec h2{font-family:'Playfair Display',serif;font-size:clamp(2rem,3.5vw,4rem);font-weight:700;color:var(--text);line-height:.95;margin-bottom:10px;position:relative}
+    .cta-sec h2 em{font-style:italic;color:var(--gold)}
+    .cta-div{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:18px;position:relative}
+    .cdl{width:44px;height:1px;background:var(--gold);opacity:.2}
+    .cdd{width:4px;height:4px;background:var(--gold);transform:rotate(45deg);opacity:.4}
+    .cta-sec p{font-size:.95rem;color:var(--muted);font-weight:300;margin-bottom:36px;position:relative}
+    .cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative}
+
+    /* FAQ */
+    .faq-wrap{max-width:640px;margin:48px auto 0}
+    .fi{border-bottom:1px solid var(--border)}
+    .fq{display:flex;justify-content:space-between;align-items:center;padding:18px 0;cursor:pointer;gap:16px;font-size:.9rem;font-weight:400;color:var(--text);transition:color .15s}
+    .fq:hover{color:var(--gold)}
+    .fi-ico{font-size:18px;color:var(--muted2);transition:transform .2s,color .15s;flex-shrink:0;line-height:1}
+    .fi.open .fi-ico{transform:rotate(45deg);color:var(--gold)}
+    .fa{display:none;padding:0 0 16px;font-size:.85rem;color:var(--muted);line-height:1.80;font-weight:300}
+    .fi.open .fa{display:block}
+
+    /* FOOTER */
+    footer{background:var(--bg2);border-top:1px solid var(--border);padding:40px 28px 24px}
+    .fgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:32px}
+    .fb p{font-size:.82rem;color:var(--muted2);line-height:1.80;margin-top:12px;max-width:220px;font-weight:300}
+    .fcol h4{font-family:'Playfair Display',serif;font-size:.78rem;font-weight:700;color:var(--text);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
+    .fcol ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+    .fcol ul li a{font-size:.82rem;color:var(--muted2);transition:color .15s;font-weight:300}
+    .fcol ul li a:hover{color:var(--gold)}
+    .fbot{display:flex;justify-content:space-between;align-items:center;padding-top:18px;border-top:1px solid var(--border);font-size:.72rem;color:var(--muted2);flex-wrap:wrap;gap:8px}
+    .fg{color:var(--gold)}
+
+    /* REVEAL */
+    .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+    .reveal.visible{opacity:1;transform:none}
+
+    @media(max-width:900px){
+      .features,.pgrid,.tgrid,.fgrid{grid-template-columns:1fr}
+      .steps,.connect-grid{grid-template-columns:1fr 1fr}
+      .ci{border-bottom:1px solid var(--border)}
     }
-
-    body {
-      min-height: 100vh;
-      font-family: "Playfair Display", serif;
-      background: radial-gradient(circle at top, #101010 0%, var(--bg) 58%);
-      color: var(--text);
-      display: grid;
-      place-items: center;
-      padding: 32px 20px;
-    }
-
-    .container {
-      width: min(1080px, 100%);
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      min-height: 100vh;
-      gap: 20px;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      margin: 0 auto 6px;
-    }
-
-    .brand-mark {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      border: 1px solid var(--gold);
-      background: #050505;
-      color: var(--gold);
-      display: grid;
-      place-items: center;
-      font-size: 1.65rem;
-      font-weight: 700;
-      line-height: 1;
-    }
-
-    .brand-text {
-      text-align: left;
-      line-height: 1;
-    }
-
-    .brand-text strong {
-      display: block;
-      color: var(--gold);
-      letter-spacing: 2px;
-      font-size: 1.2rem;
-      font-weight: 700;
-    }
-
-    .brand-text span {
-      display: block;
-      color: var(--muted);
-      font-size: 0.82rem;
-      margin-top: 4px;
-    }
-
-    .title {
-      color: var(--text);
-      font-weight: 500;
-      font-size: clamp(1.7rem, 1.5vw + 1.2rem, 2.7rem);
-      letter-spacing: 0.5px;
-      margin-bottom: 2px;
-      line-height: 1.15;
-    }
-
-    .title-emphasis {
-      display: block;
-      color: var(--gold);
-      font-style: italic;
-      font-weight: 700;
-      font-size: clamp(2.6rem, 2.2vw + 1.7rem, 4rem);
-      margin-top: 4px;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(200px, 1fr));
-      gap: 20px;
-      align-items: stretch;
-    }
-
-    .card {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: flex-start;
-      text-align: left;
-      text-decoration: none;
-      color: inherit;
-      background: linear-gradient(145deg, #161616 0%, var(--card) 100%);
-      border: 1px solid rgba(212, 175, 55, 0.18);
-      border-radius: 14px;
-      min-height: 340px;
-      padding: 30px 24px;
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-      cursor: pointer;
-    }
-
-    .card:hover,
-    .card:focus-visible {
-      transform: translateY(-4px);
-      border-color: rgba(212, 175, 55, 0.8);
-      box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15);
-      outline: none;
-    }
-
-    .icon {
-      font-size: 2.15rem;
-      color: inherit;
-      margin-bottom: 14px;
-      line-height: 1;
-      align-self: center;
-    }
-
-    .card h2 {
-      font-size: 1.55rem;
-      color: var(--gold);
-      margin-bottom: 8px;
-      font-weight: 600;
-      align-self: center;
-    }
-
-    .card p {
-      color: #e0e0e0;
-      font-size: 0.98rem;
-      line-height: 1.45;
-      max-width: 30ch;
-      margin-bottom: 14px;
-      text-align: center;
-      align-self: center;
-    }
-
-    .highlights {
-      list-style-position: outside;
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.55;
-      display: grid;
-      gap: 4px;
-      width: 100%;
-      max-width: 100%;
-      padding-left: 18px;
-      margin-bottom: 18px;
-    }
-
-    .card-cta {
-      margin-top: auto;
-      width: 100%;
-      border: 1px solid var(--gold);
-      background: var(--gold);
-      color: #101010;
-      border-radius: 9px;
-      padding: 11px 14px;
-      font-family: "Playfair Display", serif;
-      font-size: 1rem;
-      font-weight: 700;
-      text-align: center;
-    }
-
-    .footer {
-      border-top: 1px solid rgba(212, 175, 55, 0.55);
-      margin-top: 8px;
-      padding-top: 14px;
-      color: var(--gold);
-      font-size: 0.96rem;
-      letter-spacing: 0.3px;
-    }
-
-    @media (max-width: 860px) {
-      .cards {
-        grid-template-columns: 1fr;
-      }
-
-      .card {
-        min-height: 280px;
-      }
-
-      .brand {
-        margin-bottom: 2px;
-      }
+    @media(max-width:600px){
+      .steps,.connect-grid{grid-template-columns:1fr}
+      .stats-bar{flex-wrap:wrap}
     }
   </style>
 </head>
 <body>
-  <main class="container">
-    <header class="brand" aria-label="Logo Vero Educação">
-      <div class="brand-mark" aria-hidden="true">V</div>
-      <div class="brand-text">
-        <strong>VERO</strong>
-        <span>Educação</span>
+
+
+
+<div class="container">
+  <nav>
+    <a href="index.html" class="brand">
+      <div class="brand-mark">V</div>
+      <div class="brand-text"><strong>VERO</strong><span>Educação</span></div>
+    </a>
+    <div class="nav-right">
+      
+<a href="login.html" style="font-size:13px;color:var(--muted);padding:9px 18px;border:1px solid var(--border2);border-radius:6px;margin-right:8px;font-family:Outfit,sans-serif;font-weight:400;text-decoration:none;transition:all .18s">Entrar</a>
+      <a href="cadastro.html" class="btn btn-gold">Começar grátis</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-eyebrow"><span class="ey-line"></span>IA para concursos públicos<span class="ey-line"></span></div>
+    <h1>Concurso não é sorte.<em>É estratégia.</em></h1>
+    <div class="hero-div"><div class="hd-line"></div><div class="hd-dot"></div><div class="hd-line"></div></div>
+    <p>A IA que analisa seus erros, cria seu plano e gera questões no padrão da sua banca — tudo personalizado para você passar mais rápido.</p>
+    <div class="hero-actions">
+      <a href="cadastro.html" class="btn btn-gold">Começar grátis agora</a>
+      <a href="#como-funciona" class="btn btn-ghost">Como funciona</a>
+    </div>
+    <div class="social-proof">
+      <span class="sp-stars">★★★★★</span>
+      <span>4.9/5</span>
+      <div class="sp-sep"></div>
+      <span>1.200+ avaliações</span>
+      <div class="sp-sep"></div>
+      <span>Sem cartão de crédito</span>
+    </div>
+    <div class="stats-bar">
+      <div class="stat"><span class="stat-n">+50K</span><span class="stat-l">Questões no banco</span></div>
+      <div class="stat"><span class="stat-n">12</span><span class="stat-l">Bancas integradas</span></div>
+      <div class="stat"><span class="stat-n">3×</span><span class="stat-l">Mais eficiente</span></div>
+      <div class="stat"><span class="stat-n">98%</span><span class="stat-l">Satisfação</span></div>
+    </div>
+  </section>
+
+  <section class="waitlist" id="waitlist">
+    <div class="waitlist-inner">
+      <h2>Fique por dentro dos <em>editais e promoções</em></h2>
+      <p style="font-size:.88rem;color:var(--muted);margin-bottom:18px;font-weight:300">Receba novos editais todo dia + ofertas exclusivas da Vero Educação antes de todo mundo.</p><form class="waitlist-form" action="https://formspree.io/f/xzdyevjl" method="POST">
+        <input type="email" name="email" placeholder="Seu melhor email" required>
+        <button type="submit" class="btn btn-gold">Quero receber atualizações</button>
+      </form>
+    </div>
+  </section>
+</div>
+
+<div class="ticker">
+  <div class="ticker-track">
+    <span>CESPE</span><span>CEBRASPE</span><span>FCC</span><span>FGV</span>
+    <span>VUNESP</span><span>IBFC</span><span>IDECAN</span><span>AOCP</span>
+    <span>QUADRIX</span><span>IADES</span>
+    <span>CESPE</span><span>CEBRASPE</span><span>FCC</span><span>FGV</span>
+    <span>VUNESP</span><span>IBFC</span><span>IDECAN</span><span>AOCP</span>
+    <span>QUADRIX</span><span>IADES</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <section class="features-wrap reveal">
+    <div class="section-eyebrow"><span class="s-line"></span>Funcionalidades</div>
+    <h2 class="section-title">Tudo que você precisa<br>para <em>passar de verdade</em></h2>
+    <p class="section-sub">A IA trabalha enquanto você estuda — analisando, adaptando e otimizando cada minuto.</p>
+    <div class="features">
+      <div class="feat"><div class="feat-num">01</div><h3>Questões geradas por IA</h3><p>Questões inéditas no padrão exato de cada banca, com gabarito comentado detalhado.</p><span class="feat-tag">Banco ilimitado</span></div>
+      <div class="feat"><div class="feat-num">02</div><h3>Diagnóstico preciso de erros</h3><p>O Vero diz qual artigo você confunde, qual padrão te derruba e o que estudar primeiro.</p><span class="feat-tag">Análise cirúrgica</span></div>
+      <div class="feat"><div class="feat-num">03</div><h3>Plano de estudos adaptativo</h3><p>Cronograma que se ajusta conforme seu desempenho, tempo disponível e data da prova.</p><span class="feat-tag">100% automático</span></div>
+      <div class="feat"><div class="feat-num">04</div><h3>Revisão espaçada — SRS</h3><p>Algoritmo científico que agenda cada revisão no momento certo. Memorize mais, esqueça menos.</p><span class="feat-tag">Ciência da memória</span></div>
+      <div class="feat"><div class="feat-num">05</div><h3>Simulados completos</h3><p>No formato exato da sua banca — tempo cronometrado, ranking e análise pós-prova.</p><span class="feat-tag">Por banca e cargo</span></div>
+      <div class="feat"><div class="feat-num">06</div><h3>Previsão de aprovação</h3><p>A IA monitora seu ritmo em tempo real e alerta quando alguma disciplina corre risco.</p><span class="feat-tag">Tempo real</span></div>
+    </div>
+  </section>
+
+  <section class="connect reveal">
+    <div class="connect-label">Conectado ao seu estudo</div>
+    <div class="connect-grid">
+      <div class="ci"><div class="ci-icon">⚡</div><div class="ci-title">IA em tempo real</div><div class="ci-desc">Plano ajustado automaticamente a cada sessão</div></div>
+      <div class="ci"><div class="ci-icon">🔄</div><div class="ci-title">Sincronizado</div><div class="ci-desc">Histórico completo em qualquer dispositivo</div></div>
+      <div class="ci"><div class="ci-icon">📈</div><div class="ci-title">Evolução visível</div><div class="ci-desc">Gráficos por disciplina, banca e tema</div></div>
+      <div class="ci"><div class="ci-icon">🔔</div><div class="ci-title">Notificações inteligentes</div><div class="ci-desc">Lembretes no momento exato de maior retenção</div></div>
+    </div>
+  </section>
+
+  <section class="steps-wrap reveal" id="como-funciona">
+    <div class="section-eyebrow"><span class="s-line"></span>Como funciona</div>
+    <h2 class="section-title">Do cadastro à <em>aprovação</em></h2>
+    <p class="section-sub">Configure em 2 minutos. Comece a estudar com estratégia hoje.</p>
+    <div class="steps">
+      <div class="step"><div class="step-n">01</div><h3>Informe seu concurso</h3><p>Selecione o concurso, cargo e banca. O Vero monta seu perfil com base no edital.</p></div>
+      <div class="step"><div class="step-n">02</div><h3>Diagnóstico inicial</h3><p>Responda 20 questões. A IA mapeia seus pontos fortes e fracos com precisão.</p></div>
+      <div class="step"><div class="step-n">03</div><h3>Receba seu plano</h3><p>Cronograma com metas diárias, revisões espaçadas e foco nos temas que mais caem.</p></div>
+      <div class="step"><div class="step-n">04</div><h3>Evolua todo dia</h3><p>O plano se ajusta em tempo real. Cada sessão é mais eficiente que a anterior.</p></div>
+    </div>
+  </section>
+
+  <section class="proof-wrap reveal">
+    <div class="section-eyebrow" style="justify-content:center"><span class="s-line"></span>Aprovados<span class="s-line"></span></div>
+    <h2 class="section-title" style="text-align:center">Quem usou o <em>Vero</em> passou</h2>
+    <div class="tgrid">
+      <div class="tc"><div class="tc-stars">★★★★★</div><div class="tc-rule"></div><p class="tc-quote">"Estudei 2 anos sem resultado. Com o Vero, em 4 meses identifiquei exatamente onde errava. Passei na Polícia Civil."</p><div class="tc-author"><div class="tc-av">RM</div><div><div class="tc-name">Rafael M.</div><div class="tc-role">Aprovado — Polícia Civil SP</div></div></div></div>
+      <div class="tc"><div class="tc-stars">★★★★★</div><div class="tc-rule"></div><p class="tc-quote">"A IA mostrou que era Direito Administrativo meu gargalo real. Mudei o foco e passei no INSS em 5 meses."</p><div class="tc-author"><div class="tc-av">CL</div><div><div class="tc-name">Carolina L.</div><div class="tc-role">Aprovada — INSS Analista</div></div></div></div>
+      <div class="tc"><div class="tc-stars">★★★★★</div><div class="tc-rule"></div><p class="tc-quote">"Só tinha 1h por dia. O plano adaptativo otimizou cada minuto. Em 5 meses aprovado no Banco do Brasil."</p><div class="tc-author"><div class="tc-av">TP</div><div><div class="tc-name">Thiago P.</div><div class="tc-role">Aprovado — Banco do Brasil</div></div></div></div>
+    </div>
+  </section>
+
+  <section class="plans-wrap reveal" id="planos">
+    <div class="section-eyebrow" style="justify-content:center"><span class="s-line"></span>Planos<span class="s-line"></span></div>
+    <h2 class="section-title" style="text-align:center">Invista na sua <em>aprovação</em></h2>
+    <p class="section-sub" style="margin:0 auto;text-align:center">Menos que uma apostila. Muito mais resultado.</p>
+    <div class="pgrid">
+      <div class="plan reveal">
+        <div class="p-name">Grátis</div>
+        <div class="p-price"><sup>R$</sup>0</div>
+        <div class="p-desc">Para conhecer a plataforma</div>
+        <ul class="p-feats">
+          <li><div class="chk cd">✓</div>20 questões por dia</li>
+          <li><div class="chk cd">✓</div>Diagnóstico básico</li>
+          <li><div class="chk cd">✓</div>1 simulado por mês</li>
+          <li><div class="chk cd">✓</div>Plano simples de estudos</li>
+        </ul>
+        <button class="p-cta cta-bdr">Criar conta grátis</button>
+        <div class="p-note">Sem cartão · Sem prazo</div>
       </div>
-    </header>
-
-    <h1 class="title">Escolha sua <span class="title-emphasis">Jornada</span></h1>
-
-    <section class="cards" aria-label="Seleção de jornada">
-      <a class="card" href="enem.html" aria-label="Jornada ENEM">
-        <span class="icon" aria-hidden="true">📘</span>
-        <h2>ENEM</h2>
-        <p>Estratégia completa para alcançar alta performance no exame.</p>
-        <ul class="highlights" aria-label="Diferenciais ENEM">
-          <li>Correção de redação por IA</li>
-          <li>Simulados no padrão INEP</li>
-          <li>Plano por competência</li>
+      <div class="plan reveal">
+        <div class="p-name">Basic</div>
+        <div class="p-price"><sup>R$</sup>29<sub>,99/mês</sub></div>
+        <div class="p-desc">Para quem quer estudar com método</div>
+        <ul class="p-feats">
+          <li><div class="chk cd">✓</div>100 questões por dia</li>
+          <li><div class="chk cd">✓</div>Diagnóstico avançado</li>
+          <li><div class="chk cd">✓</div>Plano personalizado</li>
+          <li><div class="chk cd">✓</div>4 simulados por mês</li>
+          <li><div class="chk cd">✓</div>Revisão espaçada (SRS)</li>
+          <li><div class="chk cd">✓</div>Gabarito comentado por IA</li>
         </ul>
-        <span class="card-cta">Começar agora →</span>
-      </a>
-
-      <a class="card" href="medicina.html" aria-label="Jornada Medicina">
-        <span class="icon" aria-hidden="true">🩺</span>
-        <h2>Medicina</h2>
-        <p>Preparação de excelência para conquistar a vaga dos sonhos.</p>
-        <ul class="highlights" aria-label="Diferenciais Medicina">
-          <li>Fuvest, USP, Unicamp e Einstein</li>
-          <li>Biologia e Química avançados</li>
-          <li>Plano por nota de corte</li>
+        <button class="p-cta cta-bdr">Assinar Basic</button>
+        <div class="p-note">Cancele quando quiser · Sem fidelidade</div>
+      </div>
+      <div class="plan feat reveal">
+        <div class="p-badge">Mais popular</div>
+        <div class="p-name">Pro</div>
+        <div class="p-price"><sup>R$</sup>45<sub>,90/mês</sub></div>
+        <div class="p-desc">Para quem quer passar logo e no topo</div>
+        <ul class="p-feats">
+          <li><div class="chk cg">✓</div>Questões ilimitadas por IA</li>
+          <li><div class="chk cg">✓</div>Diagnóstico em tempo real</li>
+          <li><div class="chk cg">✓</div>Plano adaptativo completo</li>
+          <li><div class="chk cg">✓</div>Simulados ilimitados</li>
+          <li><div class="chk cg">✓</div>Revisão espaçada avançada</li>
+          <li><div class="chk cg">✓</div>Previsão de aprovação</li>
+          <li><div class="chk cg">✓</div>Todas as bancas</li>
+          <li><div class="chk cg">✓</div>Suporte prioritário</li>
         </ul>
-        <span class="card-cta">Começar agora →</span>
-      </a>
+        <button class="p-cta cta-gld">Começar 7 dias grátis</button>
+        <div class="p-note">Cancele quando quiser · Sem fidelidade</div>
+      </div>
+    </div>
+  </section>
 
-      <a class="card" href="concursos.html" aria-label="Jornada Concursos">
-        <span class="icon" aria-hidden="true">⚖️</span>
-        <h2>Concursos</h2>
-        <p>Plano de estudos inteligente para aprovação com consistência.</p>
-        <ul class="highlights" aria-label="Diferenciais Concursos">
-          <li>CESPE, FCC, FGV e mais</li>
-          <li>Diagnóstico cirúrgico de erros</li>
-          <li>Plano por edital</li>
-        </ul>
-        <span class="card-cta">Começar agora →</span>
-      </a>
-    </section>
+</div>
 
-    <footer class="footer">Estudo de verdade. Aprovação de verdade.</footer>
-  </main>
+<div class="cta-sec">
+  <div class="cta-glow"></div>
+  <h2>Pronto para sua <em>aprovação?</em></h2>
+  <div class="cta-div"><div class="cdl"></div><div class="cdd"></div><div class="cdl"></div></div>
+  <p>+50 mil questões. IA que aprende com você. Comece grátis hoje.</p>
+  <div class="cta-btns">
+    <a href="cadastro.html" class="btn btn-gold">Começar grátis — sem cartão</a>
+    <a href="#como-funciona" class="btn btn-ghost">Como funciona</a>
+  </div>
+</div>
+
+<div class="container">
+  <section style="padding:64px 0">
+    <div class="section-eyebrow" style="justify-content:center"><span class="s-line"></span>FAQ<span class="s-line"></span></div>
+    <h2 class="section-title" style="text-align:center">Dúvidas <em>frequentes</em></h2>
+    <div class="faq-wrap">
+      <div class="fi reveal"><div class="fq" onclick="this.parentElement.classList.toggle('open')">A IA cria questões no padrão da minha banca?<span class="fi-ico">+</span></div><div class="fa">Sim. O Vero foi treinado com milhares de questões reais — aprende o estilo, nível e armadilhas de CESPE, FCC, FGV e todas as demais.</div></div>
+      <div class="fi reveal"><div class="fq" onclick="this.parentElement.classList.toggle('open')">Qual a diferença entre Basic e Pro?<span class="fi-ico">+</span></div><div class="fa">O Basic (R$29,99/mês) dá 100 questões/dia, diagnóstico avançado e 4 simulados mensais. O Pro (R$45,90/mês) é ilimitado em tudo — questões, simulados, diagnóstico em tempo real e previsão de aprovação.</div></div>
+      <div class="fi reveal"><div class="fq" onclick="this.parentElement.classList.toggle('open')">Funciona para qualquer concurso público?<span class="fi-ico">+</span></div><div class="fa">Cobrimos os principais concursos federais, estaduais e municipais. Novos concursos são adicionados toda semana.</div></div>
+      <div class="fi reveal"><div class="fq" onclick="this.parentElement.classList.toggle('open')">Posso cancelar quando quiser?<span class="fi-ico">+</span></div><div class="fa">Sim, com um clique. Sem ligação, sem burocracia. Você mantém acesso até o fim do período pago.</div></div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="fgrid">
+      <div class="fb">
+        <a href="index.html" class="brand">
+          <div class="brand-mark">V</div>
+          <div class="brand-text"><strong>VERO</strong><span>Educação</span></div>
+        </a>
+        <p>A plataforma com IA para concurseiros que querem resultado de verdade — estudo real, aprovação real.</p>
+      </div>
+      <div class="fcol"><h4>Produto</h4><ul><li><a href="#">Funcionalidades</a></li><li><a href="#planos">Planos</a></li><li><a href="#">Simulados</a></li><li><a href="#">Banco de questões</a></li></ul></div>
+      <div class="fcol"><h4>Bancas</h4><ul><li><a href="#">CESPE / CEBRASPE</a></li><li><a href="#">FCC</a></li><li><a href="#">FGV</a></li><li><a href="#">VUNESP</a></li></ul></div>
+      <div class="fcol"><h4>Vero</h4><ul><li><a href="cadastro.html">Criar conta grátis</a></li><li><a href="login.html">Entrar</a></li><li><a href="#">Contato</a></li></ul></div>
+    </div>
+    <div class="fbot">
+      <span>© 2025 <span class="fg">Vero Educação</span>. Todos os direitos reservados.</span>
+      <span>Estudo de verdade. <span class="fg">Aprovação de verdade.</span></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach((e,i) => {
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('visible'),i*70);
+      obs.unobserve(e.target);
+    }
+  });
+},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
 </body>
 </html>
