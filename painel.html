@@ -116,8 +116,18 @@ nav{
   font-size:14px;font-weight:500;color:var(--muted);
   cursor:pointer;transition:all .18s;
   border:1px solid transparent;margin-bottom:2px;
-  letter-spacing:.01em;
+  letter-spacing:.01em;position:relative;
 }
+.sb-item .sb-tooltip{
+  display:none;position:absolute;left:54px;top:50%;
+  transform:translateY(-50%);
+  background:#0d1540;color:var(--text);
+  font-size:11px;font-weight:500;padding:6px 12px;
+  border-radius:7px;border:1px solid var(--border2);
+  white-space:nowrap;z-index:200;pointer-events:none;
+  box-shadow:0 4px 20px rgba(0,0,0,0.4);
+}
+.sidebar.collapsed .sb-item:hover .sb-tooltip{display:block}
 .sb-item:hover{background:rgba(180,200,255,0.05);color:var(--text)}
 .sb-item.active{
   background:rgba(232,201,122,0.08);
@@ -352,6 +362,19 @@ nav{
 }
 .upgrade-btn:hover{background:var(--gold2)}
 
+/* NOTAS */
+.nota-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:border-color .15s}
+.nota-card:hover{border-color:var(--border2)}
+.nota-header{display:flex;align-items:center;gap:6px;padding:7px 10px;border-bottom:1px solid var(--border)}
+.nota-titulo{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:'Outfit',sans-serif;font-size:11px;font-weight:500;color-scheme:dark}
+.nota-titulo::placeholder{color:var(--muted2)}
+.nota-del{background:none;border:none;color:var(--muted2);cursor:pointer;font-size:12px;padding:2px 4px;border-radius:4px;line-height:1;transition:color .15s}
+.nota-del:hover{color:var(--red)}
+.nota-corpo{width:100%;background:transparent;border:none;outline:none;color:var(--text);font-family:'Outfit',sans-serif;font-size:11px;font-weight:300;padding:8px 10px;resize:none;line-height:1.65;color-scheme:dark;min-height:60px;max-height:100px}
+.nota-footer{padding:4px 10px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border)}
+.nota-ts{font-size:9px;color:var(--muted2);font-weight:300}
+.notas-empty{font-size:11px;color:var(--muted2);text-align:center;padding:14px 8px;font-weight:300;line-height:1.6}
+
 @media(max-width:960px){
   .layout{grid-template-columns:1fr}
   .sidebar{display:none}
@@ -384,33 +407,33 @@ nav{
 
     <div class="sb-item active">
       <div class="sb-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
-      <span class="sb-item-label">Dashboard</span>
+      <span class="sb-item-label">Dashboard</span><span class="sb-tooltip">Dashboard</span>
     </div>
 
     <div class="sb-item" onclick="window.location.href='questoes.html'">
       <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
-      <span class="sb-item-label">Questões do dia</span>
+      <span class="sb-item-label">Questões do dia</span><span class="sb-tooltip">Questões do dia</span>
       <span class="sb-badge" id="sb-questoes-badge">20</span>
     </div>
 
     <div class="sb-item" onclick="alert('Em breve!')">
       <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
-      <span class="sb-item-label">Meu plano de estudos</span>
+      <span class="sb-item-label">Meu plano de estudos</span><span class="sb-tooltip">Meu plano de estudos</span>
     </div>
 
     <div class="sb-item" onclick="alert('Em breve!')">
       <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M8 21V10M12 21V3M16 21v-7M4 21v-4"/></svg></div>
-      <span class="sb-item-label">Desempenho</span>
+      <span class="sb-item-label">Desempenho</span><span class="sb-tooltip">Desempenho</span>
     </div>
 
     <div class="sb-item" onclick="alert('Em breve!')">
       <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
-      <span class="sb-item-label">Simulados</span>
+      <span class="sb-item-label">Simulados</span><span class="sb-tooltip">Simulados</span>
     </div>
 
     <div class="sb-item" onclick="alert('Em breve!')">
       <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
-      <span class="sb-item-label">Relatórios</span>
+      <span class="sb-item-label">Relatórios</span><span class="sb-tooltip">Relatórios</span>
     </div>
 
     <div class="sb-divider"></div>
@@ -418,24 +441,16 @@ nav{
 
     <div class="sb-item active" id="sb-jornada">
       <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-      <span id="sb-concurso-label">Carregando...</span>
+      <span id="sb-concurso-label">Carregando...</span><span class="sb-tooltip" id="sb-tooltip-jornada">Minha jornada</span>
     </div>
 
     <!-- ANOTAÇÕES -->
     <div class="notas-block" style="margin:14px 2px 0">
-      <div style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2);padding:0 10px;margin-bottom:8px">Minhas anotações</div>
-      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:9px;overflow:hidden">
-        <textarea
-          id="notas-textarea"
-          placeholder="Anote dúvidas, estratégias, lembretes..."
-          style="width:100%;min-height:90px;max-height:180px;background:transparent;border:none;outline:none;color:var(--text);font-family:'Outfit',sans-serif;font-size:11px;font-weight:300;padding:10px 12px;resize:vertical;line-height:1.6;color-scheme:dark"
-          oninput="autoSaveNota()"
-        ></textarea>
-        <div style="padding:6px 12px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-          <span style="font-size:9px;color:var(--muted2)" id="nota-status">Digite para salvar</span>
-          <button onclick="limparNota()" style="font-size:9px;color:var(--muted2);background:none;border:none;cursor:pointer;font-family:'Outfit',sans-serif;padding:2px 6px;border-radius:4px;transition:color .15s" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--muted2)'">Limpar</button>
-        </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 10px;margin-bottom:8px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2)">Anotações</div>
+        <button onclick="novaNota()" style="font-size:9px;color:var(--gold);background:rgba(232,201,122,0.08);border:1px solid var(--border2);padding:3px 8px;border-radius:5px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:600;transition:all .15s" onmouseover="this.style.background='rgba(232,201,122,0.15)'" onmouseout="this.style.background='rgba(232,201,122,0.08)'">+ Nova</button>
       </div>
+      <div id="notas-lista" style="display:flex;flex-direction:column;gap:6px;max-height:260px;overflow-y:auto;padding-right:2px"></div>
     </div>
 
     <div class="sb-spacer"></div>
@@ -666,6 +681,8 @@ async function carregarPerfil(){
       if(label){
         const concursoShort=perfil.concurso.length>28?perfil.concurso.substring(0,28)+'...':perfil.concurso;
         label.textContent=concursoShort;
+        const tt=document.getElementById('sb-tooltip-jornada');
+        if(tt)tt.textContent=perfil.concurso;
       }
       // Redirect to perfil if not complete
     } else {
@@ -810,37 +827,70 @@ function toggleSidebar(){
   localStorage.setItem('sb_collapsed',isCollapsed?'1':'0');
 }
 
-let notaTimer=null;
-function autoSaveNota(){
-  const nota=document.getElementById('notas-textarea').value;
-  document.getElementById('nota-status').textContent='Salvando...';
-  clearTimeout(notaTimer);
-  notaTimer=setTimeout(()=>{
-    localStorage.setItem('vero_nota_'+userId,nota);
-    document.getElementById('nota-status').textContent='Salvo ✓';
-    setTimeout(()=>document.getElementById('nota-status').textContent='',2000);
-  },800);
-}
-
-function limparNota(){
-  if(!confirm('Limpar anotações?'))return;
-  document.getElementById('notas-textarea').value='';
-  localStorage.removeItem('vero_nota_'+userId);
-  document.getElementById('nota-status').textContent='Limpo';
-  setTimeout(()=>document.getElementById('nota-status').textContent='',1500);
-}
+let notas=[];
+let notaTimers={};
+function getNotasKey(){return 'vero_notas_'+userId;}
 
 function carregarNota(){
   if(!userId)return;
-  const nota=localStorage.getItem('vero_nota_'+userId)||'';
-  const el=document.getElementById('notas-textarea');
-  if(el)el.value=nota;
-  // Restore sidebar state
   const collapsed=localStorage.getItem('sb_collapsed')==='1';
   if(collapsed){
     document.querySelector('.sidebar')?.classList.add('collapsed');
     document.querySelector('.layout')?.classList.add('collapsed-sb');
   }
+  try{const saved=localStorage.getItem(getNotasKey());notas=saved?JSON.parse(saved):[];}
+  catch(e){notas=[];}
+  if(!notas.length){notas=[{id:Date.now(),titulo:'',corpo:'',ts:new Date().toLocaleDateString('pt-BR')}];salvarNotas();}
+  renderNotas();
+}
+
+function salvarNotas(){localStorage.setItem(getNotasKey(),JSON.stringify(notas));}
+
+function renderNotas(){
+  const el=document.getElementById('notas-lista');
+  if(!el)return;
+  if(!notas.length){el.innerHTML='<div class="notas-empty">Clique em + Nova para criar uma anotação.</div>';return;}
+  el.innerHTML=notas.map(n=>{
+    const titulo=n.titulo.replace(/"/g,'&quot;');
+    const corpo=n.corpo.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return `<div class="nota-card">
+      <div class="nota-header">
+        <input class="nota-titulo" value="${titulo}" placeholder="Título..." oninput="atualizarNota(${n.id},'titulo',this.value)">
+        <button class="nota-del" onclick="deletarNota(${n.id})">✕</button>
+      </div>
+      <textarea class="nota-corpo" placeholder="Sua anotação..." oninput="atualizarNota(${n.id},'corpo',this.value)">${corpo}</textarea>
+      <div class="nota-footer">
+        <span class="nota-ts">${n.ts}</span>
+        <span style="font-size:9px;color:var(--muted2)" id="nota-st-${n.id}"></span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function novaNota(){
+  const nova={id:Date.now(),titulo:'',corpo:'',ts:new Date().toLocaleDateString('pt-BR')};
+  notas.unshift(nova);
+  salvarNotas();renderNotas();
+  setTimeout(()=>{const el=document.querySelector('.nota-titulo');if(el)el.focus();},50);
+}
+
+function atualizarNota(id,campo,valor){
+  const nota=notas.find(n=>n.id===id);
+  if(!nota)return;
+  nota[campo]=valor;nota.ts=new Date().toLocaleDateString('pt-BR');
+  clearTimeout(notaTimers[id]);
+  const st=document.getElementById('nota-st-'+id);
+  if(st)st.textContent='•';
+  notaTimers[id]=setTimeout(()=>{
+    salvarNotas();
+    if(st)st.textContent='✓';
+    setTimeout(()=>{if(st)st.textContent='';},1500);
+  },700);
+}
+
+function deletarNota(id){
+  if(notas.length===1){notas[0].titulo='';notas[0].corpo='';salvarNotas();renderNotas();return;}
+  notas=notas.filter(n=>n.id!==id);salvarNotas();renderNotas();
 }
 
 async function sair(){await sb.auth.signOut();window.location.href='index.html';}
