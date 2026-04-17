@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vero — Minhas Anotações</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06091a;--bg2:#0a1035;--bg3:#0d1540;--bg4:#040714;
+  --gold:#e8c97a;--gold2:#f2d98e;
+  --text:#eef2ff;--muted:#7a90c8;--muted2:rgba(180,200,255,0.28);
+  --border:rgba(232,201,122,0.12);--border2:rgba(232,201,122,0.28);
+  --green:#0fa968;--red:#e05454;--radius:12px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg4);color:var(--text);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+a{text-decoration:none;color:inherit}
+
+nav{padding:0 28px;height:58px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg4);position:sticky;top:0;z-index:100}
+.brand{display:inline-flex;align-items:center;gap:12px}
+.brand-mark{width:34px;height:34px;border-radius:8px;border:1.5px solid var(--border2);background:var(--bg3);color:var(--gold);display:grid;place-items:center;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700}
+.brand-name{font-family:'Playfair Display',serif;color:var(--text);letter-spacing:3px;font-size:.95rem;font-weight:600}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-user{font-size:12px;color:var(--muted);padding:4px 12px;border-radius:100px;background:rgba(180,200,255,0.06);border:1px solid var(--border)}
+.nav-back{font-size:12px;color:var(--muted);padding:6px 14px;border:1px solid var(--border);border-radius:7px;cursor:pointer;transition:all .15s;font-weight:500}
+.nav-back:hover{color:var(--gold);border-color:var(--border2)}
+.btn-sair{font-size:12px;color:var(--muted);padding:6px 14px;border:1px solid var(--border);border-radius:7px;cursor:pointer;background:none;font-family:'Outfit',sans-serif;transition:all .15s;font-weight:500}
+.btn-sair:hover{color:var(--gold);border-color:var(--border2)}
+
+.layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 58px)}
+
+/* SIDEBAR */
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:28px 16px 24px;display:flex;flex-direction:column;gap:2px}
+.sb-section{font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted2);padding:0 14px;margin:22px 0 8px}
+.sb-section:first-child{margin-top:0}
+.sb-item{display:flex;align-items:center;gap:13px;padding:11px 14px;border-radius:9px;font-size:14px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .18s;border:1px solid transparent;margin-bottom:2px}
+.sb-item:hover{background:rgba(180,200,255,0.05);color:var(--text)}
+.sb-item.active{background:rgba(232,201,122,0.08);color:var(--gold);border-color:rgba(232,201,122,0.15)}
+.sb-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(180,200,255,0.05);flex-shrink:0;border:1px solid transparent}
+.sb-item.active .sb-icon{background:rgba(232,201,122,0.1);border-color:rgba(232,201,122,0.2)}
+.sb-item:hover .sb-icon{background:rgba(180,200,255,0.08)}
+.sb-icon svg{width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.sb-item.active .sb-icon svg,.sb-item:hover .sb-icon svg{stroke:var(--gold)}
+.sb-divider{height:1px;background:var(--border);margin:12px 4px}
+.sb-spacer{flex:1}
+.sb-plan{margin:0 0 4px;padding:12px;background:rgba(232,201,122,0.05);border:1px solid rgba(232,201,122,0.15);border-radius:10px}
+.sb-plan-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.sb-plan-label{font-size:9px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.sb-plan-badge{font-size:9px;font-weight:700;padding:2px 8px;background:rgba(232,201,122,0.12);color:var(--gold);border-radius:100px;border:1px solid rgba(232,201,122,0.25)}
+.sb-plan-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
+.sb-plan-desc{font-size:11px;color:var(--muted2);font-weight:300;margin-bottom:10px}
+.sb-plan-btn{width:100%;padding:8px;background:var(--gold);color:#0a1035;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Outfit',sans-serif;transition:all .15s}
+.sb-plan-btn:hover{background:var(--gold2)}
+
+/* MAIN */
+.main{display:grid;grid-template-columns:280px 1fr;gap:0;overflow:hidden}
+
+/* LISTA DE NOTAS */
+.notas-lista{
+  border-right:1px solid var(--border);
+  background:var(--bg2);
+  display:flex;flex-direction:column;
+  height:calc(100vh - 58px);
+  overflow:hidden;
+}
+.notas-lista-header{
+  padding:18px 16px 14px;
+  border-bottom:1px solid var(--border);
+  background:var(--bg3);
+  flex-shrink:0;
+}
+.notas-lista-title{
+  font-family:'Playfair Display',serif;
+  font-size:1.1rem;font-weight:700;margin-bottom:12px;
+}
+.btn-nova-nota{
+  width:100%;padding:9px;background:var(--gold);color:#0a1035;
+  border:none;border-radius:8px;font-size:12px;font-weight:700;
+  cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.btn-nova-nota:hover{background:var(--gold2)}
+
+.notas-search{
+  padding:10px 14px;border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.search-input{
+  width:100%;background:var(--bg);border:1px solid var(--border);
+  border-radius:7px;padding:8px 12px;font-size:12px;
+  color:var(--text);font-family:'Outfit',sans-serif;outline:none;
+  transition:border-color .15s;color-scheme:dark;
+}
+.search-input:focus{border-color:var(--border2)}
+.search-input::placeholder{color:var(--muted2)}
+
+.notas-itens{flex:1;overflow-y:auto;padding:8px}
+.notas-itens::-webkit-scrollbar{width:4px}
+.notas-itens::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+.nota-item{
+  padding:12px 14px;border-radius:9px;cursor:pointer;
+  transition:all .15s;border:1px solid transparent;margin-bottom:4px;
+}
+.nota-item:hover{background:rgba(180,200,255,0.05)}
+.nota-item.active{background:rgba(232,201,122,0.07);border-color:rgba(232,201,122,0.18)}
+.nota-item-titulo{font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nota-item-titulo.vazio{color:var(--muted2);font-style:italic}
+.nota-item-preview{font-size:11px;color:var(--muted2);font-weight:300;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:5px}
+.nota-item-meta{display:flex;align-items:center;justify-content:space-between}
+.nota-item-data{font-size:10px;color:var(--muted2);font-weight:300}
+.nota-item-tag{font-size:9px;padding:1px 7px;border-radius:100px;font-weight:600}
+.tag-estudo{background:rgba(232,201,122,0.1);color:var(--gold);border:1px solid var(--border2)}
+.tag-duvida{background:rgba(224,84,84,0.1);color:var(--red);border:1px solid rgba(224,84,84,0.2)}
+.tag-revisao{background:rgba(15,169,104,0.1);color:var(--green);border:1px solid rgba(15,169,104,0.2)}
+.tag-livre{background:rgba(180,200,255,0.08);color:var(--muted);border:1px solid var(--border)}
+
+.notas-vazio{text-align:center;padding:40px 20px;color:var(--muted2);font-size:13px;font-weight:300;line-height:1.7}
+
+/* EDITOR */
+.nota-editor{
+  display:flex;flex-direction:column;
+  height:calc(100vh - 58px);
+  background:var(--bg4);
+}
+.editor-vazio{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  color:var(--muted2);text-align:center;gap:10px;
+}
+.editor-vazio-icon{font-size:40px;opacity:.4}
+.editor-vazio-txt{font-size:14px;font-weight:300}
+
+.editor-header{
+  padding:16px 24px;border-bottom:1px solid var(--border);
+  background:var(--bg2);flex-shrink:0;
+  display:flex;align-items:center;gap:12px;
+}
+.editor-titulo{
+  flex:1;background:transparent;border:none;outline:none;
+  color:var(--text);font-family:'Playfair Display',serif;
+  font-size:1.3rem;font-weight:700;
+  color-scheme:dark;
+}
+.editor-titulo::placeholder{color:var(--muted2);font-style:italic}
+.editor-actions{display:flex;align-items:center;gap:8px}
+.editor-tag-sel{
+  background:var(--bg3);color:var(--muted);
+  border:1px solid var(--border);border-radius:7px;
+  padding:6px 10px;font-size:11px;font-family:'Outfit',sans-serif;
+  outline:none;cursor:pointer;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg width='8' height='5' viewBox='0 0 8 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L4 4L7 1' stroke='%237a90c8' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 8px center;
+  padding-right:22px;
+}
+.editor-tag-sel option{background:#0a1035}
+.btn-del-nota{
+  padding:7px 12px;background:none;color:var(--muted2);
+  border:1px solid var(--border);border-radius:7px;
+  font-size:11px;cursor:pointer;font-family:'Outfit',sans-serif;
+  transition:all .15s;
+}
+.btn-del-nota:hover{color:var(--red);border-color:rgba(224,84,84,0.3)}
+.editor-status{font-size:10px;color:var(--muted2);white-space:nowrap}
+
+.editor-toolbar{
+  padding:8px 24px;border-bottom:1px solid var(--border);
+  background:var(--bg2);display:flex;align-items:center;gap:4px;flex-shrink:0;
+}
+.tb-btn{
+  padding:5px 10px;background:none;color:var(--muted);
+  border:1px solid transparent;border-radius:6px;
+  font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;
+  transition:all .15s;font-weight:500;
+}
+.tb-btn:hover{background:var(--bg3);color:var(--text);border-color:var(--border)}
+.tb-sep{width:1px;height:16px;background:var(--border);margin:0 4px}
+
+.editor-corpo{
+  flex:1;padding:28px 32px;
+  background:transparent;border:none;outline:none;
+  color:var(--text);font-family:'Outfit',sans-serif;
+  font-size:.97rem;line-height:1.9;font-weight:300;
+  resize:none;color-scheme:dark;overflow-y:auto;
+}
+.editor-corpo::placeholder{color:var(--muted2);font-style:italic}
+
+.editor-footer{
+  padding:10px 24px;border-top:1px solid var(--border);
+  background:var(--bg2);flex-shrink:0;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.editor-meta{font-size:11px;color:var(--muted2);font-weight:300}
+.editor-chars{font-size:11px;color:var(--muted2)}
+
+@media(max-width:960px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .main{grid-template-columns:1fr}
+  .notas-lista{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="brand">
+    <div class="brand-mark">V</div>
+    <div class="brand-name">VERO</div>
+  </a>
+  <div class="nav-right">
+    <a href="painel.html" class="nav-back">← Painel</a>
+    <span class="nav-user" id="nav-user">—</span>
+    <button class="btn-sair" onclick="sair()">Sair</button>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-section">Menu principal</div>
+    <div class="sb-item" onclick="window.location.href='painel.html'">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+      Dashboard
+    </div>
+    <div class="sb-item" onclick="window.location.href='questoes.html'">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+      Questões do dia
+    </div>
+    <div class="sb-item" onclick="alert('Em breve!')">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
+      Meu plano de estudos
+    </div>
+    <div class="sb-item" onclick="alert('Em breve!')">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M8 21V10M12 21V3M16 21v-7M4 21v-4"/></svg></div>
+      Desempenho
+    </div>
+    <div class="sb-item active">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+      Anotações
+    </div>
+    <div class="sb-item" onclick="alert('Em breve!')">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      Simulados
+    </div>
+    <div class="sb-item" onclick="alert('Em breve!')">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+      Relatórios
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-section">Minha jornada</div>
+    <div class="sb-item">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <span id="sb-concurso">Carregando...</span>
+    </div>
+    <div class="sb-spacer"></div>
+    <div class="sb-plan">
+      <div class="sb-plan-row">
+        <div class="sb-plan-label">Plano atual</div>
+        <div class="sb-plan-badge">Grátis</div>
+      </div>
+      <div class="sb-plan-name">Plano Gratuito</div>
+      <div class="sb-plan-desc">20 questões por dia.</div>
+      <button class="sb-plan-btn" onclick="alert('Em breve!')">Fazer upgrade →</button>
+    </div>
+  </aside>
+
+  <!-- MAIN: LISTA + EDITOR -->
+  <div class="main">
+
+    <!-- LISTA DE NOTAS -->
+    <div class="notas-lista">
+      <div class="notas-lista-header">
+        <div class="notas-lista-title">Minhas <em style="font-style:italic;color:var(--gold)">Anotações</em></div>
+        <button class="btn-nova-nota" onclick="novaNota()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nova anotação
+        </button>
+      </div>
+      <div class="notas-search">
+        <input class="search-input" id="search-input" type="text" placeholder="Buscar anotações..." oninput="filtrarNotas(this.value)">
+      </div>
+      <div class="notas-itens" id="notas-itens">
+        <div class="notas-vazio">Nenhuma anotação ainda.<br>Crie sua primeira!</div>
+      </div>
+    </div>
+
+    <!-- EDITOR -->
+    <div class="nota-editor" id="nota-editor">
+      <div class="editor-vazio" id="editor-vazio">
+        <div class="editor-vazio-icon">📝</div>
+        <div class="editor-vazio-txt">Selecione uma anotação<br>ou crie uma nova</div>
+      </div>
+      <div id="editor-conteudo" style="display:none;flex-direction:column;height:100%">
+        <div class="editor-header">
+          <input class="editor-titulo" id="editor-titulo" placeholder="Título da anotação..." oninput="atualizarNota('titulo',this.value)">
+          <div class="editor-actions">
+            <select class="editor-tag-sel" id="editor-tag" onchange="atualizarNota('tag',this.value)">
+              <option value="livre">Livre</option>
+              <option value="estudo">📖 Estudo</option>
+              <option value="duvida">❓ Dúvida</option>
+              <option value="revisao">✅ Revisão</option>
+            </select>
+            <span class="editor-status" id="editor-status"></span>
+            <button class="btn-del-nota" onclick="deletarNotaAtual()">Apagar</button>
+          </div>
+        </div>
+        <div class="editor-toolbar">
+          <button class="tb-btn" onclick="inserirTexto('**','**','negrito')">N</button>
+          <button class="tb-btn" onclick="inserirTexto('_','_','itálico')" style="font-style:italic">I</button>
+          <button class="tb-btn" onclick="inserirTexto('~~','~~','riscado')" style="text-decoration:line-through">S</button>
+          <div class="tb-sep"></div>
+          <button class="tb-btn" onclick="inserirLinha('# ')">H1</button>
+          <button class="tb-btn" onclick="inserirLinha('## ')">H2</button>
+          <div class="tb-sep"></div>
+          <button class="tb-btn" onclick="inserirLinha('• ')">Lista</button>
+          <button class="tb-btn" onclick="inserirLinha('[ ] ')">Tarefa</button>
+          <div class="tb-sep"></div>
+          <button class="tb-btn" onclick="inserirLinha('---')">Linha</button>
+        </div>
+        <textarea class="editor-corpo" id="editor-corpo" placeholder="Comece a escrever sua anotação aqui..." oninput="atualizarNota('corpo',this.value);atualizarChars()"></textarea>
+        <div class="editor-footer">
+          <span class="editor-meta" id="editor-meta">—</span>
+          <span class="editor-chars" id="editor-chars">0 caracteres</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const{createClient}=supabase;
+const sb=createClient('https://lklmzhunhiwqsbhnymaw.supabase.co','sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU');
+
+let userId=null, notas=[], notaAtualId=null, saveTimer=null;
+
+function getKey(){return 'vero_notas_'+userId;}
+
+async function init(){
+  const{data:{session}}=await sb.auth.getSession();
+  if(!session){window.location.href='login.html';return;}
+  userId=session.user.id;
+  const nome=session.user.user_metadata?.full_name||session.user.email.split('@')[0];
+  document.getElementById('nav-user').textContent=nome;
+
+  // Carrega concurso na sidebar
+  const{data:perfil}=await sb.from('perfis').select('concurso').eq('id',userId).single();
+  if(perfil?.concurso){
+    const el=document.getElementById('sb-concurso');
+    if(el)el.textContent=perfil.concurso.length>28?perfil.concurso.substring(0,28)+'...':perfil.concurso;
+  }
+
+  // Carrega notas do localStorage
+  try{
+    const saved=localStorage.getItem(getKey());
+    notas=saved?JSON.parse(saved):[];
+  }catch(e){notas=[];}
+
+  renderLista();
+  // Abre a primeira nota se existir
+  if(notas.length>0)abrirNota(notas[0].id);
+}
+
+function salvarLocal(){
+  localStorage.setItem(getKey(),JSON.stringify(notas));
+}
+
+function renderLista(filtro=''){
+  const el=document.getElementById('notas-itens');
+  let lista=notas;
+  if(filtro){
+    const f=filtro.toLowerCase();
+    lista=notas.filter(n=>(n.titulo||'').toLowerCase().includes(f)||(n.corpo||'').toLowerCase().includes(f));
+  }
+  if(!lista.length){
+    el.innerHTML=filtro
+      ? '<div class="notas-vazio">Nenhuma nota encontrada.</div>'
+      : '<div class="notas-vazio">Nenhuma anotação ainda.<br>Clique em "Nova anotação"!</div>';
+    return;
+  }
+  const tagClasses={estudo:'tag-estudo',duvida:'tag-duvida',revisao:'tag-revisao',livre:'tag-livre'};
+  const tagLabels={estudo:'📖 Estudo',duvida:'❓ Dúvida',revisao:'✅ Revisão',livre:'Livre'};
+  el.innerHTML=lista.map(n=>`
+    <div class="nota-item${n.id===notaAtualId?' active':''}" onclick="abrirNota(${n.id})">
+      <div class="nota-item-titulo${!n.titulo?' vazio':''}">${n.titulo||'Sem título'}</div>
+      <div class="nota-item-preview">${n.corpo?n.corpo.substring(0,60)+'...':'Nota em branco'}</div>
+      <div class="nota-item-meta">
+        <span class="nota-item-data">${n.updatedAt||n.createdAt||'—'}</span>
+        ${n.tag&&n.tag!=='livre'?`<span class="nota-item-tag ${tagClasses[n.tag]||'tag-livre'}">${tagLabels[n.tag]||n.tag}</span>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function abrirNota(id){
+  notaAtualId=id;
+  const nota=notas.find(n=>n.id===id);
+  if(!nota)return;
+  document.getElementById('editor-vazio').style.display='none';
+  const ec=document.getElementById('editor-conteudo');
+  ec.style.display='flex';
+  document.getElementById('editor-titulo').value=nota.titulo||'';
+  document.getElementById('editor-corpo').value=nota.corpo||'';
+  document.getElementById('editor-tag').value=nota.tag||'livre';
+  document.getElementById('editor-meta').textContent='Criada em '+nota.createdAt+(nota.updatedAt&&nota.updatedAt!==nota.createdAt?' · Editada em '+nota.updatedAt:'');
+  document.getElementById('editor-status').textContent='';
+  atualizarChars();
+  renderLista(document.getElementById('search-input').value);
+  document.getElementById('editor-corpo').focus();
+}
+
+function novaNota(){
+  const agora=new Date().toLocaleDateString('pt-BR');
+  const nova={id:Date.now(),titulo:'',corpo:'',tag:'livre',createdAt:agora,updatedAt:agora};
+  notas.unshift(nova);
+  salvarLocal();
+  renderLista();
+  abrirNota(nova.id);
+  setTimeout(()=>document.getElementById('editor-titulo').focus(),50);
+}
+
+let debTimer=null;
+function atualizarNota(campo,valor){
+  const nota=notas.find(n=>n.id===notaAtualId);
+  if(!nota)return;
+  nota[campo]=valor;
+  nota.updatedAt=new Date().toLocaleDateString('pt-BR');
+  document.getElementById('editor-status').textContent='•••';
+  clearTimeout(debTimer);
+  debTimer=setTimeout(()=>{
+    salvarLocal();
+    renderLista(document.getElementById('search-input').value);
+    document.getElementById('editor-status').textContent='✓ Salvo';
+    setTimeout(()=>document.getElementById('editor-status').textContent='',2000);
+  },600);
+}
+
+function deletarNotaAtual(){
+  if(!notaAtualId)return;
+  if(!confirm('Apagar esta anotação? Essa ação não pode ser desfeita.'))return;
+  notas=notas.filter(n=>n.id!==notaAtualId);
+  salvarLocal();
+  notaAtualId=null;
+  document.getElementById('editor-vazio').style.display='flex';
+  document.getElementById('editor-conteudo').style.display='none';
+  if(notas.length>0)abrirNota(notas[0].id);
+  renderLista();
+}
+
+function filtrarNotas(val){renderLista(val);}
+
+function atualizarChars(){
+  const v=document.getElementById('editor-corpo').value;
+  const palavras=v.trim()?v.trim().split(/\s+/).length:0;
+  document.getElementById('editor-chars').textContent=v.length+' caracteres · '+palavras+' palavras';
+}
+
+function inserirTexto(antes,depois,placeholder){
+  const ta=document.getElementById('editor-corpo');
+  const s=ta.selectionStart, e=ta.selectionEnd;
+  const sel=ta.value.substring(s,e)||placeholder;
+  const novo=ta.value.substring(0,s)+antes+sel+depois+ta.value.substring(e);
+  ta.value=novo;
+  ta.selectionStart=s+antes.length;
+  ta.selectionEnd=s+antes.length+sel.length;
+  ta.focus();
+  atualizarNota('corpo',ta.value);
+}
+
+function inserirLinha(prefix){
+  const ta=document.getElementById('editor-corpo');
+  const pos=ta.selectionStart;
+  const antes=ta.value.substring(0,pos);
+  const depois=ta.value.substring(pos);
+  const nl=antes.endsWith('\n')||antes===''?'':'\n';
+  ta.value=antes+nl+prefix+depois;
+  ta.selectionStart=ta.selectionEnd=pos+nl.length+prefix.length;
+  ta.focus();
+  atualizarNota('corpo',ta.value);
+}
+
+async function sair(){await sb.auth.signOut();window.location.href='index.html';}
+init();
+</script>
+</body>
+</html>
