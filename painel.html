@@ -37,6 +37,15 @@ nav{
   background:var(--bg4);
   position:sticky;top:0;z-index:100;
 }
+.sb-toggle{
+  width:32px;height:32px;border-radius:7px;
+  border:1px solid var(--border);background:none;
+  color:var(--muted);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;flex-shrink:0;
+}
+.sb-toggle:hover{border-color:var(--border2);color:var(--gold)}
+.sb-toggle svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round}
 .brand{display:inline-flex;align-items:center;gap:12px}
 .brand-mark{
   width:34px;height:34px;border-radius:8px;
@@ -73,6 +82,26 @@ nav{
   padding:28px 16px 24px;
   display:flex;flex-direction:column;
   gap:2px;
+  transition:width .25s ease,padding .25s ease;
+  overflow:hidden;
+}
+.sidebar.collapsed{
+  width:60px;padding:28px 8px 24px;
+}
+.sidebar.collapsed .sb-section,
+.sidebar.collapsed .sb-item-label,
+.sidebar.collapsed .sb-badge,
+.sidebar.collapsed .sb-plan,
+.sidebar.collapsed .sb-divider,
+.sidebar.collapsed #sb-jornada .sb-item-label,
+.sidebar.collapsed .notas-block{
+  display:none;
+}
+.sidebar.collapsed .sb-item{
+  justify-content:center;padding:10px;
+}
+.layout.collapsed-sb{
+  grid-template-columns:60px 1fr;
 }
 .sb-section{
   font-size:9px;font-weight:700;letter-spacing:.2em;
@@ -338,6 +367,9 @@ nav{
     <div class="brand-mark">V</div>
     <div class="brand-name">VERO</div>
   </a>
+  <button class="sb-toggle" onclick="toggleSidebar()" title="Recolher menu">
+    <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
   <div class="nav-right">
     <span class="nav-user" id="nav-user">—</span>
     <button class="btn-sair" onclick="sair()">Sair</button>
@@ -387,6 +419,23 @@ nav{
     <div class="sb-item active" id="sb-jornada">
       <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
       <span id="sb-concurso-label">Carregando...</span>
+    </div>
+
+    <!-- ANOTAÇÕES -->
+    <div class="notas-block" style="margin:14px 2px 0">
+      <div style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2);padding:0 10px;margin-bottom:8px">Minhas anotações</div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:9px;overflow:hidden">
+        <textarea
+          id="notas-textarea"
+          placeholder="Anote dúvidas, estratégias, lembretes..."
+          style="width:100%;min-height:90px;max-height:180px;background:transparent;border:none;outline:none;color:var(--text);font-family:'Outfit',sans-serif;font-size:11px;font-weight:300;padding:10px 12px;resize:vertical;line-height:1.6;color-scheme:dark"
+          oninput="autoSaveNota()"
+        ></textarea>
+        <div style="padding:6px 12px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:9px;color:var(--muted2)" id="nota-status">Digite para salvar</span>
+          <button onclick="limparNota()" style="font-size:9px;color:var(--muted2);background:none;border:none;cursor:pointer;font-family:'Outfit',sans-serif;padding:2px 6px;border-radius:4px;transition:color .15s" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--muted2)'">Limpar</button>
+        </div>
+      </div>
     </div>
 
     <div class="sb-spacer"></div>
@@ -606,6 +655,7 @@ async function init(){
   document.getElementById('nav-user').textContent=nome;
   await carregarPerfil();
   await carregarHistorico();
+  carregarNota();
 }
 
 async function carregarPerfil(){
@@ -750,6 +800,49 @@ function renderMelhorar(){
 }
 
 function irParaQuestoes(){window.location.href='questoes.html';}
+
+function toggleSidebar(){
+  const sidebar=document.querySelector('.sidebar');
+  const layout=document.querySelector('.layout');
+  const isCollapsed=sidebar.classList.toggle('collapsed');
+  layout.classList.toggle('collapsed-sb',isCollapsed);
+  // Save preference
+  localStorage.setItem('sb_collapsed',isCollapsed?'1':'0');
+}
+
+let notaTimer=null;
+function autoSaveNota(){
+  const nota=document.getElementById('notas-textarea').value;
+  document.getElementById('nota-status').textContent='Salvando...';
+  clearTimeout(notaTimer);
+  notaTimer=setTimeout(()=>{
+    localStorage.setItem('vero_nota_'+userId,nota);
+    document.getElementById('nota-status').textContent='Salvo ✓';
+    setTimeout(()=>document.getElementById('nota-status').textContent='',2000);
+  },800);
+}
+
+function limparNota(){
+  if(!confirm('Limpar anotações?'))return;
+  document.getElementById('notas-textarea').value='';
+  localStorage.removeItem('vero_nota_'+userId);
+  document.getElementById('nota-status').textContent='Limpo';
+  setTimeout(()=>document.getElementById('nota-status').textContent='',1500);
+}
+
+function carregarNota(){
+  if(!userId)return;
+  const nota=localStorage.getItem('vero_nota_'+userId)||'';
+  const el=document.getElementById('notas-textarea');
+  if(el)el.value=nota;
+  // Restore sidebar state
+  const collapsed=localStorage.getItem('sb_collapsed')==='1';
+  if(collapsed){
+    document.querySelector('.sidebar')?.classList.add('collapsed');
+    document.querySelector('.layout')?.classList.add('collapsed-sb');
+  }
+}
+
 async function sair(){await sb.auth.signOut();window.location.href='index.html';}
 function abrirPlanos(){document.getElementById('planos-modal').style.display='block';document.body.style.overflow='hidden';}
 function fecharPlanos(){document.getElementById('planos-modal').style.display='none';document.body.style.overflow='';}
