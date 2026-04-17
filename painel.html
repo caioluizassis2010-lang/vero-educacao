@@ -6,159 +6,328 @@
 <title>Vero — Meu Painel</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0a1535;--bg2:#0f1f50;--bg3:#142560;
-  --gold:#e8c97a;--gold2:#f2d98e;
-  --text:#eef2ff;--muted:#7a90c8;--muted2:rgba(180,200,255,0.25);
-  --border:rgba(232,201,122,0.15);--border2:rgba(232,201,122,0.28);
-  --green:#0fa968;--red:#e05454;
-  --radius:12px;
+  --bg:#06091a;
+  --bg2:#0a1035;
+  --bg3:#0d1540;
+  --bg4:#040714;
+  --gold:#e8c97a;
+  --gold2:#f2d98e;
+  --text:#eef2ff;
+  --muted:#7a90c8;
+  --muted2:rgba(180,200,255,0.3);
+  --border:rgba(232,201,122,0.12);
+  --border2:rgba(232,201,122,0.25);
+  --accent:#1a56db;
+  --green:#0fa968;
+  --red:#e05454;
+  --radius:10px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+body{background:var(--bg4);color:var(--text);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
 a{text-decoration:none;color:inherit}
 
-nav{padding:0 28px;height:56px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(9,9,9,0.97);backdrop-filter:blur(16px);position:sticky;top:0;z-index:100}
-.brand{display:inline-flex;align-items:center;gap:10px}
-.brand-mark{width:30px;height:30px;border-radius:7px;border:1px solid var(--border2);background:#071030;color:var(--gold);display:grid;place-items:center;font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700}
-.brand-name{font-family:'Playfair Display',serif;color:var(--text);letter-spacing:2px;font-size:.9rem;font-weight:600}
-.nav-right{display:flex;align-items:center;gap:14px}
-.nav-user{font-size:12px;color:var(--muted)}
-.btn-sair{font-size:11px;color:var(--muted);padding:5px 12px;border:1px solid var(--border);border-radius:6px;cursor:pointer;background:none;font-family:'Outfit',sans-serif;transition:all .15s}
+/* NAV */
+nav{
+  padding:0 28px;height:58px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--bg4);
+  position:sticky;top:0;z-index:100;
+}
+.brand{display:inline-flex;align-items:center;gap:12px}
+.brand-mark{
+  width:34px;height:34px;border-radius:8px;
+  border:1.5px solid var(--border2);background:var(--bg3);
+  color:var(--gold);display:grid;place-items:center;
+  font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;
+}
+.brand-name{
+  font-family:'Playfair Display',serif;
+  color:var(--text);letter-spacing:3px;font-size:.95rem;font-weight:600;
+}
+.nav-right{display:flex;align-items:center;gap:16px}
+.nav-user{
+  font-size:12px;color:var(--muted);
+  padding:4px 12px;border-radius:100px;
+  background:rgba(180,200,255,0.06);
+  border:1px solid var(--border);
+}
+.btn-sair{
+  font-size:12px;color:var(--muted);
+  padding:6px 14px;border:1px solid var(--border);
+  border-radius:7px;cursor:pointer;background:none;
+  font-family:'Outfit',sans-serif;transition:all .15s;font-weight:500;
+}
 .btn-sair:hover{color:var(--gold);border-color:var(--border2)}
 
-.layout{display:grid;grid-template-columns:192px 1fr;min-height:calc(100vh - 56px)}
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 58px)}
 
-/* SIDEBAR */
-.sidebar{background:var(--bg);border-right:1px solid var(--border);padding:20px 10px;display:flex;flex-direction:column}
-.sb-section{font-size:9px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2);padding:0 10px;margin:18px 0 7px}
-.sb-section:first-child{margin-top:4px}
-.sb-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:12px;color:var(--muted);cursor:pointer;transition:all .15s;border:1px solid transparent;margin-bottom:1px}
-.sb-item:hover{background:var(--bg2);color:var(--text)}
-.sb-item.active{background:rgba(232,201,122,.07);color:var(--gold);border-color:var(--border)}
-.sb-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;background:var(--bg3);flex-shrink:0;transition:all .15s}
-.sb-item.active .sb-icon{background:rgba(232,201,122,.1)}
-.sb-icon svg{width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:stroke .15s}
-.sb-item.active .sb-icon svg,.sb-item:hover .sb-icon svg{stroke:var(--gold)}
-.sb-divider{height:1px;background:var(--border);margin:10px 2px}
-.sb-spacer{flex:1}
-.sb-plan{margin:0 2px;padding:12px;background:var(--bg2);border:1px solid var(--border);border-radius:10px}
-.sb-plan-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.sb-plan-label{font-size:9px;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase}
-.sb-plan-badge{font-size:9px;font-weight:700;padding:2px 7px;background:rgba(232,201,122,.1);color:var(--gold);border-radius:100px;border:1px solid var(--border2)}
-.sb-plan-desc{font-size:11px;color:var(--muted2);font-weight:300;margin-bottom:10px;line-height:1.5}
-.sb-plan-btn{width:100%;padding:7px;background:var(--gold);color:#111;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;border:none;font-family:'Outfit',sans-serif;transition:all .15s}
+/* SIDEBAR — maior, mais séria */
+.sidebar{
+  background:var(--bg2);
+  border-right:1px solid var(--border);
+  padding:28px 16px 24px;
+  display:flex;flex-direction:column;
+  gap:2px;
+}
+.sb-section{
+  font-size:9px;font-weight:700;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--muted2);
+  padding:0 14px;margin:22px 0 8px;
+}
+.sb-section:first-child{margin-top:0}
+
+.sb-item{
+  display:flex;align-items:center;gap:13px;
+  padding:11px 14px;border-radius:9px;
+  font-size:14px;font-weight:500;color:var(--muted);
+  cursor:pointer;transition:all .18s;
+  border:1px solid transparent;margin-bottom:2px;
+  letter-spacing:.01em;
+}
+.sb-item:hover{background:rgba(180,200,255,0.05);color:var(--text)}
+.sb-item.active{
+  background:rgba(232,201,122,0.08);
+  color:var(--gold);border-color:rgba(232,201,122,0.15);
+}
+.sb-icon{
+  width:32px;height:32px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(180,200,255,0.05);flex-shrink:0;transition:all .18s;
+  border:1px solid transparent;
+}
+.sb-item.active .sb-icon{
+  background:rgba(232,201,122,0.1);
+  border-color:rgba(232,201,122,0.2);
+}
+.sb-item:hover .sb-icon{background:rgba(180,200,255,0.08)}
+.sb-icon svg{
+  width:15px;height:15px;stroke:var(--muted);fill:none;
+  stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;
+  transition:stroke .18s;
+}
+.sb-item.active .sb-icon svg{stroke:var(--gold)}
+.sb-item:hover .sb-icon svg{stroke:var(--text)}
+.sb-item-label{flex:1}
+.sb-badge{
+  font-size:10px;font-weight:700;padding:2px 8px;
+  border-radius:100px;background:rgba(232,201,122,0.1);
+  color:var(--gold);border:1px solid rgba(232,201,122,0.2);
+}
+
+.sb-divider{height:1px;background:var(--border);margin:12px 4px}
+.sb-spacer{flex:1;min-height:20px}
+
+/* PLANO NA SIDEBAR */
+.sb-plan{
+  margin:0 0 4px;padding:16px;
+  background:rgba(232,201,122,0.05);
+  border:1px solid rgba(232,201,122,0.15);
+  border-radius:10px;
+}
+.sb-plan-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.sb-plan-label{font-size:10px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.sb-plan-badge{
+  font-size:10px;font-weight:700;padding:3px 9px;
+  background:rgba(232,201,122,0.12);color:var(--gold);
+  border-radius:100px;border:1px solid rgba(232,201,122,0.25);
+}
+.sb-plan-name{font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px}
+.sb-plan-desc{font-size:11px;color:var(--muted2);font-weight:300;margin-bottom:12px;line-height:1.5}
+.sb-plan-btn{
+  width:100%;padding:9px;background:var(--gold);color:#0a1035;
+  border-radius:7px;font-size:12px;font-weight:700;
+  cursor:pointer;border:none;font-family:'Outfit',sans-serif;
+  letter-spacing:.02em;transition:all .15s;
+}
 .sb-plan-btn:hover{background:var(--gold2)}
 
-/* MAIN — DASHBOARD */
-.main{padding:24px 26px;overflow-y:auto}
-.page-hd{margin-bottom:22px}
-.page-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;line-height:1.1}
+/* MAIN */
+.main{padding:28px 30px;overflow-y:auto;background:var(--bg4)}
+
+/* PAGE HEADER */
+.page-hd{margin-bottom:26px}
+.page-title{
+  font-family:'Playfair Display',serif;
+  font-size:1.6rem;font-weight:700;line-height:1.1;
+}
 .page-title em{font-style:italic;color:var(--gold)}
-.page-sub{font-size:12px;color:var(--muted);margin-top:4px;font-weight:300}
+.page-sub{font-size:12px;color:var(--muted);margin-top:5px;font-weight:300;letter-spacing:.01em}
 
 /* STATS */
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
-.stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;transition:border-color .2s;position:relative;overflow:hidden}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.stat{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px 22px;
+  transition:border-color .2s;
+}
 .stat:hover{border-color:var(--border2)}
-.stat-label{font-size:9px;color:var(--muted2);letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
-.stat-value{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--gold);line-height:1}
-.stat-sub{font-size:11px;color:var(--muted2);margin-top:5px;font-weight:300}
+.stat-label{
+  font-size:9px;color:var(--muted2);
+  letter-spacing:.16em;text-transform:uppercase;
+  margin-bottom:12px;font-weight:600;
+}
+.stat-value{
+  font-family:'Playfair Display',serif;
+  font-size:2.2rem;font-weight:700;color:var(--gold);line-height:1;
+}
+.stat-sub{font-size:11px;color:var(--muted2);margin-top:6px;font-weight:300}
 
-/* DASHBOARD GRID */
-.dash-grid{display:grid;grid-template-columns:1fr 292px;gap:14px}
+/* CONTENT GRID */
+.content-grid{display:grid;grid-template-columns:1fr 280px;gap:16px}
 
 /* CARDS */
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
-.card-header{padding:13px 18px;border-bottom:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:space-between}
-.card-title{font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2)}
-.card-body{padding:18px}
+.card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;margin-bottom:14px;
+}
+.card:last-child{margin-bottom:0}
+.card-header{
+  padding:14px 20px;border-bottom:1px solid var(--border);
+  background:var(--bg3);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.card-title{
+  font-size:10px;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted2);
+}
+.card-subtitle{font-size:10px;color:var(--muted2);font-weight:300}
+.card-body{padding:20px}
 
 /* ONDE MELHORAR */
-.improve-item{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border-radius:9px;background:var(--bg3);margin-bottom:7px;transition:background .15s}
+.improve-item{
+  display:flex;align-items:flex-start;gap:13px;
+  padding:13px 16px;border-radius:9px;
+  background:var(--bg3);margin-bottom:8px;
+  border:1px solid var(--border);
+  transition:border-color .15s;
+}
 .improve-item:last-child{margin-bottom:0}
-.improve-item:hover{background:var(--bg4,#1a1a1a)}
-.improve-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.imp-warn{background:rgba(224,84,84,.1)}
-.imp-ok{background:rgba(15,169,104,.1)}
-.imp-tip{background:rgba(232,201,122,.08)}
+.improve-item:hover{border-color:var(--border2)}
+.improve-icon{
+  width:32px;height:32px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;flex-shrink:0;
+}
+.imp-warn{background:rgba(224,84,84,.12);border:1px solid rgba(224,84,84,.2)}
+.imp-ok{background:rgba(15,169,104,.1);border:1px solid rgba(15,169,104,.2)}
+.imp-tip{background:rgba(232,201,122,.08);border:1px solid rgba(232,201,122,.15)}
 .improve-body{flex:1}
-.improve-label{font-size:12px;color:var(--text);font-weight:500;margin-bottom:2px}
+.improve-label{font-size:13px;color:var(--text);font-weight:500;margin-bottom:3px}
 .improve-sub{font-size:11px;color:var(--muted2);font-weight:300;line-height:1.5}
-.improve-empty{font-size:12px;color:var(--muted2);font-weight:300;text-align:center;padding:24px 0}
+.improve-empty{
+  font-size:13px;color:var(--muted2);font-weight:300;
+  text-align:center;padding:28px 0;
+}
 
 /* DESEMPENHO */
-.perf-item{margin-bottom:12px}
+.perf-item{margin-bottom:14px}
 .perf-item:last-child{margin-bottom:0}
-.perf-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
-.perf-name{font-size:12px;color:var(--muted);font-weight:300}
-.perf-pct{font-size:12px;font-weight:500}
-.perf-bar-bg{height:3px;background:var(--border);border-radius:2px}
-.perf-bar{height:3px;border-radius:2px;transition:width .7s ease}
+.perf-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.perf-name{font-size:12px;color:var(--muted);font-weight:400}
+.perf-info{display:flex;align-items:center;gap:8px}
+.perf-pct{font-size:13px;font-weight:600}
+.perf-count{font-size:10px;color:var(--muted2);font-weight:300}
+.perf-bar-bg{height:4px;background:rgba(180,200,255,0.1);border-radius:2px}
+.perf-bar{height:4px;border-radius:2px;transition:width .8s ease}
 .perf-empty{font-size:12px;color:var(--muted2);font-weight:300;text-align:center;padding:20px 0}
 
-/* QUESTÃO DO DIA — seção separada */
-.questao-section{margin-top:14px}
-.q-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
-.q-header{padding:13px 18px;border-bottom:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:space-between}
-.q-header-left{display:flex;align-items:center;gap:10px}
-.q-label{font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2)}
-.q-chips{display:flex;gap:5px}
-.q-chip{font-size:10px;padding:3px 9px;border-radius:100px;border:1px solid var(--border);color:var(--muted2);background:var(--bg2)}
-.q-chip.gold{border-color:var(--border2);color:var(--gold);background:rgba(232,201,122,.06)}
-.q-filters{display:flex;gap:6px}
-.q-filter{background:var(--bg2);color:var(--muted);border:1px solid var(--border);border-radius:6px;padding:5px 22px 5px 9px;font-size:11px;font-family:'Outfit',sans-serif;cursor:pointer;outline:none;transition:all .15s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='8' height='5' viewBox='0 0 8 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L4 4L7 1' stroke='%238a8278' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center}
-.q-filter:focus,.q-filter:hover{border-color:var(--border2);color:var(--text)}
-.q-filter option{background:var(--bg2);color:var(--text)}
-.q-body{padding:20px}
-.q-loading{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px;padding:8px 0}
-.q-spinner{width:15px;height:15px;border:1.5px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
-@keyframes spin{to{transform:rotate(360deg)}}
-.q-text{font-size:.9rem;line-height:1.82;color:var(--text);margin-bottom:18px;font-weight:300}
-.opcoes{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
-.opcao{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border:1px solid var(--border);border-radius:9px;cursor:pointer;transition:all .18s;font-size:.87rem;color:var(--text);background:transparent;font-weight:300}
-.opcao:hover{border-color:var(--border2);background:rgba(232,201,122,.03)}
-.opcao.certa{background:rgba(15,169,104,.07);border-color:rgba(15,169,104,.3);color:#0fa968}
-.opcao.errada{background:rgba(224,84,84,.07);border-color:rgba(224,84,84,.3);color:var(--red)}
-.opcao.disabled{pointer-events:none}
-.opcao-letra{font-size:.82rem;font-weight:600;min-width:18px;flex-shrink:0;margin-top:1px;color:var(--muted)}
-.opcao.certa .opcao-letra,.opcao.errada .opcao-letra{color:inherit}
-.gabarito{background:rgba(232,201,122,.04);border:1px solid var(--border);border-left:2px solid var(--gold);border-radius:9px;padding:14px 16px;margin-top:12px;display:none}
-.gab-label{font-size:9px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
-.gab-text{font-size:.83rem;color:var(--muted);line-height:1.78;font-weight:300}
-.q-footer{padding:12px 18px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg3)}
-.btn-nova{padding:8px 16px;background:var(--gold);color:#111;border:none;border-radius:7px;font-size:.82rem;font-weight:700;cursor:pointer;transition:all .18s;font-family:'Outfit',sans-serif}
-.btn-nova:hover{background:var(--gold2);transform:translateY(-1px)}
-.btn-nova:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.q-count-txt{font-size:11px;color:var(--muted2);font-weight:300}
+/* ACESSO RÁPIDO */
+.quick-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:22px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:border-color .2s;
+}
+.quick-card:hover{border-color:var(--border2)}
+.quick-title{
+  font-family:'Playfair Display',serif;
+  font-size:1.15rem;font-weight:700;color:var(--text);margin-bottom:5px;
+}
+.quick-sub{font-size:12px;color:var(--muted);font-weight:300}
+.quick-btn{
+  padding:11px 22px;background:var(--gold);color:#0a1035;
+  border:none;border-radius:8px;font-size:13px;font-weight:700;
+  cursor:pointer;font-family:'Outfit',sans-serif;
+  white-space:nowrap;transition:all .18s;
+}
+.quick-btn:hover{background:var(--gold2);transform:translateY(-1px)}
 
 /* COLUNA DIREITA */
-.right-col{display:flex;flex-direction:column;gap:12px}
+.right-col{display:flex;flex-direction:column;gap:14px}
+.r-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;
+}
+.r-header{
+  padding:13px 18px;border-bottom:1px solid var(--border);
+  background:var(--bg3);
+}
+.r-title{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2)}
+.r-body{padding:16px 18px}
 
-/* PLANO — somente no fundo */
-.plan-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-top:auto}
-.plan-header{padding:12px 16px;border-bottom:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:space-between}
-.plan-htitle{font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2)}
-.plan-badge{font-size:9px;font-weight:700;padding:2px 8px;background:rgba(232,201,122,.1);color:var(--gold);border-radius:100px;border:1px solid var(--border2)}
-.plan-body{padding:16px}
-.plan-name{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--text);margin-bottom:3px}
-.plan-desc{font-size:11px;color:var(--muted);font-weight:300;margin-bottom:14px;line-height:1.55}
-.prog-row{display:flex;justify-content:space-between;font-size:10px;color:var(--muted2);margin-bottom:5px}
-.prog-bg{height:3px;background:var(--border);border-radius:2px;margin-bottom:14px}
-.prog-fill{height:3px;border-radius:2px;background:var(--gold);transition:width .5s ease}
-.plan-feats{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
-.pf{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted);font-weight:300}
-.pf-dot{width:14px;height:14px;border-radius:50%;background:rgba(232,201,122,.09);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0}
-.upgrade-btn{width:100%;padding:10px;background:var(--gold);color:#111;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Outfit',sans-serif;transition:all .18s}
+/* RESUMO */
+.stat-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 0;border-bottom:1px solid var(--border);
+}
+.stat-row:last-child{border-bottom:none}
+.stat-row-label{font-size:12px;color:var(--muted);font-weight:300}
+.stat-row-val{
+  font-family:'Playfair Display',serif;
+  font-size:1.4rem;font-weight:700;
+}
+
+/* PLANO DIREITA */
+.plan-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;
+}
+.plan-header{
+  padding:13px 18px;border-bottom:1px solid var(--border);
+  background:var(--bg3);display:flex;align-items:center;justify-content:space-between;
+}
+.plan-htitle{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2)}
+.plan-badge{
+  font-size:10px;font-weight:700;padding:2px 9px;
+  background:rgba(232,201,122,.1);color:var(--gold);
+  border-radius:100px;border:1px solid rgba(232,201,122,.25);
+}
+.plan-body{padding:18px}
+.plan-name{
+  font-family:'Playfair Display',serif;
+  font-size:1.25rem;font-weight:700;color:var(--text);margin-bottom:4px;
+}
+.plan-desc{font-size:11px;color:var(--muted);font-weight:300;margin-bottom:16px;line-height:1.6}
+.prog-row{display:flex;justify-content:space-between;font-size:10px;color:var(--muted2);margin-bottom:6px}
+.prog-bg{height:4px;background:rgba(180,200,255,0.1);border-radius:2px;margin-bottom:16px}
+.prog-fill{height:4px;border-radius:2px;background:var(--gold);transition:width .5s ease}
+.plan-feats{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+.pf{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);font-weight:300}
+.pf-dot{
+  width:16px;height:16px;border-radius:50%;
+  background:rgba(232,201,122,.09);color:var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-size:8px;font-weight:700;flex-shrink:0;
+  border:1px solid rgba(232,201,122,.2);
+}
+.upgrade-btn{
+  width:100%;padding:11px;background:var(--gold);color:#0a1035;
+  border-radius:8px;font-size:13px;font-weight:700;
+  cursor:pointer;border:none;font-family:'Outfit',sans-serif;
+  transition:all .18s;letter-spacing:.01em;
+}
 .upgrade-btn:hover{background:var(--gold2)}
 
 @media(max-width:960px){
   .layout{grid-template-columns:1fr}
   .sidebar{display:none}
   .stats-grid{grid-template-columns:1fr 1fr}
-  .dash-grid{grid-template-columns:1fr}
+  .content-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -170,52 +339,77 @@ nav{padding:0 28px;height:56px;border-bottom:1px solid var(--border);display:fle
     <div class="brand-name">VERO</div>
   </a>
   <div class="nav-right">
-    <span class="nav-user" id="nav-user"></span>
+    <span class="nav-user" id="nav-user">—</span>
     <button class="btn-sair" onclick="sair()">Sair</button>
   </div>
 </nav>
 
 <div class="layout">
+
+  <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="sb-section">Menu</div>
+    <div class="sb-section">Menu principal</div>
+
     <div class="sb-item active">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>Dashboard
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+      <span class="sb-item-label">Dashboard</span>
     </div>
+
     <div class="sb-item" onclick="window.location.href='questoes.html'">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg></div>Questões
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+      <span class="sb-item-label">Questões do dia</span>
+      <span class="sb-badge" id="sb-questoes-badge">20</span>
     </div>
+
     <div class="sb-item" onclick="alert('Em breve!')">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></div>Meu plano
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
+      <span class="sb-item-label">Meu plano de estudos</span>
     </div>
+
     <div class="sb-item" onclick="alert('Em breve!')">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M8 21V10M12 21V3M16 21v-7M4 21v-4"/></svg></div>Desempenho
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M8 21V10M12 21V3M16 21v-7M4 21v-4"/></svg></div>
+      <span class="sb-item-label">Desempenho</span>
     </div>
+
     <div class="sb-item" onclick="alert('Em breve!')">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>Simulados
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      <span class="sb-item-label">Simulados</span>
     </div>
+
+    <div class="sb-item" onclick="alert('Em breve!')">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+      <span class="sb-item-label">Relatórios</span>
+    </div>
+
     <div class="sb-divider"></div>
-    <div class="sb-section">Jornada</div>
+    <div class="sb-section">Jornada atual</div>
+
     <div class="sb-item active">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>Concursos
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <span class="sb-item-label">Concursos Públicos</span>
     </div>
+
     <div class="sb-spacer"></div>
+
     <div class="sb-plan">
-      <div class="sb-plan-top">
+      <div class="sb-plan-row">
         <div class="sb-plan-label">Plano atual</div>
         <div class="sb-plan-badge">Grátis</div>
       </div>
-      <div class="sb-plan-desc">20 questões por dia</div>
-      <button class="sb-plan-btn" onclick="abrirPlanos()">Fazer upgrade →</button>
+      <div class="sb-plan-name">Plano Gratuito</div>
+      <div class="sb-plan-desc">20 questões por dia. Faça upgrade para acelerar sua aprovação.</div>
+      <button class="sb-plan-btn" onclick="abrirPlanos()">Fazer upgrade para Pro →</button>
     </div>
   </aside>
 
+  <!-- MAIN -->
   <main class="main">
     <div class="page-hd">
       <h1 class="page-title">Bom estudo, <em id="nome-aluno">aluno</em>.</h1>
       <p class="page-sub">Continue de onde parou — cada questão te aproxima da aprovação.</p>
     </div>
 
-    <!-- ESTATÍSTICAS -->
+    <!-- STATS -->
     <div class="stats-grid">
       <div class="stat">
         <div class="stat-label">Questões hoje</div>
@@ -233,31 +427,31 @@ nav{padding:0 28px;height:56px;border-bottom:1px solid var(--border);display:fle
         <div class="stat-sub" id="taxa-sub">sessão atual</div>
       </div>
       <div class="stat">
-        <div class="stat-label">Sequência</div>
+        <div class="stat-label">Dias seguidos</div>
         <div class="stat-value">1</div>
-        <div class="stat-sub">dias seguidos</div>
+        <div class="stat-sub">sequência atual</div>
       </div>
     </div>
 
-    <!-- DASHBOARD PRINCIPAL -->
-    <div class="dash-grid">
-
+    <!-- CONTENT -->
+    <div class="content-grid">
       <div>
+
         <!-- ONDE MELHORAR -->
-        <div class="card" style="margin-bottom:14px">
+        <div class="card">
           <div class="card-header">
             <div class="card-title">Onde melhorar</div>
-            <span style="font-size:10px;color:var(--muted2);font-weight:300">baseado no seu histórico</span>
+            <div class="card-subtitle">baseado no seu histórico</div>
           </div>
           <div class="card-body">
             <div id="improve-list">
-              <div class="improve-empty">Responda questões para receber análise personalizada</div>
+              <div class="improve-empty">Responda questões para receber análise personalizada pela IA</div>
             </div>
           </div>
         </div>
 
-        <!-- DESEMPENHO POR DISCIPLINA -->
-        <div class="card" style="margin-bottom:14px">
+        <!-- DESEMPENHO -->
+        <div class="card">
           <div class="card-header">
             <div class="card-title">Desempenho por disciplina</div>
           </div>
@@ -268,54 +462,63 @@ nav{padding:0 28px;height:56px;border-bottom:1px solid var(--border);display:fle
           </div>
         </div>
 
-        <!-- ACESSO RÁPIDO — QUESTÕES -->
-        <div style="margin-top:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
-          <div style="padding:20px 22px;display:flex;align-items:center;justify-content:space-between">
-            <div>
-              <div style="font-family:Playfair Display,serif;font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:4px">Pronto para estudar?</div>
-              <div style="font-size:12px;color:var(--muted);font-weight:300">Você tem <strong style="color:var(--gold)" id="qtd-restantes">20</strong> questões disponíveis hoje.</div>
-            </div>
-            <button onclick="irParaQuestoes()" style="padding:10px 20px;background:var(--gold);color:#111;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:Outfit,sans-serif;white-space:nowrap;transition:all .18s" onmouseover="this.style.background='var(--gold2)'" onmouseout="this.style.background='var(--gold)'">
-              Resolver questões →
-            </button>
+        <!-- ACESSO RÁPIDO -->
+        <div class="quick-card">
+          <div>
+            <div class="quick-title">Pronto para estudar?</div>
+            <div class="quick-sub">Você tem <strong style="color:var(--gold)" id="qtd-restantes">20</strong> questões disponíveis hoje.</div>
           </div>
+          <button class="quick-btn" onclick="window.location.href='questoes.html'">Resolver questões →</button>
         </div>
+
       </div>
 
       <!-- COLUNA DIREITA -->
       <div class="right-col">
 
-        <!-- RESUMO DA SESSÃO -->
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Resumo da sessão</div>
-          </div>
-          <div class="card-body" style="display:flex;flex-direction:column;gap:12px">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <span style="font-size:12px;color:var(--muted);font-weight:300">Respondidas</span>
-              <span style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--gold)" id="sess-respondidas">0</span>
+        <div class="r-card">
+          <div class="r-header"><div class="r-title">Resumo da sessão</div></div>
+          <div class="r-body">
+            <div class="stat-row">
+              <span class="stat-row-label">Respondidas</span>
+              <span class="stat-row-val" style="color:var(--gold)" id="s-resp">0</span>
             </div>
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <span style="font-size:12px;color:var(--muted);font-weight:300">Acertos</span>
-              <span style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--green)" id="sess-acertos">0</span>
+            <div class="stat-row">
+              <span class="stat-row-label">Acertos</span>
+              <span class="stat-row-val" style="color:var(--green)" id="s-ok">0</span>
             </div>
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <span style="font-size:12px;color:var(--muted);font-weight:300">Erros</span>
-              <span style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--red)" id="sess-erros">0</span>
+            <div class="stat-row">
+              <span class="stat-row-label">Erros</span>
+              <span class="stat-row-val" style="color:var(--red)" id="s-err">0</span>
             </div>
-            <div style="height:1px;background:var(--border)"></div>
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <span style="font-size:12px;color:var(--muted);font-weight:300">Última disciplina</span>
-              <span style="font-size:12px;color:var(--text);font-weight:400;text-align:right;max-width:130px" id="sess-disc">—</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <span style="font-size:12px;color:var(--muted);font-weight:300">Última banca</span>
-              <span style="font-size:12px;color:var(--gold);font-weight:500" id="sess-banca">—</span>
+            <div class="stat-row">
+              <span class="stat-row-label">Taxa</span>
+              <span class="stat-row-val" style="color:var(--gold);font-size:1rem" id="s-taxa">—</span>
             </div>
           </div>
         </div>
 
-
+        <div class="plan-card">
+          <div class="plan-header">
+            <div class="plan-htitle">Seu plano</div>
+            <div class="plan-badge">Grátis</div>
+          </div>
+          <div class="plan-body">
+            <div class="plan-name">Plano Grátis</div>
+            <p class="plan-desc">Faça upgrade para questões ilimitadas, diagnóstico avançado e simulados completos.</p>
+            <div class="prog-row">
+              <span>Questões hoje</span>
+              <span id="prog-label">0 / 20</span>
+            </div>
+            <div class="prog-bg"><div class="prog-fill" id="progress-fill" style="width:0%"></div></div>
+            <div class="plan-feats">
+              <div class="pf"><div class="pf-dot">✓</div>20 questões por dia</div>
+              <div class="pf"><div class="pf-dot">✓</div>Gabarito comentado por IA</div>
+              <div class="pf"><div class="pf-dot">✓</div>1 simulado por mês</div>
+            </div>
+            <button class="upgrade-btn" onclick="abrirPlanos()">Fazer upgrade para Pro →</button>
+          </div>
+        </div>
 
       </div>
     </div>
@@ -323,53 +526,53 @@ nav{padding:0 28px;height:56px;border-bottom:1px solid var(--border);display:fle
 </div>
 
 <!-- MODAL PLANOS -->
-<div id="planos-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:200;overflow-y:auto;padding:40px 20px">
-  <div style="max-width:800px;margin:0 auto">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px">
-      <div style="font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:700;color:#eef2ff">Invista na sua <em style="color:#e8c97a;font-style:italic">aprovação</em></div>
-      <button onclick="fecharPlanos()" style="background:none;border:1px solid rgba(180,200,255,0.13);color:#7a90c8;padding:7px 14px;border-radius:6px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:12px">✕ Fechar</button>
+<div id="planos-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:200;overflow-y:auto;padding:40px 20px">
+  <div style="max-width:820px;margin:0 auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:30px">
+      <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:#eef2ff">Invista na sua <em style="color:#e8c97a;font-style:italic">aprovação</em></div>
+      <button onclick="fecharPlanos()" style="background:none;border:1px solid rgba(232,201,122,0.2);color:#7a90c8;padding:8px 16px;border-radius:7px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:12px;font-weight:500">✕ Fechar</button>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(232,201,122,0.13);border:1px solid rgba(232,201,122,0.13);border-radius:14px;overflow:hidden">
-      <div style="background:#0f1f50;padding:26px 20px">
-        <div style="font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(180,200,255,0.25);margin-bottom:10px">Grátis</div>
-        <div style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:#eef2ff;line-height:1"><sup style="font-size:.85rem;font-family:'Outfit',sans-serif;font-weight:300">R$</sup>0</div>
-        <div style="font-size:.78rem;color:rgba(180,200,255,0.25);margin:8px 0 16px;padding-bottom:16px;border-bottom:1px solid rgba(232,201,122,0.13)">Plano atual</div>
-        <ul style="list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:18px">
-          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ 20 questões por dia</li>
-          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ Diagnóstico básico</li>
-          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ 1 simulado por mês</li>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(232,201,122,0.12);border:1px solid rgba(232,201,122,0.12);border-radius:12px;overflow:hidden">
+      <div style="background:#0a1035;padding:28px 22px">
+        <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:rgba(180,200,255,0.3);margin-bottom:12px">Grátis</div>
+        <div style="font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:700;color:#eef2ff;line-height:1"><sup style="font-size:.9rem;font-family:'Outfit',sans-serif;font-weight:300">R$</sup>0</div>
+        <div style="font-size:.8rem;color:rgba(180,200,255,0.3);margin:8px 0 18px;padding-bottom:18px;border-bottom:1px solid rgba(232,201,122,0.1)">Plano atual</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+          <li style="font-size:.82rem;color:#7a90c8;font-weight:300">✓ 20 questões por dia</li>
+          <li style="font-size:.82rem;color:#7a90c8;font-weight:300">✓ Diagnóstico básico</li>
+          <li style="font-size:.82rem;color:#7a90c8;font-weight:300">✓ 1 simulado por mês</li>
         </ul>
-        <button style="width:100%;padding:10px;border-radius:7px;background:none;border:1px solid rgba(180,200,255,0.13);color:rgba(180,200,255,0.35);font-family:'Outfit',sans-serif;font-size:.8rem;cursor:default">Plano atual</button>
+        <button style="width:100%;padding:11px;border-radius:7px;background:none;border:1px solid rgba(232,201,122,0.15);color:rgba(238,242,255,0.35);font-family:'Outfit',sans-serif;font-size:.82rem;cursor:default">Plano atual</button>
       </div>
-      <div style="background:#0f1f50;padding:26px 20px">
-        <div style="font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(180,200,255,0.25);margin-bottom:10px">Basic</div>
-        <div style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:#eef2ff;line-height:1"><sup style="font-size:.85rem;font-family:'Outfit',sans-serif;font-weight:300">R$</sup>29<sub style="font-size:.72rem;color:rgba(180,200,255,0.25);font-family:'Outfit',sans-serif;font-weight:300">,99/mês</sub></div>
-        <div style="font-size:.78rem;color:rgba(180,200,255,0.25);margin:8px 0 16px;padding-bottom:16px;border-bottom:1px solid rgba(232,201,122,0.13)">Para estudar com método</div>
-        <ul style="list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:18px">
-          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ 100 questões por dia</li>
-          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ Diagnóstico avançado</li>
-          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ 4 simulados por mês</li>
-          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ Revisão espaçada SRS</li>
+      <div style="background:#0a1035;padding:28px 22px">
+        <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:rgba(180,200,255,0.3);margin-bottom:12px">Basic</div>
+        <div style="font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:700;color:#eef2ff;line-height:1"><sup style="font-size:.9rem;font-family:'Outfit',sans-serif;font-weight:300">R$</sup>29<sub style="font-size:.75rem;color:rgba(180,200,255,0.3);font-family:'Outfit',sans-serif;font-weight:300">,99/mês</sub></div>
+        <div style="font-size:.8rem;color:rgba(180,200,255,0.3);margin:8px 0 18px;padding-bottom:18px;border-bottom:1px solid rgba(232,201,122,0.1)">Para estudar com método</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+          <li style="font-size:.82rem;color:#7a90c8;font-weight:300">✓ 100 questões por dia</li>
+          <li style="font-size:.82rem;color:#7a90c8;font-weight:300">✓ Diagnóstico avançado</li>
+          <li style="font-size:.82rem;color:#7a90c8;font-weight:300">✓ 4 simulados por mês</li>
+          <li style="font-size:.82rem;color:#7a90c8;font-weight:300">✓ Revisão espaçada SRS</li>
         </ul>
-        <button style="width:100%;padding:10px;border-radius:7px;background:none;border:1px solid rgba(232,201,122,0.26);color:#eef2ff;font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer" onclick="alert('Em breve!')">Assinar Basic</button>
+        <button style="width:100%;padding:11px;border-radius:7px;background:none;border:1px solid rgba(232,201,122,0.25);color:#eef2ff;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer" onclick="alert('Em breve!')">Assinar Basic</button>
       </div>
-      <div style="background:#0a1535;padding:26px 20px;border-top:2px solid #e8c97a">
-        <div style="display:inline-block;background:#e8c97a;color:#111;font-size:.6rem;font-weight:700;padding:2px 9px;border-radius:100px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px">Popular</div>
-        <div style="font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(180,200,255,0.25);margin-bottom:10px">Pro</div>
-        <div style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:#eef2ff;line-height:1"><sup style="font-size:.85rem;font-family:'Outfit',sans-serif;font-weight:300">R$</sup>45<sub style="font-size:.72rem;color:rgba(180,200,255,0.25);font-family:'Outfit',sans-serif;font-weight:300">,90/mês</sub></div>
-        <div style="font-size:.78rem;color:rgba(180,200,255,0.25);margin:8px 0 16px;padding-bottom:16px;border-bottom:1px solid rgba(232,201,122,0.13)">Para passar logo e no topo</div>
-        <ul style="list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:18px">
-          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ Questões ilimitadas</li>
-          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ Diagnóstico em tempo real</li>
-          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ Simulados ilimitados</li>
-          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ Todas as bancas</li>
-          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ Suporte prioritário</li>
+      <div style="background:#0d1540;padding:28px 22px;border-top:2px solid #e8c97a">
+        <div style="display:inline-block;background:#e8c97a;color:#0a1035;font-size:.62rem;font-weight:700;padding:3px 10px;border-radius:100px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">Popular</div>
+        <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:rgba(180,200,255,0.3);margin-bottom:12px">Pro</div>
+        <div style="font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:700;color:#eef2ff;line-height:1"><sup style="font-size:.9rem;font-family:'Outfit',sans-serif;font-weight:300">R$</sup>45<sub style="font-size:.75rem;color:rgba(180,200,255,0.3);font-family:'Outfit',sans-serif;font-weight:300">,90/mês</sub></div>
+        <div style="font-size:.8rem;color:rgba(180,200,255,0.3);margin:8px 0 18px;padding-bottom:18px;border-bottom:1px solid rgba(232,201,122,0.1)">Para passar logo e no topo</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+          <li style="font-size:.82rem;color:#7a90c8;font-weight:300">✓ Questões ilimitadas</li>
+          <li style="font-size:.82rem;color:#7a90c8;font-weight:300">✓ Diagnóstico em tempo real</li>
+          <li style="font-size:.82rem;color:#7a90c8;font-weight:300">✓ Simulados ilimitados</li>
+          <li style="font-size:.82rem;color:#7a90c8;font-weight:300">✓ Todas as bancas</li>
+          <li style="font-size:.82rem;color:#7a90c8;font-weight:300">✓ Suporte prioritário</li>
         </ul>
-        <button style="width:100%;padding:10px;border-radius:7px;background:#e8c97a;color:#111;border:none;font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer" onclick="alert('Em breve!')">Começar 7 dias grátis</button>
-        <div style="font-size:.66rem;color:rgba(180,200,255,0.25);text-align:center;margin-top:8px">Cancele quando quiser</div>
+        <button style="width:100%;padding:11px;border-radius:7px;background:#e8c97a;color:#0a1035;border:none;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer" onclick="alert('Em breve!')">Começar 7 dias grátis</button>
+        <div style="font-size:.68rem;color:rgba(180,200,255,0.3);text-align:center;margin-top:8px">Cancele quando quiser</div>
       </div>
     </div>
-    <div style="text-align:center;margin-top:16px">
+    <div style="text-align:center;margin-top:18px">
       <button onclick="fecharPlanos()" style="background:none;border:none;color:#7a90c8;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">← Voltar para o painel</button>
     </div>
   </div>
@@ -380,10 +583,8 @@ nav{padding:0 28px;height:56px;border-bottom:1px solid var(--border);display:fle
 const{createClient}=supabase;
 const sb=createClient('https://lklmzhunhiwqsbhnymaw.supabase.co','sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU');
 
-let questoesHoje=0,acertos=0,respondidas=0,questaoAtual=null;
-let disciplinaAtual='',bancaAtual='';
+let acertos=0,respondidas=0,questoesHoje=0,userId=null;
 let desempenhoPorDisc={};
-let userId=null;
 
 async function init(){
   const{data:{session}}=await sb.auth.getSession();
@@ -392,17 +593,13 @@ async function init(){
   const nome=session.user.user_metadata?.full_name||session.user.email.split('@')[0];
   document.getElementById('nome-aluno').textContent=nome;
   document.getElementById('nav-user').textContent=nome;
-  await carregarEstatisticasHistoricas();
-  gerarQuestao();
+  await carregarHistorico();
 }
 
-async function carregarEstatisticasHistoricas(){
+async function carregarHistorico(){
   try{
-    // Total histórico
     const{count}=await sb.from('questoes_respondidas').select('*',{count:'exact',head:true}).eq('user_id',userId);
     document.getElementById('qtd-total').textContent=count||0;
-
-    // Desempenho histórico por disciplina
     const{data}=await sb.from('questoes_respondidas').select('disciplina,acertou').eq('user_id',userId);
     if(data&&data.length>0){
       const disc={};
@@ -415,112 +612,7 @@ async function carregarEstatisticasHistoricas(){
       renderDesempenho();
       renderMelhorar();
     }
-  }catch(e){console.log('Erro ao carregar histórico:',e)}
-}
-
-async function salvarQuestao(acertou){
-  if(!userId||!questaoAtual)return;
-  try{
-    await sb.from('questoes_respondidas').insert({
-      user_id:userId,
-      disciplina:disciplinaAtual,
-      banca:bancaAtual,
-      acertou:acertou,
-      enunciado:questaoAtual.enunciado?.substring(0,300)||'',
-      gabarito:questaoAtual.gabarito||''
-    });
-  }catch(e){console.log('Erro ao salvar questão:',e)}
-}
-
-function atualizarFiltros(){
-  const d=document.getElementById('sel-disciplina').value;
-  const b=document.getElementById('sel-banca').value;
-  document.getElementById('q-counter').textContent=d||b?`${d||'Aleatória'} · ${b||'Qualquer banca'}`:'';
-}
-
-async function gerarQuestao(){
-  const btn=document.getElementById('btn-nova');
-  btn.disabled=true;
-  document.getElementById('q-loading').style.display='flex';
-  document.getElementById('q-content').style.display='none';
-  document.getElementById('gabarito').style.display='none';
-
-  const disciplinas=['Direito Constitucional','Direito Administrativo','Raciocínio Lógico','Português','Direito Penal','Direito Civil','Informática'];
-  const bancas=['CESPE','FCC','FGV','VUNESP','IBFC'];
-  disciplinaAtual=document.getElementById('sel-disciplina').value||disciplinas[Math.floor(Math.random()*disciplinas.length)];
-  bancaAtual=document.getElementById('sel-banca').value||bancas[Math.floor(Math.random()*bancas.length)];
-  document.getElementById('q-banca').textContent=bancaAtual;
-  document.getElementById('q-disciplina').textContent=disciplinaAtual;
-
-  try{
-    const resp=await fetch('/api/questao',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({disciplina:disciplinaAtual,banca:bancaAtual})});
-    if(!resp.ok)throw new Error('Erro '+resp.status);
-    questaoAtual=await resp.json();
-    document.getElementById('q-text').textContent=questaoAtual.enunciado;
-    const el=document.getElementById('opcoes');
-    el.innerHTML='';
-    questaoAtual.opcoes.forEach(op=>{
-      const letra=op.charAt(0);
-      const div=document.createElement('div');
-      div.className='opcao';
-      div.innerHTML=`<span class="opcao-letra">${letra}</span><span>${op.substring(3)}</span>`;
-      div.onclick=()=>responder(div,letra);
-      el.appendChild(div);
-    });
-    document.getElementById('q-loading').style.display='none';
-    document.getElementById('q-content').style.display='block';
-  }catch(err){
-    document.getElementById('q-loading').style.display='none';
-    document.getElementById('q-content').style.display='block';
-    document.getElementById('q-text').textContent='Erro ao gerar questão: '+err.message;
-  }
-  btn.disabled=false;
-}
-
-function responder(el,letra){
-  if(!questaoAtual)return;
-  document.querySelectorAll('.opcao').forEach(o=>o.classList.add('disabled'));
-  respondidas++;
-  const acertou=letra===questaoAtual.gabarito;
-  if(acertou){el.classList.add('certa');acertos++;}
-  else{
-    el.classList.add('errada');
-    document.querySelectorAll('.opcao').forEach(o=>{
-      if(o.querySelector('.opcao-letra').textContent===questaoAtual.gabarito)o.classList.add('certa');
-    });
-  }
-  document.getElementById('gab-text').textContent=questaoAtual.explicacao;
-  document.getElementById('gabarito').style.display='block';
-
-  // Salva no banco
-  salvarQuestao(acertou);
-
-  // Atualiza métricas
-  questoesHoje++;
-  document.getElementById('qtd-hoje').textContent=questoesHoje;
-  if(document.getElementById('prog-label'))document.getElementById('prog-label').textContent=questoesHoje+' / 20';
-  if(document.getElementById('progress-fill'))document.getElementById('progress-fill').style.width=Math.min(questoesHoje/20*100,100)+'%';
-  const taxa=Math.round(acertos/respondidas*100);
-  document.getElementById('taxa-acerto').textContent=taxa+'%';
-  document.getElementById('taxa-sub').textContent=acertos+' de '+respondidas+' certas';
-
-  // Resumo da sessão
-  document.getElementById('sess-respondidas').textContent=respondidas;
-  document.getElementById('sess-acertos').textContent=acertos;
-  document.getElementById('sess-erros').textContent=respondidas-acertos;
-  document.getElementById('sess-disc').textContent=disciplinaAtual;
-  document.getElementById('sess-banca').textContent=bancaAtual;
-
-  // Total histórico
-  const totalEl=document.getElementById('qtd-total');
-  totalEl.textContent=(parseInt(totalEl.textContent)||0)+1;
-
-  // Desempenho por disciplina
-  if(!desempenhoPorDisc[disciplinaAtual])desempenhoPorDisc[disciplinaAtual]={acertos:0,total:0};
-  desempenhoPorDisc[disciplinaAtual].total++;
-  if(acertou)desempenhoPorDisc[disciplinaAtual].acertos++;
-  renderDesempenho();
-  renderMelhorar();
+  }catch(e){console.log('Erro:',e)}
 }
 
 function renderDesempenho(){
@@ -534,7 +626,10 @@ function renderDesempenho(){
     return`<div class="perf-item">
       <div class="perf-row">
         <span class="perf-name">${disc}</span>
-        <span class="perf-pct" style="color:${cor}">${pct}% <span style="font-size:10px;color:var(--muted2);font-weight:300">(${d.total} questões)</span></span>
+        <div class="perf-info">
+          <span class="perf-pct" style="color:${cor}">${pct}%</span>
+          <span class="perf-count">${d.total} questões</span>
+        </div>
       </div>
       <div class="perf-bar-bg"><div class="perf-bar" style="width:${pct}%;background:${cor}"></div></div>
     </div>`;
@@ -545,51 +640,27 @@ function renderMelhorar(){
   const el=document.getElementById('improve-list');
   const discs=Object.entries(desempenhoPorDisc).filter(([,d])=>d.total>=2);
   if(!discs.length){el.innerHTML='<div class="improve-empty">Responda pelo menos 2 questões por disciplina para receber análise personalizada</div>';return;}
-
   const fracas=discs.filter(([,d])=>Math.round(d.acertos/d.total*100)<60).sort((a,b)=>Math.round(a[1].acertos/a[1].total*100)-Math.round(b[1].acertos/b[1].total*100));
   const medias=discs.filter(([,d])=>{const p=Math.round(d.acertos/d.total*100);return p>=60&&p<80;});
   const fortes=discs.filter(([,d])=>Math.round(d.acertos/d.total*100)>=80);
-
   let html='';
   fracas.forEach(([disc,d])=>{
     const pct=Math.round(d.acertos/d.total*100);
-    html+=`<div class="improve-item">
-      <div class="improve-icon imp-warn">⚠️</div>
-      <div class="improve-body">
-        <div class="improve-label">Revisar ${disc}</div>
-        <div class="improve-sub">${pct}% de acerto em ${d.total} questões — foco aqui para melhorar sua nota</div>
-      </div>
-    </div>`;
+    html+=`<div class="improve-item"><div class="improve-icon imp-warn">⚠️</div><div class="improve-body"><div class="improve-label">Revisar ${disc}</div><div class="improve-sub">${pct}% de acerto em ${d.total} questões — priorize esse tema</div></div></div>`;
   });
   medias.forEach(([disc,d])=>{
     const pct=Math.round(d.acertos/d.total*100);
-    html+=`<div class="improve-item">
-      <div class="improve-icon imp-tip">📈</div>
-      <div class="improve-body">
-        <div class="improve-label">${disc} — quase lá</div>
-        <div class="improve-sub">${pct}% de acerto — mais algumas questões para consolidar</div>
-      </div>
-    </div>`;
+    html+=`<div class="improve-item"><div class="improve-icon imp-tip">📈</div><div class="improve-body"><div class="improve-label">${disc} — quase lá</div><div class="improve-sub">${pct}% de acerto — mais algumas questões para consolidar</div></div></div>`;
   });
   fortes.forEach(([disc,d])=>{
     const pct=Math.round(d.acertos/d.total*100);
-    html+=`<div class="improve-item">
-      <div class="improve-icon imp-ok">🎯</div>
-      <div class="improve-body">
-        <div class="improve-label">${disc} em dia</div>
-        <div class="improve-sub">${pct}% de acerto — continue assim!</div>
-      </div>
-    </div>`;
+    html+=`<div class="improve-item"><div class="improve-icon imp-ok">🎯</div><div class="improve-body"><div class="improve-label">${disc} em dia</div><div class="improve-sub">${pct}% de acerto — continue assim!</div></div></div>`;
   });
-
   if(!html)html='<div class="improve-empty">Continue respondendo para receber dicas personalizadas</div>';
   el.innerHTML=html;
 }
 
-function irParaQuestoes(){
-  window.location.href = "questoes.html";
-}
-
+function irParaQuestoes(){window.location.href='questoes.html';}
 async function sair(){await sb.auth.signOut();window.location.href='index.html';}
 function abrirPlanos(){document.getElementById('planos-modal').style.display='block';document.body.style.overflow='hidden';}
 function fecharPlanos(){document.getElementById('planos-modal').style.display='none';document.body.style.overflow='';}
