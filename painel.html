@@ -477,28 +477,59 @@ nav{
       <div class="right-col">
 
         <div class="r-card">
-          <div class="r-header"><div class="r-title">Resumo da sessão</div></div>
+          <div class="r-header" style="display:flex;align-items:center;justify-content:space-between">
+            <div class="r-title">Seu histórico geral</div>
+            <span style="font-size:9px;color:var(--muted2);font-weight:300">todos os acessos</span>
+          </div>
           <div class="r-body">
             <div class="stat-row">
-              <span class="stat-row-label">Respondidas</span>
-              <span class="stat-row-val" style="color:var(--gold)" id="s-resp">0</span>
+              <span class="stat-row-label">Total respondidas</span>
+              <span class="stat-row-val" style="color:var(--gold)" id="s-resp">—</span>
             </div>
             <div class="stat-row">
-              <span class="stat-row-label">Acertos</span>
-              <span class="stat-row-val" style="color:var(--green)" id="s-ok">0</span>
+              <span class="stat-row-label">Total acertos</span>
+              <span class="stat-row-val" style="color:var(--green)" id="s-ok">—</span>
             </div>
             <div class="stat-row">
-              <span class="stat-row-label">Erros</span>
-              <span class="stat-row-val" style="color:var(--red)" id="s-err">0</span>
+              <span class="stat-row-label">Total erros</span>
+              <span class="stat-row-val" style="color:var(--red)" id="s-err">—</span>
             </div>
             <div class="stat-row">
-              <span class="stat-row-label">Taxa</span>
-              <span class="stat-row-val" style="color:var(--gold);font-size:1rem" id="s-taxa">—</span>
+              <span class="stat-row-label">Taxa geral</span>
+              <span class="stat-row-val" style="color:var(--gold);font-size:1.1rem" id="s-taxa">—</span>
+            </div>
+            <div style="padding:12px 0 4px;border-top:1px solid var(--border);margin-top:4px">
+              <div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:8px">Evolução semanal</div>
+              <div style="font-size:12px;font-weight:500" id="s-evolucao" style="color:var(--muted)">Calculando...</div>
             </div>
           </div>
         </div>
 
 
+
+        <!-- MINI STATS CARD -->
+        <div class="r-card">
+          <div class="r-header"><div class="r-title">Hoje</div></div>
+          <div class="r-body" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div style="text-align:center;padding:8px 0">
+              <div style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--gold);line-height:1" id="hoje-qtd">0</div>
+              <div style="font-size:10px;color:var(--muted2);margin-top:4px;font-weight:300">questões</div>
+            </div>
+            <div style="text-align:center;padding:8px 0">
+              <div style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--green);line-height:1" id="hoje-taxa">—</div>
+              <div style="font-size:10px;color:var(--muted2);margin-top:4px;font-weight:300">acerto hoje</div>
+            </div>
+            <div style="grid-column:1/-1">
+              <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted2);margin-bottom:5px">
+                <span>Meta diária</span>
+                <span id="hoje-prog-label">0 / 20</span>
+              </div>
+              <div style="height:4px;background:rgba(180,200,255,0.1);border-radius:2px">
+                <div id="hoje-prog-bar" style="height:4px;border-radius:2px;background:var(--gold);width:0%;transition:width .5s ease"></div>
+              </div>
+            </div>
+          </div>
+        </div>
 
       </div>
     </div>
@@ -598,20 +629,78 @@ async function carregarPerfil(){
 
 async function carregarHistorico(){
   try{
-    const{count}=await sb.from('questoes_respondidas').select('*',{count:'exact',head:true}).eq('user_id',userId);
-    document.getElementById('qtd-total').textContent=count||0;
-    const{data}=await sb.from('questoes_respondidas').select('disciplina,acertou').eq('user_id',userId);
-    if(data&&data.length>0){
-      const disc={};
-      data.forEach(q=>{
-        if(!disc[q.disciplina])disc[q.disciplina]={acertos:0,total:0};
-        disc[q.disciplina].total++;
-        if(q.acertou)disc[q.disciplina].acertos++;
-      });
-      desempenhoPorDisc={...disc};
-      renderDesempenho();
-      renderMelhorar();
+    // Busca TODAS as questoes respondidas
+    const{data,error}=await sb.from('questoes_respondidas')
+      .select('disciplina,acertou,created_at')
+      .eq('user_id',userId)
+      .order('created_at',{ascending:false});
+
+    if(error||!data)return;
+
+    const total=data.length;
+    const acertosTotal=data.filter(q=>q.acertou).length;
+    const taxaTotal=total>0?Math.round(acertosTotal/total*100):0;
+
+    // Atualiza stats gerais
+    document.getElementById('qtd-total').textContent=total;
+
+    // Calcula evolução — compara última semana com semana anterior
+    const agora=new Date();
+    const set7=new Date(agora-7*86400000);
+    const set14=new Date(agora-14*86400000);
+    const semanaAtual=data.filter(q=>new Date(q.created_at)>=set7);
+    const semanaAnterior=data.filter(q=>new Date(q.created_at)>=set14&&new Date(q.created_at)<set7);
+    const taxaSemAtual=semanaAtual.length>0?Math.round(semanaAtual.filter(q=>q.acertou).length/semanaAtual.length*100):0;
+    const taxaSemAnt=semanaAnterior.length>0?Math.round(semanaAnterior.filter(q=>q.acertou).length/semanaAnterior.length*100):0;
+    const evolucao=taxaSemAtual-taxaSemAnt;
+
+    // Atualiza resumo da sessão com dados reais históricos
+    document.getElementById('s-resp').textContent=total;
+    document.getElementById('s-ok').textContent=acertosTotal;
+    document.getElementById('s-err').textContent=total-acertosTotal;
+
+    if(total>0){
+      document.getElementById('s-taxa').textContent=taxaTotal+'%';
+      // Evolução
+      const evolEl=document.getElementById('s-evolucao');
+      if(evolEl){
+        if(evolucao>0){evolEl.textContent='↑ +'+evolucao+'% vs semana passada';evolEl.style.color='var(--green)';}
+        else if(evolucao<0){evolEl.textContent='↓ '+evolucao+'% vs semana passada';evolEl.style.color='var(--red)';}
+        else{evolEl.textContent='→ Estável vs semana passada';evolEl.style.color='var(--muted)';}
+      }
     }
+
+    // Questoes hoje
+    const hoje=new Date().toISOString().split('T')[0];
+    const hoje_count=data.filter(q=>q.created_at&&q.created_at.startsWith(hoje)).length;
+    document.getElementById('qtd-hoje').textContent=hoje_count;
+    const restantes=Math.max(0,20-hoje_count);
+    if(document.getElementById('qtd-restantes'))document.getElementById('qtd-restantes').textContent=restantes;
+
+    // Mini card hoje
+    if(document.getElementById('hoje-qtd'))document.getElementById('hoje-qtd').textContent=hoje_count;
+    const taxaHoje=hoje_count>0?Math.round(data.filter(q=>q.created_at&&q.created_at.startsWith(hoje)&&q.acertou).length/hoje_count*100):0;
+    if(document.getElementById('hoje-taxa'))document.getElementById('hoje-taxa').textContent=hoje_count>0?taxaHoje+'%':'—';
+    if(document.getElementById('hoje-prog-label'))document.getElementById('hoje-prog-label').textContent=hoje_count+' / 20';
+    if(document.getElementById('hoje-prog-bar'))document.getElementById('hoje-prog-bar').style.width=Math.min(hoje_count/20*100,100)+'%';
+
+    // Taxa de acerto
+    if(total>0){
+      document.getElementById('taxa-acerto').textContent=taxaTotal+'%';
+      document.getElementById('taxa-sub').textContent=acertosTotal+' de '+total+' certas (total)';
+    }
+
+    // Desempenho por disciplina
+    const disc={};
+    data.forEach(q=>{
+      if(!disc[q.disciplina])disc[q.disciplina]={acertos:0,total:0};
+      disc[q.disciplina].total++;
+      if(q.acertou)disc[q.disciplina].acertos++;
+    });
+    desempenhoPorDisc={...disc};
+    renderDesempenho();
+    renderMelhorar();
+
   }catch(e){console.log('Erro:',e)}
 }
 
