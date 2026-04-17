@@ -382,11 +382,11 @@ nav{
     </div>
 
     <div class="sb-divider"></div>
-    <div class="sb-section">Jornada atual</div>
+    <div class="sb-section">Minha jornada</div>
 
-    <div class="sb-item active">
+    <div class="sb-item active" id="sb-jornada">
       <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-      <span class="sb-item-label">Concursos Públicos</span>
+      <span id="sb-concurso-label">Carregando...</span>
     </div>
 
     <div class="sb-spacer"></div>
@@ -573,7 +573,27 @@ async function init(){
   const nome=session.user.user_metadata?.full_name||session.user.email.split('@')[0];
   document.getElementById('nome-aluno').textContent=nome;
   document.getElementById('nav-user').textContent=nome;
+  await carregarPerfil();
   await carregarHistorico();
+}
+
+async function carregarPerfil(){
+  try{
+    const{data:perfil}=await sb.from('perfis').select('*').eq('id',userId).single();
+    if(perfil&&perfil.concurso){
+      const label=document.getElementById('sb-concurso-label');
+      if(label){
+        const concursoShort=perfil.concurso.length>28?perfil.concurso.substring(0,28)+'...':perfil.concurso;
+        label.textContent=concursoShort;
+      }
+      // Redirect to perfil if not complete
+    } else {
+      const label=document.getElementById('sb-concurso-label');
+      if(label){
+        label.innerHTML='<a href="perfil.html" style="color:var(--gold);text-decoration:none;font-size:12px">Configurar concurso →</a>';
+      }
+    }
+  }catch(e){console.log('Perfil:',e)}
 }
 
 async function carregarHistorico(){

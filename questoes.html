@@ -249,10 +249,10 @@ nav{
       <span>Relatórios</span>
     </div>
     <div class="sb-divider"></div>
-    <div class="sb-section">Jornada atual</div>
+    <div class="sb-section">Minha jornada</div>
     <div class="sb-item active">
       <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-      <span>Concursos Públicos</span>
+      <span id="sb-concurso-label">Carregando...</span>
     </div>
     <div class="sb-spacer"></div>
     <div class="sb-plan">
@@ -394,13 +394,30 @@ let disciplinaAtual='',bancaAtual='';
 let historico=[];
 let userId=null;
 
+let perfilAluno = null;
+
 async function init(){
   const{data:{session}}=await sb.auth.getSession();
   if(!session){window.location.href='login.html';return;}
   userId=session.user.id;
   const nome=session.user.user_metadata?.full_name||session.user.email.split('@')[0];
   document.getElementById('nav-user').textContent=nome;
+  await carregarPerfil();
   gerarQuestao();
+}
+
+async function carregarPerfil(){
+  try{
+    const{data:perfil}=await sb.from('perfis').select('*').eq('id',userId).single();
+    if(perfil){
+      perfilAluno=perfil;
+      const label=document.getElementById('sb-concurso-label');
+      if(label&&perfil.concurso){
+        const s=perfil.concurso.length>28?perfil.concurso.substring(0,28)+'...':perfil.concurso;
+        label.textContent=s;
+      }
+    }
+  }catch(e){console.log('Perfil:',e)}
 }
 
 async function gerarQuestao(){
@@ -418,7 +435,14 @@ async function gerarQuestao(){
   document.getElementById('q-disciplina').textContent=disciplinaAtual;
 
   try{
-    const resp=await fetch('/api/questao',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({disciplina:disciplinaAtual,banca:bancaAtual})});
+    const payload={
+      disciplina:disciplinaAtual,
+      banca:bancaAtual,
+      concurso:perfilAluno?.concurso||null,
+      nivel:perfilAluno?.nivel||'intermediario',
+      assunto:null
+    };
+    const resp=await fetch('/api/questao',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     if(!resp.ok)throw new Error('Erro '+resp.status);
     questaoAtual=await resp.json();
     document.getElementById('q-text').textContent=questaoAtual.enunciado;
@@ -458,7 +482,26 @@ function responder(el,letra){
   document.getElementById('gabarito').style.display='block';
 
   if(userId&&questaoAtual){
-    sb.from('questoes_respondidas').insert({user_id:userId,disciplina:disciplinaAtual,banca:bancaAtual,acertou,enunciado:questaoAtual.enunciado?.substring(0,300)||'',gabarito:questaoAtual.gabarito||''}).then(()=>{});
+    sb.from('questoes_respondidas').insert({
+      user_id:userId,
+      disciplina:disciplinaAtual,
+      banca:bancaAtual,
+      acertou,
+      enunciado:questaoAtual.enunciado?.substring(0,300)||'',
+      gabarito:questaoAtual.gabarito||''
+    }).then(()=>{});
+    // Salva também em assuntos_respondidos se tiver assunto
+    if(questaoAtual.assunto){
+      sb.from('assuntos_respondidos').insert({
+        user_id:userId,
+        concurso:perfilAluno?.concurso||null,
+        disciplina:disciplinaAtual,
+        assunto:questaoAtual.assunto,
+        banca:bancaAtual,
+        acertou,
+        nivel_questao:perfilAluno?.nivel||'intermediario'
+      }).then(()=>{});
+    }
   }
 
   questoesHoje++;
