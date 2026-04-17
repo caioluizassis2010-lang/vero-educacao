@@ -774,8 +774,8 @@ function atualizarConcursos(){
     el.innerHTML='<div class="cc-empty">Nenhum concurso mapeado para esse estado/área ainda</div>';
     return;
   }
-  el.innerHTML=lista.map(c=>`
-    <div class="cc" onclick="selecionarConcurso(this,'${c.nome}','${c.banca}')">
+  el.innerHTML=lista.map((c,i)=>`
+    <div class="cc" data-nome="${c.nome.replace(/"/g,'&quot;')}" data-banca="${c.banca}" onclick="selecionarConcursoById(this)">
       <div class="cc-name">${c.nome}</div>
       <div class="cc-banca">Banca: ${c.banca}</div>
     </div>`).join('');
@@ -783,6 +783,11 @@ function atualizarConcursos(){
   document.getElementById('cargo-group').style.display='none';
 }
 
+function selecionarConcursoById(el){
+  const nome=el.dataset.nome;
+  const banca=el.dataset.banca;
+  selecionarConcurso(el,nome,banca);
+}
 function selecionarConcurso(el,nome,banca){
   document.querySelectorAll('.cc').forEach(c=>c.classList.remove('selected'));
   el.classList.add('selected');
