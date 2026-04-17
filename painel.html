@@ -9,10 +9,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#090909;--bg2:#0f0f0f;--bg3:#141414;
-  --gold:#c8a45a;--gold2:#d6b772;
-  --text:#f6f3ec;--muted:#8a8278;--muted2:rgba(246,243,236,0.25);
-  --border:rgba(200,164,90,0.13);--border2:rgba(200,164,90,0.26);
+  --bg:#0a1535;--bg2:#0f1f50;--bg3:#142560;
+  --gold:#e8c97a;--gold2:#f2d98e;
+  --text:#eef2ff;--muted:#7a90c8;--muted2:rgba(180,200,255,0.25);
+  --border:rgba(232,201,122,0.15);--border2:rgba(232,201,122,0.28);
   --green:#0fa968;--red:#e05454;
   --radius:12px;
 }
@@ -22,7 +22,7 @@ a{text-decoration:none;color:inherit}
 
 nav{padding:0 28px;height:56px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(9,9,9,0.97);backdrop-filter:blur(16px);position:sticky;top:0;z-index:100}
 .brand{display:inline-flex;align-items:center;gap:10px}
-.brand-mark{width:30px;height:30px;border-radius:7px;border:1px solid var(--border2);background:#050505;color:var(--gold);display:grid;place-items:center;font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700}
+.brand-mark{width:30px;height:30px;border-radius:7px;border:1px solid var(--border2);background:#071030;color:var(--gold);display:grid;place-items:center;font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700}
 .brand-name{font-family:'Playfair Display',serif;color:var(--text);letter-spacing:2px;font-size:.9rem;font-weight:600}
 .nav-right{display:flex;align-items:center;gap:14px}
 .nav-user{font-size:12px;color:var(--muted)}
@@ -37,9 +37,9 @@ nav{padding:0 28px;height:56px;border-bottom:1px solid var(--border);display:fle
 .sb-section:first-child{margin-top:4px}
 .sb-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:12px;color:var(--muted);cursor:pointer;transition:all .15s;border:1px solid transparent;margin-bottom:1px}
 .sb-item:hover{background:var(--bg2);color:var(--text)}
-.sb-item.active{background:rgba(200,164,90,.07);color:var(--gold);border-color:var(--border)}
+.sb-item.active{background:rgba(232,201,122,.07);color:var(--gold);border-color:var(--border)}
 .sb-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;background:var(--bg3);flex-shrink:0;transition:all .15s}
-.sb-item.active .sb-icon{background:rgba(200,164,90,.1)}
+.sb-item.active .sb-icon{background:rgba(232,201,122,.1)}
 .sb-icon svg{width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:stroke .15s}
 .sb-item.active .sb-icon svg,.sb-item:hover .sb-icon svg{stroke:var(--gold)}
 .sb-divider{height:1px;background:var(--border);margin:10px 2px}
@@ -47,7 +47,7 @@ nav{padding:0 28px;height:56px;border-bottom:1px solid var(--border);display:fle
 .sb-plan{margin:0 2px;padding:12px;background:var(--bg2);border:1px solid var(--border);border-radius:10px}
 .sb-plan-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
 .sb-plan-label{font-size:9px;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase}
-.sb-plan-badge{font-size:9px;font-weight:700;padding:2px 7px;background:rgba(200,164,90,.1);color:var(--gold);border-radius:100px;border:1px solid var(--border2)}
+.sb-plan-badge{font-size:9px;font-weight:700;padding:2px 7px;background:rgba(232,201,122,.1);color:var(--gold);border-radius:100px;border:1px solid var(--border2)}
 .sb-plan-desc{font-size:11px;color:var(--muted2);font-weight:300;margin-bottom:10px;line-height:1.5}
 .sb-plan-btn{width:100%;padding:7px;background:var(--gold);color:#111;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;border:none;font-family:'Outfit',sans-serif;transition:all .15s}
 .sb-plan-btn:hover{background:var(--gold2)}
@@ -83,7 +83,7 @@ nav{padding:0 28px;height:56px;border-bottom:1px solid var(--border);display:fle
 .improve-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
 .imp-warn{background:rgba(224,84,84,.1)}
 .imp-ok{background:rgba(15,169,104,.1)}
-.imp-tip{background:rgba(200,164,90,.08)}
+.imp-tip{background:rgba(232,201,122,.08)}
 .improve-body{flex:1}
 .improve-label{font-size:12px;color:var(--text);font-weight:500;margin-bottom:2px}
 .improve-sub{font-size:11px;color:var(--muted2);font-weight:300;line-height:1.5}
@@ -107,7 +107,7 @@ nav{padding:0 28px;height:56px;border-bottom:1px solid var(--border);display:fle
 .q-label{font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2)}
 .q-chips{display:flex;gap:5px}
 .q-chip{font-size:10px;padding:3px 9px;border-radius:100px;border:1px solid var(--border);color:var(--muted2);background:var(--bg2)}
-.q-chip.gold{border-color:var(--border2);color:var(--gold);background:rgba(200,164,90,.06)}
+.q-chip.gold{border-color:var(--border2);color:var(--gold);background:rgba(232,201,122,.06)}
 .q-filters{display:flex;gap:6px}
 .q-filter{background:var(--bg2);color:var(--muted);border:1px solid var(--border);border-radius:6px;padding:5px 22px 5px 9px;font-size:11px;font-family:'Outfit',sans-serif;cursor:pointer;outline:none;transition:all .15s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='8' height='5' viewBox='0 0 8 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L4 4L7 1' stroke='%238a8278' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center}
 .q-filter:focus,.q-filter:hover{border-color:var(--border2);color:var(--text)}
@@ -119,13 +119,13 @@ nav{padding:0 28px;height:56px;border-bottom:1px solid var(--border);display:fle
 .q-text{font-size:.9rem;line-height:1.82;color:var(--text);margin-bottom:18px;font-weight:300}
 .opcoes{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
 .opcao{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border:1px solid var(--border);border-radius:9px;cursor:pointer;transition:all .18s;font-size:.87rem;color:var(--text);background:transparent;font-weight:300}
-.opcao:hover{border-color:var(--border2);background:rgba(200,164,90,.03)}
+.opcao:hover{border-color:var(--border2);background:rgba(232,201,122,.03)}
 .opcao.certa{background:rgba(15,169,104,.07);border-color:rgba(15,169,104,.3);color:#0fa968}
 .opcao.errada{background:rgba(224,84,84,.07);border-color:rgba(224,84,84,.3);color:var(--red)}
 .opcao.disabled{pointer-events:none}
 .opcao-letra{font-size:.82rem;font-weight:600;min-width:18px;flex-shrink:0;margin-top:1px;color:var(--muted)}
 .opcao.certa .opcao-letra,.opcao.errada .opcao-letra{color:inherit}
-.gabarito{background:rgba(200,164,90,.04);border:1px solid var(--border);border-left:2px solid var(--gold);border-radius:9px;padding:14px 16px;margin-top:12px;display:none}
+.gabarito{background:rgba(232,201,122,.04);border:1px solid var(--border);border-left:2px solid var(--gold);border-radius:9px;padding:14px 16px;margin-top:12px;display:none}
 .gab-label{font-size:9px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
 .gab-text{font-size:.83rem;color:var(--muted);line-height:1.78;font-weight:300}
 .q-footer{padding:12px 18px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg3)}
@@ -141,7 +141,7 @@ nav{padding:0 28px;height:56px;border-bottom:1px solid var(--border);display:fle
 .plan-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-top:auto}
 .plan-header{padding:12px 16px;border-bottom:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:space-between}
 .plan-htitle{font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2)}
-.plan-badge{font-size:9px;font-weight:700;padding:2px 8px;background:rgba(200,164,90,.1);color:var(--gold);border-radius:100px;border:1px solid var(--border2)}
+.plan-badge{font-size:9px;font-weight:700;padding:2px 8px;background:rgba(232,201,122,.1);color:var(--gold);border-radius:100px;border:1px solid var(--border2)}
 .plan-body{padding:16px}
 .plan-name{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--text);margin-bottom:3px}
 .plan-desc{font-size:11px;color:var(--muted);font-weight:300;margin-bottom:14px;line-height:1.55}
@@ -150,7 +150,7 @@ nav{padding:0 28px;height:56px;border-bottom:1px solid var(--border);display:fle
 .prog-fill{height:3px;border-radius:2px;background:var(--gold);transition:width .5s ease}
 .plan-feats{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
 .pf{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted);font-weight:300}
-.pf-dot{width:14px;height:14px;border-radius:50%;background:rgba(200,164,90,.09);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0}
+.pf-dot{width:14px;height:14px;border-radius:50%;background:rgba(232,201,122,.09);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0}
 .upgrade-btn{width:100%;padding:10px;background:var(--gold);color:#111;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Outfit',sans-serif;transition:all .18s}
 .upgrade-btn:hover{background:var(--gold2)}
 
@@ -326,51 +326,51 @@ nav{padding:0 28px;height:56px;border-bottom:1px solid var(--border);display:fle
 <div id="planos-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:200;overflow-y:auto;padding:40px 20px">
   <div style="max-width:800px;margin:0 auto">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px">
-      <div style="font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:700;color:#f6f3ec">Invista na sua <em style="color:#c8a45a;font-style:italic">aprovação</em></div>
-      <button onclick="fecharPlanos()" style="background:none;border:1px solid rgba(246,243,236,0.13);color:#8a8278;padding:7px 14px;border-radius:6px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:12px">✕ Fechar</button>
+      <div style="font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:700;color:#eef2ff">Invista na sua <em style="color:#e8c97a;font-style:italic">aprovação</em></div>
+      <button onclick="fecharPlanos()" style="background:none;border:1px solid rgba(180,200,255,0.13);color:#7a90c8;padding:7px 14px;border-radius:6px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:12px">✕ Fechar</button>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(200,164,90,0.13);border:1px solid rgba(200,164,90,0.13);border-radius:14px;overflow:hidden">
-      <div style="background:#0f0f0f;padding:26px 20px">
-        <div style="font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(246,243,236,0.25);margin-bottom:10px">Grátis</div>
-        <div style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:#f6f3ec;line-height:1"><sup style="font-size:.85rem;font-family:'Outfit',sans-serif;font-weight:300">R$</sup>0</div>
-        <div style="font-size:.78rem;color:rgba(246,243,236,0.25);margin:8px 0 16px;padding-bottom:16px;border-bottom:1px solid rgba(200,164,90,0.13)">Plano atual</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(232,201,122,0.13);border:1px solid rgba(232,201,122,0.13);border-radius:14px;overflow:hidden">
+      <div style="background:#0f1f50;padding:26px 20px">
+        <div style="font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(180,200,255,0.25);margin-bottom:10px">Grátis</div>
+        <div style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:#eef2ff;line-height:1"><sup style="font-size:.85rem;font-family:'Outfit',sans-serif;font-weight:300">R$</sup>0</div>
+        <div style="font-size:.78rem;color:rgba(180,200,255,0.25);margin:8px 0 16px;padding-bottom:16px;border-bottom:1px solid rgba(232,201,122,0.13)">Plano atual</div>
         <ul style="list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:18px">
-          <li style="font-size:.8rem;color:#8a8278;font-weight:300">✓ 20 questões por dia</li>
-          <li style="font-size:.8rem;color:#8a8278;font-weight:300">✓ Diagnóstico básico</li>
-          <li style="font-size:.8rem;color:#8a8278;font-weight:300">✓ 1 simulado por mês</li>
+          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ 20 questões por dia</li>
+          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ Diagnóstico básico</li>
+          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ 1 simulado por mês</li>
         </ul>
-        <button style="width:100%;padding:10px;border-radius:7px;background:none;border:1px solid rgba(246,243,236,0.13);color:rgba(246,243,236,0.35);font-family:'Outfit',sans-serif;font-size:.8rem;cursor:default">Plano atual</button>
+        <button style="width:100%;padding:10px;border-radius:7px;background:none;border:1px solid rgba(180,200,255,0.13);color:rgba(180,200,255,0.35);font-family:'Outfit',sans-serif;font-size:.8rem;cursor:default">Plano atual</button>
       </div>
-      <div style="background:#0f0f0f;padding:26px 20px">
-        <div style="font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(246,243,236,0.25);margin-bottom:10px">Basic</div>
-        <div style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:#f6f3ec;line-height:1"><sup style="font-size:.85rem;font-family:'Outfit',sans-serif;font-weight:300">R$</sup>29<sub style="font-size:.72rem;color:rgba(246,243,236,0.25);font-family:'Outfit',sans-serif;font-weight:300">,99/mês</sub></div>
-        <div style="font-size:.78rem;color:rgba(246,243,236,0.25);margin:8px 0 16px;padding-bottom:16px;border-bottom:1px solid rgba(200,164,90,0.13)">Para estudar com método</div>
+      <div style="background:#0f1f50;padding:26px 20px">
+        <div style="font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(180,200,255,0.25);margin-bottom:10px">Basic</div>
+        <div style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:#eef2ff;line-height:1"><sup style="font-size:.85rem;font-family:'Outfit',sans-serif;font-weight:300">R$</sup>29<sub style="font-size:.72rem;color:rgba(180,200,255,0.25);font-family:'Outfit',sans-serif;font-weight:300">,99/mês</sub></div>
+        <div style="font-size:.78rem;color:rgba(180,200,255,0.25);margin:8px 0 16px;padding-bottom:16px;border-bottom:1px solid rgba(232,201,122,0.13)">Para estudar com método</div>
         <ul style="list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:18px">
-          <li style="font-size:.8rem;color:#8a8278;font-weight:300">✓ 100 questões por dia</li>
-          <li style="font-size:.8rem;color:#8a8278;font-weight:300">✓ Diagnóstico avançado</li>
-          <li style="font-size:.8rem;color:#8a8278;font-weight:300">✓ 4 simulados por mês</li>
-          <li style="font-size:.8rem;color:#8a8278;font-weight:300">✓ Revisão espaçada SRS</li>
+          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ 100 questões por dia</li>
+          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ Diagnóstico avançado</li>
+          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ 4 simulados por mês</li>
+          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ Revisão espaçada SRS</li>
         </ul>
-        <button style="width:100%;padding:10px;border-radius:7px;background:none;border:1px solid rgba(200,164,90,0.26);color:#f6f3ec;font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer" onclick="alert('Em breve!')">Assinar Basic</button>
+        <button style="width:100%;padding:10px;border-radius:7px;background:none;border:1px solid rgba(232,201,122,0.26);color:#eef2ff;font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer" onclick="alert('Em breve!')">Assinar Basic</button>
       </div>
-      <div style="background:#111;padding:26px 20px;border-top:2px solid #c8a45a">
-        <div style="display:inline-block;background:#c8a45a;color:#111;font-size:.6rem;font-weight:700;padding:2px 9px;border-radius:100px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px">Popular</div>
-        <div style="font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(246,243,236,0.25);margin-bottom:10px">Pro</div>
-        <div style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:#f6f3ec;line-height:1"><sup style="font-size:.85rem;font-family:'Outfit',sans-serif;font-weight:300">R$</sup>45<sub style="font-size:.72rem;color:rgba(246,243,236,0.25);font-family:'Outfit',sans-serif;font-weight:300">,90/mês</sub></div>
-        <div style="font-size:.78rem;color:rgba(246,243,236,0.25);margin:8px 0 16px;padding-bottom:16px;border-bottom:1px solid rgba(200,164,90,0.13)">Para passar logo e no topo</div>
+      <div style="background:#0a1535;padding:26px 20px;border-top:2px solid #e8c97a">
+        <div style="display:inline-block;background:#e8c97a;color:#111;font-size:.6rem;font-weight:700;padding:2px 9px;border-radius:100px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px">Popular</div>
+        <div style="font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(180,200,255,0.25);margin-bottom:10px">Pro</div>
+        <div style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:#eef2ff;line-height:1"><sup style="font-size:.85rem;font-family:'Outfit',sans-serif;font-weight:300">R$</sup>45<sub style="font-size:.72rem;color:rgba(180,200,255,0.25);font-family:'Outfit',sans-serif;font-weight:300">,90/mês</sub></div>
+        <div style="font-size:.78rem;color:rgba(180,200,255,0.25);margin:8px 0 16px;padding-bottom:16px;border-bottom:1px solid rgba(232,201,122,0.13)">Para passar logo e no topo</div>
         <ul style="list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:18px">
-          <li style="font-size:.8rem;color:#8a8278;font-weight:300">✓ Questões ilimitadas</li>
-          <li style="font-size:.8rem;color:#8a8278;font-weight:300">✓ Diagnóstico em tempo real</li>
-          <li style="font-size:.8rem;color:#8a8278;font-weight:300">✓ Simulados ilimitados</li>
-          <li style="font-size:.8rem;color:#8a8278;font-weight:300">✓ Todas as bancas</li>
-          <li style="font-size:.8rem;color:#8a8278;font-weight:300">✓ Suporte prioritário</li>
+          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ Questões ilimitadas</li>
+          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ Diagnóstico em tempo real</li>
+          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ Simulados ilimitados</li>
+          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ Todas as bancas</li>
+          <li style="font-size:.8rem;color:#7a90c8;font-weight:300">✓ Suporte prioritário</li>
         </ul>
-        <button style="width:100%;padding:10px;border-radius:7px;background:#c8a45a;color:#111;border:none;font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer" onclick="alert('Em breve!')">Começar 7 dias grátis</button>
-        <div style="font-size:.66rem;color:rgba(246,243,236,0.25);text-align:center;margin-top:8px">Cancele quando quiser</div>
+        <button style="width:100%;padding:10px;border-radius:7px;background:#e8c97a;color:#111;border:none;font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer" onclick="alert('Em breve!')">Começar 7 dias grátis</button>
+        <div style="font-size:.66rem;color:rgba(180,200,255,0.25);text-align:center;margin-top:8px">Cancele quando quiser</div>
       </div>
     </div>
     <div style="text-align:center;margin-top:16px">
-      <button onclick="fecharPlanos()" style="background:none;border:none;color:#8a8278;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">← Voltar para o painel</button>
+      <button onclick="fecharPlanos()" style="background:none;border:none;color:#7a90c8;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">← Voltar para o painel</button>
     </div>
   </div>
 </div>
@@ -525,7 +525,7 @@ function responder(el,letra){
 
 function renderDesempenho(){
   const el=document.getElementById('perf-list');
-  const cores=['#c8a45a','#0fa968','#378add','#e05454','#7B6FE8','#0F6E56','#BA7517'];
+  const cores=['#e8c97a','#0fa968','#378add','#e05454','#7B6FE8','#0F6E56','#BA7517'];
   const discs=Object.entries(desempenhoPorDisc);
   if(!discs.length){el.innerHTML='<div class="perf-empty">Responda questões para ver seu desempenho</div>';return;}
   el.innerHTML=discs.map(([disc,d],i)=>{
