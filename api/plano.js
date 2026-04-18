@@ -418,58 +418,20 @@ module.exports = async function handler(req, res) {
 
     const totalPeso = edital.disciplinas.reduce((a, d) => a + d.peso, 0);
 
-    const prompt = `Você é especialista em concursos públicos brasileiros com acesso ao edital oficial.
+    // Monta lista curta de disciplinas para o prompt
+    const discResumo = edital.disciplinas
+      .sort((a,b)=>b.peso-a.peso)
+      .map(d=>`${d.nome}(${d.peso}%):${d.assuntos.slice(0,4).join(',')}`)
+      .join(';');
 
-DADOS DO ALUNO:
-- Concurso: ${concurso}
-- Nível atual: ${nivel || 'intermediario'}
-- Horas de estudo por dia: ${horas_dia || '2h'} (~${qDia} questões/dia)
-- Semanas disponíveis: ${numSemanas} semanas
-- Total horas estimado: ${numSemanas * 7 * parseInt(horas_dia || '2')}h
-- Desempenho atual por disciplina: ${desempStr}
+    const prompt = `Crie plano de estudos para concurso brasileiro.
+Concurso:${concurso} | Nível:${nivel||'intermediario'} | ${horas_dia||'2h'}/dia | ${numSemanas} semanas
+Desempenho:${desempStr}
+Disciplinas do edital:${discResumo}
 
-EDITAL OFICIAL — TODAS AS DISCIPLINAS (total de pesos: ${totalPeso}%):
-${disciplinasEdital}
+Regras: distribua TODAS disciplinas nas semanas; maior peso=mais semanas; últimas ${Math.max(1,Math.floor(numSemanas*0.2))} semanas=revisão; use só assuntos do edital.
 
-REGRAS DO PLANO:
-1. Crie EXATAMENTE ${numSemanas} semanas
-2. TODAS as disciplinas do edital devem aparecer pelo menos uma vez
-3. Disciplinas com maior peso devem ter mais semanas dedicadas
-4. Prioridade ALTA: disciplinas com menos de 50% de acerto ou peso > 20%
-5. Prioridade MÉDIA: disciplinas com 50-75% de acerto ou peso entre 10-20%
-6. Prioridade BAIXA: disciplinas com mais de 75% de acerto e peso < 10%
-7. Últimas ${Math.max(1, Math.floor(numSemanas * 0.2))} semanas = REVISÃO GERAL
-8. Para cada disciplina, use APENAS assuntos do edital listado acima
-9. Meta de questões por disciplina proporcional ao peso no edital
-10. Distribua os assuntos de forma progressiva (básico → avançado)
-
-Responda APENAS com JSON puro:
-{
-  "semanas": [
-    {
-      "numero": 1,
-      "titulo": "título motivador",
-      "foco": "disciplinas da semana",
-      "tipo": "introducao|aprofundamento|revisao",
-      "disciplinas": [
-        {
-          "nome": "nome EXATO da disciplina do edital",
-          "peso": 15,
-          "prioridade": "alta|media|baixa",
-          "meta_questoes": 80,
-          "horas_semana": 8,
-          "assuntos": ["assunto específico 1", "assunto específico 2", "assunto específico 3"]
-        }
-      ]
-    }
-  ],
-  "dica_ia": "dica estratégica personalizada para este concurso e perfil",
-  "resumo": "resumo do plano em 2-3 frases motivadoras",
-  "total_semanas": ${numSemanas},
-  "total_horas": 0,
-  "disciplinas_criticas": ["disc com baixo desempenho ou alto peso"],
-  "disciplinas_ok": ["disc com bom desempenho"]
-}`;
+JSON puro:{"semanas":[{"numero":1,"titulo":"...","foco":"...","tipo":"introducao|aprofundamento|revisao","disciplinas":[{"nome":"...","peso":0,"prioridade":"alta|media|baixa","meta_questoes":0,"horas_semana":0,"assuntos":["..."]}]}],"dica_ia":"...","resumo":"...","total_semanas":${numSemanas},"total_horas":0,"disciplinas_criticas":[],"disciplinas_ok":[]}`;
 
     const groqResp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -484,17 +446,27 @@ Responda APENAS com JSON puro:
           { role: 'user', content: prompt }
         ],
         temperature: 0.4,
-        max_tokens: 4096
+        max_tokens: 3000
       })
     });
 
     const raw = await groqResp.json();
-    if (!raw.choices?.[0]?.message?.content) throw new Error('Sem resposta da IA');
+    console.log('Groq status:', groqResp.status);
+    console.log('Groq raw:', JSON.stringify(raw).substring(0, 300));
 
-    const txt = raw.choices[0].message.content.replace(/```json|```/g, '').trim();
-    const plano = JSON.parse(txt);
+    if (raw.error) throw new Error('Groq error: ' + JSON.stringify(raw.error));
+    if (!raw.choices?.[0]?.message?.content) throw new Error('Sem choices na resposta: ' + JSON.stringify(raw).substring(0,200));
+
+    let txt = raw.choices[0].message.content.replace(/```json|```/g, '').trim();
+    // Sometimes response has text before JSON
+    const jsonStart = txt.indexOf('{');
+    if (jsonStart > 0) txt = txt.substring(jsonStart);
+    
+    let plano;
+    try { plano = JSON.parse(txt); }
+    catch(pe) { throw new Error('JSON inválido: ' + pe.message + ' | txt: ' + txt.substring(0,200)); }
+    
     plano._edital = edital;
-
     return res.status(200).json(plano);
 
   } catch (err) {
