@@ -46,6 +46,7 @@ nav{
 }
 .sb-toggle:hover{border-color:var(--border2);color:var(--gold)}
 .sb-toggle svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round}
+@media(max-width:768px){.sb-toggle{display:none !important}}
 .brand{display:inline-flex;align-items:center;gap:12px}
 .brand-mark{
   width:34px;height:34px;border-radius:8px;
@@ -384,7 +385,6 @@ nav{
   height:60px;background:var(--bg2);
   border-top:1px solid var(--border);
   z-index:200;
-  display:none;
   align-items:center;justify-content:space-around;
   padding:0 8px;
 }
@@ -432,6 +432,7 @@ nav{
   <button class="sb-toggle" onclick="toggleSidebar()" title="Recolher menu">
     <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
   </button>
+  <div id="mobile-concurso" style="font-size:11px;color:var(--muted);display:none;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></div>
   <div class="nav-right">
     <span class="nav-user" id="nav-user">—</span>
     <button class="btn-sair" onclick="sair()">Sair</button>
