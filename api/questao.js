@@ -41,7 +41,7 @@ JSON puro: {"enunciado":"...","opcoes":["A) ...","B) ...","C) ...","D) ...","E) 
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer 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'
+            'Authorization': 'Bearer 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'
           },
           body: JSON.stringify({
             model,
