@@ -433,15 +433,13 @@ function renderPlano(plano){
   const wrap=document.getElementById('plano-wrap');
   wrap.style.display='flex';
 
-  // Carrega estado de checks do localStorage
   const checks=JSON.parse(localStorage.getItem('vero_checks_'+userId)||'{}');
-
   let html='';
 
-  // Resumo
   const totalDisc=new Set(plano.semanas?.flatMap(s=>s.disciplinas?.map(d=>d.nome)||[])||[]).size;
   const totalAssuntos=plano.semanas?.reduce((a,s)=>(s.disciplinas?.reduce((b,d)=>b+(d.assuntos?.length||0),0)||0)+a,0)||0;
   const totalHoras=plano.semanas?.reduce((a,s)=>(s.disciplinas?.reduce((b,d)=>b+(d.horas_semana||0),0)||0)+a,0)||plano.total_horas||0;
+
   html+=`<div class="plano-resumo">
     <div class="pr-item"><div class="pr-num">${plano.total_semanas||4}</div><div class="pr-label">Semanas</div></div>
     <div class="pr-item"><div class="pr-num">${totalDisc}</div><div class="pr-label">Disciplinas</div></div>
@@ -449,33 +447,29 @@ function renderPlano(plano){
     <div class="pr-item"><div class="pr-num">${totalHoras}h</div><div class="pr-label">Horas totais</div></div>
   </div>`;
 
-  // Resumo da IA
   if(plano.resumo){
-    html+=\`<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;font-size:.9rem;color:var(--muted);font-weight:300;line-height:1.7">
-      <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted2);display:block;margin-bottom:6px">Resumo do plano</span>
-      \${plano.resumo}
-    </div>\`;
+    html+=`<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;font-size:.9rem;color:var(--muted);font-weight:300;line-height:1.7"><span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted2);display:block;margin-bottom:6px">Resumo do plano</span>${plano.resumo}</div>`;
   }
 
-  // Disciplinas críticas e ok
   if(plano.disciplinas_criticas?.length||plano.disciplinas_ok?.length){
-    html+=\`<div style="display:flex;gap:10px;flex-wrap:wrap">\`;
-    plano.disciplinas_criticas?.forEach(d=>html+=\`<span style="font-size:11px;padding:4px 12px;border-radius:100px;background:rgba(224,84,84,.1);color:var(--red);border:1px solid rgba(224,84,84,.25)">⚠️ \${d}</span>\`);
-    plano.disciplinas_ok?.forEach(d=>html+=\`<span style="font-size:11px;padding:4px 12px;border-radius:100px;background:rgba(15,169,104,.08);color:var(--green);border:1px solid rgba(15,169,104,.2)">✓ \${d}</span>\`);
-    html+=\`</div>\`;
+    let tags='';
+    plano.disciplinas_criticas?.forEach(d=>{tags+=`<span style="font-size:11px;padding:4px 12px;border-radius:100px;background:rgba(224,84,84,.1);color:var(--red);border:1px solid rgba(224,84,84,.25)">⚠️ ${d}</span>`;});
+    plano.disciplinas_ok?.forEach(d=>{tags+=`<span style="font-size:11px;padding:4px 12px;border-radius:100px;background:rgba(15,169,104,.08);color:var(--green);border:1px solid rgba(15,169,104,.2)">✓ ${d}</span>`;});
+    html+=`<div style="display:flex;gap:8px;flex-wrap:wrap">${tags}</div>`;
   }
 
-  // Dica da IA
   if(plano.dica_ia){
-    html+=`<div class="ia-tip">
-      <div class="ia-tip-icon">💡</div>
-      <div class="ia-tip-txt"><span class="ia-tip-strong">Dica estratégica da IA: </span>${plano.dica_ia}</div>
-    </div>`;
+    html+=`<div class="ia-tip"><div class="ia-tip-icon">💡</div><div class="ia-tip-txt"><span class="ia-tip-strong">Dica estratégica: </span>${plano.dica_ia}</div></div>`;
   }
 
-  // Semanas
   plano.semanas?.forEach((sem,si)=>{
     const semId='sem-'+sem.numero;
+    const tipoBadge=sem.tipo==='revisao'
+      ?`<span style="font-size:9px;padding:2px 8px;border-radius:100px;background:rgba(15,169,104,.1);color:var(--green);border:1px solid rgba(15,169,104,.2);font-weight:700">REVISÃO</span>`
+      :sem.tipo==='introducao'
+      ?`<span style="font-size:9px;padding:2px 8px;border-radius:100px;background:rgba(55,138,221,.1);color:var(--blue);border:1px solid rgba(55,138,221,.2);font-weight:700">INTRO</span>`
+      :'';
+
     html+=`<div class="semana-card">
       <div class="semana-header" onclick="toggleSemana('${semId}')">
         <div class="semana-left">
@@ -483,7 +477,7 @@ function renderPlano(plano){
           <div>
             <div style="display:flex;align-items:center;gap:8px">
               <div class="semana-titulo">${sem.titulo||'Semana '+sem.numero}</div>
-              ${sem.tipo==='revisao'?'<span style="font-size:9px;padding:2px 8px;border-radius:100px;background:rgba(15,169,104,.1);color:var(--green);border:1px solid rgba(15,169,104,.2);font-weight:700">REVISÃO</span>':sem.tipo==='introducao'?'<span style="font-size:9px;padding:2px 8px;border-radius:100px;background:rgba(55,138,221,.1);color:var(--blue);border:1px solid rgba(55,138,221,.2);font-weight:700">INTRO</span>':''}
+              ${tipoBadge}
             </div>
             <div class="semana-sub">📌 ${sem.foco||'—'}</div>
           </div>
@@ -505,10 +499,10 @@ function renderPlano(plano){
           <div class="disc-icon" style="background:${cor}18;border:1px solid ${cor}30">${icon}</div>
           <div class="disc-info">
             <div class="disc-nome">${disc.nome}</div>
-            <div class="disc-meta">${disc.assuntos?.length||0} assuntos · ${disc.meta_questoes||20} questões${disc.horas_semana?(' · '+disc.horas_semana+'h/semana'):''}</div>
+            <div class="disc-meta">${disc.assuntos?.length||0} assuntos · ${disc.meta_questoes||20} questões${disc.horas_semana?' · '+disc.horas_semana+'h/semana':''}</div>
           </div>
           <div class="disc-right">
-            <span class="disc-prioridade prio-${disc.prioridade||'media'}">${disc.prioridade==='alta'?'Prioridade alta':disc.prioridade==='baixa'?'Prioridade baixa':'Prioridade média'}</span>
+            <span class="disc-prioridade prio-${disc.prioridade||'media'}">${disc.prioridade==='alta'?'Alta prioridade':disc.prioridade==='baixa'?'Baixa prioridade':'Média prioridade'}</span>
             <div class="disc-check${isDone?' done':''}" id="check_${discId}" onclick="event.stopPropagation();toggleCheck('${discId}')">
               <svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg>
             </div>
@@ -522,7 +516,7 @@ function renderPlano(plano){
         html+=`<div class="assunto-item">
           <div class="as-bullet" style="background:${cor}"></div>
           <div class="as-nome">${a}</div>
-          <div class="as-qtd">${Math.round((disc.meta_questoes||20)/disc.assuntos.length)} questões</div>
+          <div class="as-qtd">${disc.assuntos.length>0?Math.round((disc.meta_questoes||20)/disc.assuntos.length):0} questões</div>
           <div class="as-check${asDone?' done':''}" id="check_${asId}" onclick="toggleCheck('${asId}')">
             <svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg>
           </div>
@@ -537,6 +531,7 @@ function renderPlano(plano){
 
   wrap.innerHTML=html;
 }
+
 
 function toggleSemana(id){
   const el=document.getElementById(id);
