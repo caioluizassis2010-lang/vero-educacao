@@ -290,6 +290,7 @@ nav{padding:0 28px;height:58px;border-bottom:1px solid var(--border);display:fle
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- v2 -->
 <script>
 const{createClient}=supabase;
 const sb=createClient('https://lklmzhunhiwqsbhnymaw.supabase.co','sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU');
@@ -440,7 +441,7 @@ function renderPlano(plano){
   const wrap=document.getElementById('plano-wrap');
   wrap.style.display='flex';
 
-  const checks=JSON.parse(localStorage.getItem('vero_checks_'+userId)||'{}');
+  const initChecks=JSON.parse(localStorage.getItem('vero_checks_'+userId)||'{}');
   let html='';
 
   const totalDisc=new Set(plano.semanas?.flatMap(s=>s.disciplinas?.map(d=>d.nome)||[])||[]).size;
@@ -500,7 +501,7 @@ function renderPlano(plano){
       const cor=DISC_COLORS[di%DISC_COLORS.length];
       const icon=DISC_ICONS[disc.nome]||'📚';
       const discId=`d_${sem.numero}_${di}`;
-      const isDone=checks[discId]||false;
+      const isDone=initChecks[discId]||false;
       html+=`<div class="disc-item">
         <div class="disc-header" onclick="toggleDisc('assuntos_${discId}')">
           <div class="disc-icon" style="background:${cor}18;border:1px solid ${cor}30">${icon}</div>
@@ -519,7 +520,7 @@ function renderPlano(plano){
 
       disc.assuntos?.forEach((a,ai)=>{
         const asId=`a_${sem.numero}_${di}_${ai}`;
-        const asDone=checks[asId]||false;
+        const asDone=initChecks[asId]||false;
         html+=`<div class="assunto-item">
           <div class="as-bullet" style="background:${cor}"></div>
           <div class="as-nome">${a}</div>
@@ -539,8 +540,8 @@ function renderPlano(plano){
   wrap.innerHTML=html;
 
   // Restaura estados de done
-  const checks=JSON.parse(localStorage.getItem('vero_checks_'+userId)||'{}');
-  Object.entries(checks).forEach(([id,done])=>{
+  const savedChecks=JSON.parse(localStorage.getItem('vero_checks_'+userId)||'{}');
+  Object.entries(savedChecks).forEach(([id,done])=>{
     if(!done)return;
     const el=document.getElementById('check_'+id);
     if(el){
@@ -571,17 +572,17 @@ function toggleDisc(id){
 }
 
 function toggleCheck(id){
-  const checks=JSON.parse(localStorage.getItem('vero_checks_'+userId)||'{}');
-  checks[id]=!checks[id];
-  localStorage.setItem('vero_checks_'+userId,JSON.stringify(checks));
+  const tChecks=JSON.parse(localStorage.getItem('vero_checks_'+userId)||'{}');
+  tChecks[id]=!tChecks[id];
+  localStorage.setItem('vero_checks_'+userId,JSON.stringify(tChecks));
 
   const el=document.getElementById('check_'+id);
-  if(el)el.classList.toggle('done',checks[id]);
+  if(el)el.classList.toggle('done',tChecks[id]);
 
   // Se é assunto (começa com 'a_'), atualiza visual do item pai
   if(id.startsWith('a_')){
     const assuntoEl=el?.closest('.assunto-item');
-    if(assuntoEl)assuntoEl.classList.toggle('done-item',checks[id]);
+    if(assuntoEl)assuntoEl.classList.toggle('done-item',tChecks[id]);
     // Verifica se todos assuntos da disciplina foram marcados
     const listaEl=el?.closest('.assuntos-lista');
     if(listaEl){
@@ -594,8 +595,8 @@ function toggleCheck(id){
         discCheck.closest('.disc-item')?.classList.toggle('done-disc',allDone);
         // Salva check da disciplina
         const discId=discCheck.id.replace('check_','');
-        checks[discId]=allDone;
-        localStorage.setItem('vero_checks_'+userId,JSON.stringify(checks));
+        tChecks[discId]=allDone;
+        localStorage.setItem('vero_checks_'+userId,JSON.stringify(tChecks));
       }
     }
   }
@@ -603,16 +604,16 @@ function toggleCheck(id){
   if(id.startsWith('d_')){
     const discItem=el?.closest('.disc-item');
     if(discItem){
-      discItem.classList.toggle('done-disc',checks[id]);
+      discItem.classList.toggle('done-disc',tChecks[id]);
       const assuntoEls=discItem.querySelectorAll('.assunto-item');
       const asChecks=discItem.querySelectorAll('.as-check');
       asChecks.forEach((ac,i)=>{
         const asId=ac.id.replace('check_','');
-        checks[asId]=checks[id];
-        ac.classList.toggle('done',checks[id]);
-        if(assuntoEls[i])assuntoEls[i].classList.toggle('done-item',checks[id]);
+        tChecks[asId]=tChecks[id];
+        ac.classList.toggle('done',tChecks[id]);
+        if(assuntoEls[i])assuntoEls[i].classList.toggle('done-item',tChecks[id]);
       });
-      localStorage.setItem('vero_checks_'+userId,JSON.stringify(checks));
+      localStorage.setItem('vero_checks_'+userId,JSON.stringify(tChecks));
     }
   }
 
@@ -621,7 +622,7 @@ function toggleCheck(id){
 }
 
 function atualizarProgresso(){
-  const checks=JSON.parse(localStorage.getItem('vero_checks_'+userId)||'{}');
+  const pChecks=JSON.parse(localStorage.getItem('vero_checks_'+userId)||'{}');
   const totalAs=document.querySelectorAll('.as-check').length;
   const feitosAs=document.querySelectorAll('.as-check.done').length;
   if(totalAs>0){
