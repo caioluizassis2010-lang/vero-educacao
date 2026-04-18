@@ -112,7 +112,7 @@ module.exports = async function handler(req, res) {
 
     const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer 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'},
+      headers:{'Content-Type':'application/json','Authorization':'Bearer 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'},
       body:JSON.stringify({
         model:'llama-3.3-70b-versatile',
         messages:[
