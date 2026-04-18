@@ -90,28 +90,25 @@ module.exports = async function handler(req, res) {
     let numSemanas=4;
     if(data_prova){
       const dias=Math.ceil((new Date(data_prova+'T00:00:00')-new Date())/(864e5));
-      if(dias>0)numSemanas=Math.min(Math.max(Math.ceil(dias/7),4),8);
+      if(dias>0)numSemanas=Math.min(Math.max(Math.ceil(dias/7),4),6);
     }
 
     const desempStr=desempenho&&Object.keys(desempenho).length
       ?Object.entries(desempenho).map(([d,v])=>`${d}:${Math.round(v.acertos/v.total*100)}%`).join(',')
       :'sem histórico';
 
-    // Monta lista compacta de disciplinas
-    const discs=edital.disciplinas.sort((a,b)=>b.peso-a.peso)
-      .map(d=>`${d.nome}(${d.peso}%)`).join(';');
+    // Lista compacta: só nome e peso
+    const discList=edital.disciplinas
+      .sort((a,b)=>b.peso-a.peso)
+      .map(d=>d.nome+'('+d.peso+'%)')
+      .join(', ');
 
-    // Assuntos por disciplina
-    const assuntos=edital.disciplinas.sort((a,b)=>b.peso-a.peso)
-      .map(d=>`${d.nome}:[${d.assuntos.join('|')}]`).join(';');
-
-    const prompt=`Plano de estudos para concurso brasileiro.
-Dados: concurso="${concurso}", nível="${nivel||'intermediario'}", ${horas_dia||'2h'}/dia, ${numSemanas} semanas, desempenho={${desempStr}}
-Disciplinas: ${discs}
-Assuntos disponíveis: ${assuntos}
-
-Gere JSON com ${numSemanas} semanas, distribuindo TODAS as disciplinas. Use APENAS assuntos listados acima. Max 3 disciplinas/semana, max 3 assuntos/disciplina/semana.
-{"semanas":[{"numero":1,"titulo":"string","foco":"string","tipo":"introducao","disciplinas":[{"nome":"string","peso":0,"prioridade":"alta","meta_questoes":0,"horas_semana":0,"assuntos":["string"]}]}],"dica_ia":"string","resumo":"string","total_semanas":${numSemanas},"total_horas":0,"disciplinas_criticas":[],"disciplinas_ok":[]}`;
+    const prompt='Crie plano de estudos JSON para: concurso="'+concurso+'", nivel='+
+      (nivel||'intermediario')+', '+
+      (horas_dia||'2h')+'/dia, '+numSemanas+' semanas, desempenho={'+desempStr+'}.'+
+      ' Disciplinas do edital: '+discList+'.'+
+      ' REGRAS: 2 disciplinas por semana maximo, 2 assuntos por disciplina maximo, ultima semana e revisao.'+
+      ' RESPONDA APENAS JSON: {"semanas":[{"numero":1,"titulo":"string","foco":"string","tipo":"introducao","disciplinas":[{"nome":"string","peso":15,"prioridade":"alta","meta_questoes":20,"horas_semana":4,"assuntos":["assunto1","assunto2"]}]}],"dica_ia":"string","resumo":"string","total_semanas":'+numSemanas+',"total_horas":0,"disciplinas_criticas":[],"disciplinas_ok":[]}';
 
     const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
       method:'POST',
@@ -119,11 +116,11 @@ Gere JSON com ${numSemanas} semanas, distribuindo TODAS as disciplinas. Use APEN
       body:JSON.stringify({
         model:'llama-3.3-70b-versatile',
         messages:[
-          {role:'system',content:'Responda APENAS com JSON puro válido, sem markdown.'},
+          {role:'system',content:'Responda APENAS JSON puro valido, sem markdown, sem texto adicional.'},
           {role:'user',content:prompt}
         ],
-        temperature:0.3,
-        max_tokens:2500
+        temperature:0.2,
+        max_tokens:1500
       })
     });
 
@@ -134,10 +131,13 @@ Gere JSON com ${numSemanas} semanas, distribuindo TODAS as disciplinas. Use APEN
     let txt=raw.choices[0].message.content.replace(/```json|```/g,'').trim();
     const ji=txt.indexOf('{');
     if(ji>0)txt=txt.substring(ji);
+    // Remove any trailing text after last }
+    const jEnd=txt.lastIndexOf('}');
+    if(jEnd>=0)txt=txt.substring(0,jEnd+1);
 
     let plano;
     try{plano=JSON.parse(txt);}
-    catch(e){throw new Error('JSON inválido: '+e.message+' pos:'+txt.length);}
+    catch(e){throw new Error('JSON invalido: '+e.message+' len:'+txt.length);}
 
     plano._edital=edital;
     return res.status(200).json(plano);
