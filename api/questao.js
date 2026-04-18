@@ -11,58 +11,84 @@ module.exports = async function handler(req, res) {
 
     const disciplina = body.disciplina || 'Direito Constitucional';
     const banca = body.banca || 'CESPE';
-    const assunto = body.assunto || null;
     const concurso = body.concurso || null;
     const nivel = body.nivel || 'intermediario';
+    const assunto = body.assunto || null;
 
-    // Monta o prompt personalizado
-    let prompt = '';
+    // Prompt compacto e direto
+    const contexto = concurso
+      ? `para o concurso "${concurso}" no estilo ${banca}, nível ${nivel}`
+      : `no estilo da banca ${banca}, nível ${nivel}`;
 
-    if (concurso && assunto) {
-      prompt = `Você é um especialista em concursos públicos brasileiros. Crie uma questão de ${disciplina} sobre o assunto "${assunto}" no estilo da banca ${banca}, calibrada para o concurso "${concurso}" em nível ${nivel}. Use o padrão real de questões cobradas nesse concurso — linguagem, formato e dificuldade típicos dessa banca.`;
-    } else if (concurso) {
-      prompt = `Você é um especialista em concursos públicos brasileiros. Crie uma questão de ${disciplina} no estilo da banca ${banca}, calibrada para o concurso "${concurso}" em nível ${nivel}. Use o padrão real cobrado nesse concurso.`;
-    } else {
-      prompt = `Você é um especialista em concursos públicos brasileiros. Crie uma questão de ${disciplina} no estilo da banca ${banca} em nível ${nivel}.`;
-    }
+    const assuntoCtx = assunto ? ` sobre "${assunto}"` : '';
 
-    prompt += ` Responda APENAS em JSON puro sem markdown, neste formato exato: {"enunciado":"texto da questão aqui","opcoes":["A) opção 1","B) opção 2","C) opção 3","D) opção 4","E) opção 5"],"gabarito":"A","explicacao":"explicação detalhada da resposta correta","assunto":"assunto específico da questão"}`;
+    const prompt = `Crie uma questão de múltipla escolha de ${disciplina}${assuntoCtx} ${contexto}.
+JSON puro: {"enunciado":"...","opcoes":["A) ...","B) ...","C) ...","D) ...","E) ..."],"gabarito":"A","explicacao":"...","assunto":"..."}`;
 
-    const groqResp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer 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'
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages: [
-          {
-            role: 'system',
-            content: 'Você é especialista em concursos públicos brasileiros. Conheça os padrões de cada banca (CESPE usa certo/errado e assertivas, FCC usa letra de lei, FGV usa casos práticos). Responda APENAS com JSON puro e válido, sem texto adicional, sem markdown.'
+    // Tenta modelos em ordem de preferência
+    const models = [
+      'llama-3.3-70b-versatile',
+      'llama3-70b-8192',
+      'mixtral-8x7b-32768'
+    ];
+
+    let data = null;
+    let lastError = null;
+
+    for (const model of models) {
+      try {
+        const groqResp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer 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'
           },
-          { role: 'user', content: prompt }
-        ],
-        temperature: 0.7,
-        max_tokens: 1024
-      })
-    });
+          body: JSON.stringify({
+            model,
+            messages: [
+              { role: 'system', content: 'Especialista em concursos públicos brasileiros. Responda APENAS JSON puro válido, sem markdown.' },
+              { role: 'user', content: prompt }
+            ],
+            temperature: 0.6,
+            max_tokens: 800
+          })
+        });
 
-    const text = await groqResp.text();
-    let data;
-    try { data = JSON.parse(text); }
-    catch(e) { return res.status(500).json({ error: 'Resposta inválida do Groq', raw: text.substring(0,200) }); }
+        const raw = await groqResp.json();
+        
+        if (raw.error) {
+          lastError = `${model}: ${raw.error.message || JSON.stringify(raw.error)}`;
+          continue;
+        }
+        
+        if (!raw.choices?.[0]?.message?.content) {
+          lastError = `${model}: sem choices`;
+          continue;
+        }
 
-    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-      return res.status(500).json({ error: 'Sem resposta da IA', data });
+        // Parse JSON
+        let txt = raw.choices[0].message.content.replace(/```json|```/g, '').trim();
+        const ji = txt.indexOf('{');
+        const je = txt.lastIndexOf('}');
+        if (ji >= 0 && je > ji) txt = txt.substring(ji, je + 1);
+        
+        data = JSON.parse(txt);
+        break; // sucesso!
+
+      } catch (modelErr) {
+        lastError = `${model}: ${modelErr.message}`;
+        continue;
+      }
     }
 
-    const content = data.choices[0].message.content.replace(/```json|```/g, '').trim();
-    const questao = JSON.parse(content);
-    return res.status(200).json(questao);
+    if (!data) {
+      return res.status(500).json({ error: 'Todos os modelos falharam: ' + lastError });
+    }
+
+    return res.status(200).json(data);
 
   } catch (err) {
-    console.error('Erro:', err.message);
+    console.error('Erro questao:', err.message);
     return res.status(500).json({ error: err.message });
   }
 }
