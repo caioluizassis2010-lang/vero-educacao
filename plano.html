@@ -359,75 +359,21 @@ async function gerarPlano(){
       });
     }
 
-    // Calcula dias até a prova
-    let diasProva=null;
-    if(perfil.data_prova){
-      const hoje=new Date();
-      const prova=new Date(perfil.data_prova+'T00:00:00');
-      diasProva=Math.ceil((prova-hoje)/(1000*60*60*24));
-    }
-
-    // Prompt para a IA
-    const desempStr=Object.entries(desempenho).map(([d,v])=>`${d}: ${Math.round(v.acertos/v.total*100)}% (${v.total} questões)`).join(', ')||'Nenhum histórico ainda';
-
-    const prompt=`Você é um especialista em concursos públicos brasileiros. Crie um plano de estudos personalizado para o seguinte aluno:
-
-PERFIL DO ALUNO:
-- Concurso: ${perfil.concurso}
-- Nível: ${perfil.nivel||'intermediario'}
-- Horas disponíveis por dia: ${perfil.horas_dia||'2h'}
-${diasProva?`- Dias até a prova: ${diasProva} dias`:'- Data da prova: não informada'}
-- Desempenho atual por disciplina: ${desempStr}
-
-INSTRUÇÕES:
-1. Crie um plano para 4 semanas
-2. Cada semana deve ter 3-4 disciplinas com assuntos específicos
-3. Priorize disciplinas com menor % de acerto ou não estudadas
-4. Para cada disciplina, liste 3-5 assuntos específicos a estudar
-5. Defina prioridade: alta (vermelha), media (amarela), baixa (verde)
-6. Adapte ao tempo disponível (${perfil.horas_dia||'2h'}/dia)
-7. Inclua uma dica estratégica geral no campo "dica_ia"
-
-Responda APENAS em JSON puro sem markdown:
-{
-  "semanas": [
-    {
-      "numero": 1,
-      "titulo": "título motivador da semana",
-      "foco": "foco principal ex: Direito Penal e Constitucional",
-      "disciplinas": [
-        {
-          "nome": "Nome da disciplina",
-          "prioridade": "alta|media|baixa",
-          "meta_questoes": 20,
-          "assuntos": ["assunto 1", "assunto 2", "assunto 3"]
-        }
-      ]
-    }
-  ],
-  "dica_ia": "dica estratégica personalizada baseada no perfil",
-  "total_semanas": 4,
-  "horas_total": 56,
-  "disciplinas_foco": ["disciplina1", "disciplina2"]
-}`;
-
-    const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+    // Usa a nova API dedicada ao plano
+    const resp=await fetch('/api/plano',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer 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'},
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'llama-3.3-70b-versatile',
-        messages:[
-          {role:'system',content:'Você é especialista em concursos públicos brasileiros. Responda APENAS com JSON puro e válido, sem markdown, sem texto adicional.'},
-          {role:'user',content:prompt}
-        ],
-        temperature:0.6,
-        max_tokens:2048
+        concurso:perfil.concurso,
+        nivel:perfil.nivel||'intermediario',
+        horas_dia:perfil.horas_dia||'2h',
+        data_prova:perfil.data_prova||null,
+        area:perfil.area||'administrativa',
+        desempenho
       })
     });
-
-    const raw=await resp.json();
-    const txt=raw.choices[0].message.content.replace(/```json|```/g,'').trim();
-    planoAtual=JSON.parse(txt);
+    if(!resp.ok)throw new Error('Erro na API: '+resp.status);
+    planoAtual=await resp.json();
 
     // Salva localmente e no Supabase
     localStorage.setItem('vero_plano_'+userId,JSON.stringify(planoAtual));
@@ -475,14 +421,31 @@ function renderPlano(plano){
   let html='';
 
   // Resumo
-  const totalDisc=plano.semanas?.reduce((a,s)=>a+(s.disciplinas?.length||0),0)||0;
-  const totalAssuntos=plano.semanas?.reduce((a,s)=>s.disciplinas?.reduce((b,d)=>b+(d.assuntos?.length||0),0)||0+a,0)||0;
+  const totalDisc=new Set(plano.semanas?.flatMap(s=>s.disciplinas?.map(d=>d.nome)||[])||[]).size;
+  const totalAssuntos=plano.semanas?.reduce((a,s)=>(s.disciplinas?.reduce((b,d)=>b+(d.assuntos?.length||0),0)||0)+a,0)||0;
+  const totalHoras=plano.semanas?.reduce((a,s)=>(s.disciplinas?.reduce((b,d)=>b+(d.horas_semana||0),0)||0)+a,0)||plano.total_horas||0;
   html+=`<div class="plano-resumo">
     <div class="pr-item"><div class="pr-num">${plano.total_semanas||4}</div><div class="pr-label">Semanas</div></div>
     <div class="pr-item"><div class="pr-num">${totalDisc}</div><div class="pr-label">Disciplinas</div></div>
     <div class="pr-item"><div class="pr-num">${totalAssuntos}</div><div class="pr-label">Assuntos</div></div>
-    <div class="pr-item"><div class="pr-num">${plano.horas_total||0}h</div><div class="pr-label">Horas totais</div></div>
+    <div class="pr-item"><div class="pr-num">${totalHoras}h</div><div class="pr-label">Horas totais</div></div>
   </div>`;
+
+  // Resumo da IA
+  if(plano.resumo){
+    html+=\`<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;font-size:.9rem;color:var(--muted);font-weight:300;line-height:1.7">
+      <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted2);display:block;margin-bottom:6px">Resumo do plano</span>
+      \${plano.resumo}
+    </div>\`;
+  }
+
+  // Disciplinas críticas e ok
+  if(plano.disciplinas_criticas?.length||plano.disciplinas_ok?.length){
+    html+=\`<div style="display:flex;gap:10px;flex-wrap:wrap">\`;
+    plano.disciplinas_criticas?.forEach(d=>html+=\`<span style="font-size:11px;padding:4px 12px;border-radius:100px;background:rgba(224,84,84,.1);color:var(--red);border:1px solid rgba(224,84,84,.25)">⚠️ \${d}</span>\`);
+    plano.disciplinas_ok?.forEach(d=>html+=\`<span style="font-size:11px;padding:4px 12px;border-radius:100px;background:rgba(15,169,104,.08);color:var(--green);border:1px solid rgba(15,169,104,.2)">✓ \${d}</span>\`);
+    html+=\`</div>\`;
+  }
 
   // Dica da IA
   if(plano.dica_ia){
@@ -500,8 +463,11 @@ function renderPlano(plano){
         <div class="semana-left">
           <div class="semana-num">${sem.numero}</div>
           <div>
-            <div class="semana-titulo">${sem.titulo||'Semana '+sem.numero}</div>
-            <div class="semana-sub">Foco: ${sem.foco||'—'}</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="semana-titulo">${sem.titulo||'Semana '+sem.numero}</div>
+              ${sem.tipo==='revisao'?'<span style="font-size:9px;padding:2px 8px;border-radius:100px;background:rgba(15,169,104,.1);color:var(--green);border:1px solid rgba(15,169,104,.2);font-weight:700">REVISÃO</span>':sem.tipo==='introducao'?'<span style="font-size:9px;padding:2px 8px;border-radius:100px;background:rgba(55,138,221,.1);color:var(--blue);border:1px solid rgba(55,138,221,.2);font-weight:700">INTRO</span>':''}
+            </div>
+            <div class="semana-sub">📌 ${sem.foco||'—'}</div>
           </div>
         </div>
         <div class="semana-prog">
@@ -521,7 +487,7 @@ function renderPlano(plano){
           <div class="disc-icon" style="background:${cor}18;border:1px solid ${cor}30">${icon}</div>
           <div class="disc-info">
             <div class="disc-nome">${disc.nome}</div>
-            <div class="disc-meta">${disc.assuntos?.length||0} assuntos · Meta: ${disc.meta_questoes||20} questões</div>
+            <div class="disc-meta">${disc.assuntos?.length||0} assuntos · ${disc.meta_questoes||20} questões${disc.horas_semana?(' · '+disc.horas_semana+'h/semana'):''}</div>
           </div>
           <div class="disc-right">
             <span class="disc-prioridade prio-${disc.prioridade||'media'}">${disc.prioridade==='alta'?'Prioridade alta':disc.prioridade==='baixa'?'Prioridade baixa':'Prioridade média'}</span>
