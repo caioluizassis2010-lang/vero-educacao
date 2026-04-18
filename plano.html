@@ -305,9 +305,15 @@ async function init(){
   const nome=session.user.user_metadata?.full_name||session.user.email.split('@')[0];
   document.getElementById('nav-user').textContent=nome;
 
-  const{data:p}=await sb.from('perfis').select('*').eq('id',userId).single();
-  if(!p||!p.concurso){window.location.href='perfil.html';return;}
+  const{data:p,error:pe}=await sb.from('perfis').select('*').eq('id',userId).single();
+  console.log('Perfil carregado:', p, 'Erro:', pe);
+  if(!p||!p.concurso){
+    console.warn('Perfil sem concurso — redirecionando para perfil.html');
+    window.location.href='perfil.html';
+    return;
+  }
   perfil=p;
+  console.log('Concurso:', p.concurso, 'Área:', p.area);
 
   // Sidebar concurso
   const el=document.getElementById('sb-concurso');
@@ -352,6 +358,7 @@ async function gerarPlano(){
   },1200);
 
   try{
+    console.log('Gerando plano para:', perfil?.concurso, '| área:', perfil?.area);
     // Busca desempenho real
     const{data:qs}=await sb.from('questoes_respondidas').select('disciplina,acertou').eq('user_id',userId);
     const desempenho={};
@@ -376,8 +383,14 @@ async function gerarPlano(){
         desempenho
       })
     });
-    if(!resp.ok)throw new Error('Erro na API: '+resp.status);
+    console.log('Resposta API:', resp.status);
+    if(!resp.ok){
+      const errTxt=await resp.text();
+      console.error('API erro body:', errTxt);
+      throw new Error('Erro na API: '+resp.status+' — '+errTxt.substring(0,200));
+    }
     planoAtual=await resp.json();
+    console.log('Plano recebido:', planoAtual);
 
     // Salva localmente e no Supabase
     localStorage.setItem('vero_plano_'+userId,JSON.stringify(planoAtual));
