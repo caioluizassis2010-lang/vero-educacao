@@ -452,16 +452,30 @@ async function gerarQuestao(){
   document.getElementById('q-disciplina').textContent=disciplinaAtual;
 
   try{
-    const payload={
-      disciplina:disciplinaAtual,
-      banca:bancaAtual,
-      concurso:perfilAluno?.concurso||null,
-      nivel:perfilAluno?.nivel||'intermediario',
-      assunto:null
-    };
-    const resp=await fetch('/api/questao',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    if(!resp.ok)throw new Error('Erro '+resp.status);
-    questaoAtual=await resp.json();
+    // Chama Groq diretamente — evita timeout do Vercel
+    const prompt='Crie uma questão de múltipla escolha de '+disciplinaAtual+
+      (perfilAluno?.concurso?' para o concurso "'+perfilAluno.concurso+'"':'')+
+      ' no estilo da banca '+bancaAtual+' em nível '+(perfilAluno?.nivel||'intermediario')+'.'+
+      ' Responda APENAS JSON: {"enunciado":"texto","opcoes":["A) ...","B) ...","C) ...","D) ...","E) ..."],"gabarito":"A","explicacao":"explicação","assunto":"assunto"}';
+
+    const groqR=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer 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'},
+      body:JSON.stringify({
+        model:'llama-3.3-70b-versatile',
+        messages:[
+          {role:'system',content:'Especialista em concursos públicos brasileiros. Responda APENAS JSON puro válido sem markdown.'},
+          {role:'user',content:prompt}
+        ],
+        temperature:0.6,max_tokens:700
+      })
+    });
+    const groqData=await groqR.json();
+    if(groqData.error)throw new Error(groqData.error.message||JSON.stringify(groqData.error));
+    let txt=groqData.choices[0].message.content.replace(/```json|```/g,'').trim();
+    const ji=txt.indexOf('{'),je=txt.lastIndexOf('}');
+    if(ji>=0&&je>ji)txt=txt.substring(ji,je+1);
+    questaoAtual=JSON.parse(txt);
     document.getElementById('q-text').textContent=questaoAtual.enunciado;
     const el=document.getElementById('opcoes');
     el.innerHTML='';

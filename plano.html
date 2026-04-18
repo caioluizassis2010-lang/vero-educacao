@@ -321,6 +321,34 @@ const DISC_COLORS=['#e8c97a','#0fa968','#378add','#e05454','#7B6FE8','#f2d98e','
 
 let userId=null, perfil=null, planoAtual=null;
 
+// Mapa compacto de disciplinas por concurso
+const DISC_MAP={};
+function identificarEdital(c){
+  const u=(c||'').toUpperCase();
+  if(u.includes('PC-BA')||u.includes('INVESTIGADOR'))return 'pc_inv';
+  if(u.includes('PM-')||u.includes('SOLDADO'))return 'pm';
+  if(u.includes('INSS'))return 'inss';
+  if(u.includes('RECEITA'))return 'receita';
+  if(u.includes('BANCO DO BRASIL')||u.includes('BB —'))return 'bb';
+  if(u.includes('TJ')||u.includes('TRIBUNAL'))return 'tj';
+  if(u.includes('PF')||u.includes('POLÍCIA FEDERAL'))return 'pf';
+  if(u.includes('PRF'))return 'prf';
+  return 'generico';
+}
+// Disciplinas compactas por chave
+const DISCS={
+  pc_inv:'Português(15%),Raciocínio Lógico(10%),Direito Constitucional(15%),Direito Penal(20%),Dir Processual Penal(15%),Legislação Especial(10%),Direito Administrativo(10%),Informática(5%)',
+  pm:'Português(20%),Matemática(15%),Raciocínio Lógico(10%),Direito Constitucional(15%),Direito Penal(15%),Direito Administrativo(10%),Conhecimentos Gerais(10%),Primeiros Socorros(5%)',
+  inss:'Português(15%),Raciocínio Lógico(10%),Direito Constitucional(10%),Direito Administrativo(15%),Direito Previdenciário(25%),Legislação Previdenciária(15%),Informática(10%)',
+  receita:'Direito Tributário(25%),Direito Aduaneiro(15%),Contabilidade(20%),Direito Constitucional(10%),Direito Administrativo(10%),Raciocínio Lógico(10%),TI(5%),Português(5%)',
+  bb:'Português(15%),Matemática(20%),Mercado Financeiro(15%),Conhecimentos Bancários(20%),Legislação(10%),Tecnologia(10%),Vendas(10%)',
+  tj:'Português(15%),Raciocínio Lógico(10%),Direito Constitucional(20%),Direito Administrativo(20%),Direito Civil(15%),Direito Processual Civil(15%),Informática(5%)',
+  pf:'Português(10%),Raciocínio Lógico(10%),Direito Constitucional(10%),Direito Administrativo(10%),Direito Penal(15%),Dir Processual Penal(15%),Legislação Especial(15%),Informática(5%),Inglês(5%),Inteligência(5%)',
+  prf:'Português(10%),Lógica e Matemática(15%),Direito Constitucional(10%),Direito Administrativo(10%),Legislação de Trânsito(25%),Direito Penal(15%),Legislação Especial(10%),Primeiros Socorros(5%)',
+  generico:'Português(20%),Raciocínio Lógico(15%),Direito Constitucional(20%),Direito Administrativo(25%),Informática(10%),Conhecimentos Específicos(10%)'
+};
+
+
 async function init(){
   const{data:{session}}=await sb.auth.getSession();
   if(!session){window.location.href='login.html';return;}
@@ -393,27 +421,39 @@ async function gerarPlano(){
       });
     }
 
-    // Usa a nova API dedicada ao plano
-    const resp=await fetch('/api/plano',{
+    // Calcula semanas
+    let numSemanas=4;
+    if(perfil.data_prova){
+      const dias=Math.ceil((new Date(perfil.data_prova+'T00:00:00')-new Date())/(864e5));
+      if(dias>0)numSemanas=Math.min(Math.max(Math.ceil(dias/7),4),6);
+    }
+
+    const discList=(DISCS[identificarEdital(perfil.concurso)]||'Português(15%),Raciocínio Lógico(10%),Direito Constitucional(15%),Direito Administrativo(20%),Conhecimentos Específicos(40%)');
+
+    const prompt='Crie plano de estudos JSON para: concurso="'+perfil.concurso+'", nivel='+
+      (perfil.nivel||'intermediario')+', '+(perfil.horas_dia||'2h')+'/dia, '+numSemanas+' semanas.'+
+      ' Disciplinas: '+discList+'.'+
+      ' REGRAS: 2 disciplinas por semana maximo, 2 assuntos por disciplina maximo, ultima semana e revisao.'+
+      ' RESPONDA APENAS JSON: {"semanas":[{"numero":1,"titulo":"string","foco":"string","tipo":"introducao","disciplinas":[{"nome":"string","peso":15,"prioridade":"alta","meta_questoes":20,"horas_semana":4,"assuntos":["assunto1","assunto2"]}]}],"dica_ia":"string","resumo":"string","total_semanas":'+numSemanas+',"total_horas":0,"disciplinas_criticas":[],"disciplinas_ok":[]}';
+
+    const groqR=await fetch('https://api.groq.com/openai/v1/chat/completions',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','Authorization':'Bearer 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'},
       body:JSON.stringify({
-        concurso:perfil.concurso,
-        nivel:perfil.nivel||'intermediario',
-        horas_dia:perfil.horas_dia||'2h',
-        data_prova:perfil.data_prova||null,
-        area:perfil.area||'administrativa',
-        desempenho
+        model:'llama-3.3-70b-versatile',
+        messages:[
+          {role:'system',content:'Responda APENAS JSON puro válido sem markdown.'},
+          {role:'user',content:prompt}
+        ],
+        temperature:0.2,max_tokens:1500
       })
     });
-    console.log('Resposta API:', resp.status);
-    if(!resp.ok){
-      const errTxt=await resp.text();
-      console.error('API erro body:', errTxt);
-      throw new Error('Erro na API: '+resp.status+' — '+errTxt.substring(0,200));
-    }
-    planoAtual=await resp.json();
-    console.log('Plano recebido:', planoAtual);
+    const groqData=await groqR.json();
+    if(groqData.error)throw new Error(groqData.error.message||JSON.stringify(groqData.error));
+    let txt=groqData.choices[0].message.content.replace(/```json|```/g,'').trim();
+    const ji=txt.indexOf('{'),je=txt.lastIndexOf('}');
+    if(ji>=0&&je>ji)txt=txt.substring(ji,je+1);
+    planoAtual=JSON.parse(txt);
 
     // Salva localmente e no Supabase
     localStorage.setItem('vero_plano_'+userId,JSON.stringify(planoAtual));
