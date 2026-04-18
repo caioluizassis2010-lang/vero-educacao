@@ -311,7 +311,11 @@ async function init(){
 
   // Sidebar concurso
   const el=document.getElementById('sb-concurso');
-  if(el)el.textContent=p.concurso.length>28?p.concurso.substring(0,28)+'...':p.concurso;
+  if(el){
+    const label=p.concurso.length>26?p.concurso.substring(0,26)+'...':p.concurso;
+    el.textContent=label;
+    el.title=p.concurso;
+  }
 
   // Preenche perfil card
   document.getElementById('pc-concurso').textContent=p.concurso.length>30?p.concurso.substring(0,30)+'...':p.concurso;
@@ -387,8 +391,9 @@ async function gerarPlano(){
     clearInterval(stepTimer);
     document.getElementById('loading-wrap').style.display='none';
     document.getElementById('empty-wrap').style.display='block';
-    document.getElementById('empty-wrap').querySelector('.empty-sub').textContent='Erro ao gerar plano: '+err.message+'. Tente novamente.';
-    console.error(err);
+    document.getElementById('empty-wrap').querySelector('.empty-sub').innerHTML=
+      '<strong style="color:var(--red)">Erro: '+err.message+'</strong><br><br>Verifique se o arquivo api/plano.js foi enviado ao GitHub e tente novamente.';
+    console.error('Erro completo:', err);
   }
   btn.disabled=false;
 }
