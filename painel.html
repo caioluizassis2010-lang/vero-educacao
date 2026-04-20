@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vero — Início</title>
+<title>Vofor — Início</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -168,8 +168,8 @@ nav{
 /* PLANO NA SIDEBAR */
 .sb-plan{
   margin:0 0 4px;padding:14px;
-  background:var(--bg3);
-  border:1px solid var(--border2);
+  background:#0d1540;
+  border:1px solid rgba(232,201,122,0.3);
   border-radius:10px;
 }
 .sb-plan-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
@@ -426,8 +426,8 @@ nav{
 
 <nav>
   <a href="index.html" class="brand">
-    <div class="brand-mark">V</div>
-    <div class="brand-name">VERO</div>
+    <div class="brand-mark">VF</div>
+    <div class="brand-name">VOFOR</div>
   </a>
   <button class="sb-toggle" onclick="toggleSidebar()" title="Recolher menu">
     <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -897,7 +897,7 @@ function toggleSidebar(){
 
 let notas=[];
 let notaTimers={};
-function getNotasKey(){return 'vero_notas_'+userId;}
+function getNotasKey(){return 'vofor_notas_'+userId;}
 
 function carregarNota(){
   if(!userId)return;

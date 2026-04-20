@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vero — Meu Plano de Estudos</title>
+<title>Vofor — Meu Plano de Estudos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -178,8 +178,8 @@ nav{padding:0 28px;height:58px;border-bottom:1px solid var(--border);display:fle
 
 <nav>
   <a href="index.html" class="brand">
-    <div class="brand-mark">V</div>
-    <div class="brand-name">VERO</div>
+    <div class="brand-mark">VF</div>
+    <div class="brand-name">VOFOR</div>
   </a>
   <div class="nav-right">
     <a href="painel.html" class="nav-back">← Painel</a>
@@ -389,7 +389,7 @@ async function init(){
   document.getElementById('pc-questoes').textContent=(count||0)+' questões';
 
   // Verifica plano salvo
-  const saved=localStorage.getItem('vero_plano_'+userId);
+  const saved=localStorage.getItem('vofor_plano_'+userId);
   if(saved){
     try{planoAtual=JSON.parse(saved);renderPlano(planoAtual);}catch(e){}
   }
@@ -456,7 +456,7 @@ async function gerarPlano(){
     planoAtual=JSON.parse(txt);
 
     // Salva localmente e no Supabase
-    localStorage.setItem('vero_plano_'+userId,JSON.stringify(planoAtual));
+    localStorage.setItem('vofor_plano_'+userId,JSON.stringify(planoAtual));
     await salvarPlanoSupabase(planoAtual);
 
     clearInterval(stepTimer);
@@ -496,7 +496,7 @@ function renderPlano(plano){
   const wrap=document.getElementById('plano-wrap');
   wrap.style.display='flex';
 
-  const initChecks=JSON.parse(localStorage.getItem('vero_checks_'+userId)||'{}');
+  const initChecks=JSON.parse(localStorage.getItem('vofor_checks_'+userId)||'{}');
   let html='';
 
   const totalDisc=new Set(plano.semanas?.flatMap(s=>s.disciplinas?.map(d=>d.nome)||[])||[]).size;
@@ -595,7 +595,7 @@ function renderPlano(plano){
   wrap.innerHTML=html;
 
   // Restaura estados de done
-  const savedChecks=JSON.parse(localStorage.getItem('vero_checks_'+userId)||'{}');
+  const savedChecks=JSON.parse(localStorage.getItem('vofor_checks_'+userId)||'{}');
   Object.entries(savedChecks).forEach(([id,done])=>{
     if(!done)return;
     const el=document.getElementById('check_'+id);
@@ -627,9 +627,9 @@ function toggleDisc(id){
 }
 
 function toggleCheck(id){
-  const tChecks=JSON.parse(localStorage.getItem('vero_checks_'+userId)||'{}');
+  const tChecks=JSON.parse(localStorage.getItem('vofor_checks_'+userId)||'{}');
   tChecks[id]=!tChecks[id];
-  localStorage.setItem('vero_checks_'+userId,JSON.stringify(tChecks));
+  localStorage.setItem('vofor_checks_'+userId,JSON.stringify(tChecks));
 
   const el=document.getElementById('check_'+id);
   if(el)el.classList.toggle('done',tChecks[id]);
@@ -651,7 +651,7 @@ function toggleCheck(id){
         // Salva check da disciplina
         const discId=discCheck.id.replace('check_','');
         tChecks[discId]=allDone;
-        localStorage.setItem('vero_checks_'+userId,JSON.stringify(tChecks));
+        localStorage.setItem('vofor_checks_'+userId,JSON.stringify(tChecks));
       }
     }
   }
@@ -668,7 +668,7 @@ function toggleCheck(id){
         ac.classList.toggle('done',tChecks[id]);
         if(assuntoEls[i])assuntoEls[i].classList.toggle('done-item',tChecks[id]);
       });
-      localStorage.setItem('vero_checks_'+userId,JSON.stringify(tChecks));
+      localStorage.setItem('vofor_checks_'+userId,JSON.stringify(tChecks));
     }
   }
 
@@ -677,7 +677,7 @@ function toggleCheck(id){
 }
 
 function atualizarProgresso(){
-  const pChecks=JSON.parse(localStorage.getItem('vero_checks_'+userId)||'{}');
+  const pChecks=JSON.parse(localStorage.getItem('vofor_checks_'+userId)||'{}');
   const totalAs=document.querySelectorAll('.as-check').length;
   const feitosAs=document.querySelectorAll('.as-check.done').length;
   if(totalAs>0){

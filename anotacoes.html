@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vero — Minhas Anotações</title>
+<title>Vofor — Minhas Anotações</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -195,8 +195,8 @@ nav{padding:0 28px;height:58px;border-bottom:1px solid var(--border);display:fle
 
 <nav>
   <a href="index.html" class="brand">
-    <div class="brand-mark">V</div>
-    <div class="brand-name">VERO</div>
+    <div class="brand-mark">VF</div>
+    <div class="brand-name">VOFOR</div>
   </a>
   <div class="nav-right">
     <a href="painel.html" class="nav-back">← Painel</a>
@@ -393,7 +393,7 @@ const CATS={
 const DOT_COLORS={estudo:'#e8c97a',duvida:'#e05454',revisao:'#0fa968',resumo:'#378add',estrategia:'#7B6FE8',livre:'#7a90c8'};
 
 let userId=null, notas=[], notaId=null, catAtual='estudo', debTimer=null;
-function getKey(){return 'vero_notas_'+userId;}
+function getKey(){return 'vofor_notas_'+userId;}
 
 async function init(){
   const{data:{session}}=await sb.auth.getSession();
