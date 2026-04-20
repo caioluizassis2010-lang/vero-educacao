@@ -61,7 +61,7 @@ nav.solid{background:rgba(4,7,20,0.95);backdrop-filter:blur(20px);border-bottom:
   min-height:100vh;
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  padding:90px 6% 80px;
+  padding:88px 6% 80px;
   text-align:center;
   position:relative;overflow:hidden;
 }
@@ -357,9 +357,11 @@ footer{
 /* ── LOGGED IN BANNER ── */
 .user-bar{
   display:none;
-  background:linear-gradient(90deg,rgba(232,201,122,0.07),rgba(232,201,122,0.03));
+  background:rgba(232,201,122,0.05);
   border-bottom:1px solid var(--border);
   padding:10px 6%;
+  position:sticky;top:62px;z-index:190;
+  backdrop-filter:blur(12px);
 }
 .user-bar.show{display:block}
 .ub-inner{
@@ -402,8 +404,17 @@ footer{
   .pcard{min-height:auto}
 }
 @media(max-width:768px){
-  nav{padding:0 5%}
+  nav{padding:0 4%}
   .nav-login{display:none}
+  .user-bar{padding:8px 4%}
+  .ub-inner{flex-direction:row;gap:8px;align-items:center}
+  .ub-greeting{font-size:.75rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+  .ub-actions{flex-shrink:0;gap:6px}
+  .ub-btn{font-size:.72rem;padding:5px 10px}
+  .ub-btn-ghost{display:none}
+  .ub-welcome-txt{display:none}
+  .nup-name{display:none}
+  .nav-user-pill{padding:4px}
   .intro{padding:80px 5% 56px}
   .manifesto{padding:70px 5%}
   .produtos{padding:60px 5% 80px}
@@ -413,80 +424,21 @@ footer{
   footer{padding:48px 5% 28px}
   .ft{grid-template-columns:1fr 1fr;gap:32px}
   .intro-v{font-size:5rem}
-}
-@media(max-width:420px){
-  .ft{grid-template-columns:1fr}
-  .intro-title{font-size:2rem}
-}
-
-/* ── CONNECT STRIP ── */
-.connect-strip{
-  background:var(--bg2);
-  border-top:1px solid var(--border);
-  border-bottom:1px solid var(--border);
-  padding:22px 6%;
-}
-.cs-inner{
-  max-width:1000px;margin:0 auto;
-  display:flex;align-items:center;gap:24px;flex-wrap:wrap;
-}
-.cs-text{flex:1;min-width:200px}
-.cs-title{font-size:.88rem;font-weight:600;margin-bottom:3px}
-.cs-sub{font-size:.78rem;color:var(--muted);font-weight:300}
-.cs-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.cs-form{display:flex;align-items:center;gap:6px}
-.cs-input{
-  background:var(--bg3);border:1px solid var(--border);
-  border-radius:7px;padding:8px 13px;
-  font-size:.8rem;color:var(--text);
-  font-family:'Outfit',sans-serif;outline:none;
-  transition:border-color .2s;color-scheme:dark;
-  width:190px;
-}
-.cs-input:focus{border-color:var(--border2)}
-.cs-input::placeholder{color:var(--muted2)}
-.cs-btn-email{
-  padding:8px 14px;background:var(--gold);color:#06091a;
-  border:none;border-radius:7px;font-size:.78rem;font-weight:700;
-  cursor:pointer;font-family:'Outfit',sans-serif;transition:all .18s;
-  white-space:nowrap;
-}
-.cs-btn-email:hover{background:var(--gold2)}
-.cs-divider{width:1px;height:20px;background:var(--border);flex-shrink:0}
-.cs-btn-wpp{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:8px 14px;background:rgba(37,211,102,0.1);
-  color:#25d366;border:1px solid rgba(37,211,102,0.22);
-  border-radius:7px;font-size:.78rem;font-weight:600;
-  cursor:pointer;transition:all .18s;font-family:'Outfit',sans-serif;
-  white-space:nowrap;
-}
-.cs-btn-wpp:hover{background:rgba(37,211,102,0.18)}
-.cs-btn-sms{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:8px 14px;background:rgba(180,200,255,0.06);
-  color:var(--muted);border:1px solid var(--border);
-  border-radius:7px;font-size:.78rem;font-weight:600;
-  cursor:pointer;transition:all .18s;font-family:'Outfit',sans-serif;
-  white-space:nowrap;
-}
-.cs-btn-sms:hover{background:rgba(180,200,255,0.1);color:var(--text)}
-.cs-success{
-  display:none;font-size:.78rem;color:var(--green);
-  font-weight:500;padding:8px 14px;
-  background:rgba(15,169,104,0.08);border:1px solid rgba(15,169,104,0.2);
-  border-radius:7px;
-}
-@media(max-width:768px){
-  .connect-strip{padding:18px 5%}
-  .cs-inner{gap:14px}
+  .connect-strip{padding:16px 5%}
+  .cs-inner{gap:12px}
   .cs-form{flex-wrap:wrap;width:100%}
   .cs-input{width:100%;flex:1;min-width:0}
   .cs-actions{width:100%;gap:6px}
   .cs-divider{display:none}
 }
-
-</style>
+@media(max-width:480px){
+  .brand-name{display:none}
+}
+@media(max-width:420px){
+  .ft{grid-template-columns:1fr}
+  .intro-title{font-size:2rem}
+}
+</style></style>
 </head>
 <body>
 <script>
@@ -518,7 +470,7 @@ document.addEventListener('DOMContentLoaded',function(){
 <!-- USER BAR (logged in) -->
 <div class="user-bar" id="user-bar">
   <div class="ub-inner">
-    <span class="ub-greeting">Olá, <strong id="ub-name">—</strong> 👋 Bem-vindo de volta à Vofor!</span>
+    <span class="ub-greeting">Olá, <strong id="ub-name">—</strong> 👋 <span class="ub-welcome-txt">Bem-vindo de volta!</span></span>
     <div class="ub-actions">
       <button class="ub-btn ub-btn-primary" onclick="window.location.href='painel.html'">Ir para o painel →</button>
       <button class="ub-btn ub-btn-ghost" onclick="fazerLogout()">Sair</button>
