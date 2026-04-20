@@ -34,10 +34,11 @@ nav{
 nav.solid{background:rgba(4,7,20,0.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.05)}
 .brand{display:flex;align-items:center;gap:10px;cursor:pointer}
 .brand-mark{
-  width:32px;height:32px;border-radius:8px;
+  width:36px;height:36px;border-radius:9px;
   background:var(--bg3);border:1.5px solid var(--border2);
   display:grid;place-items:center;
-  font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;color:var(--gold);
+  font-family:'Playfair Display',serif;font-size:.75rem;font-weight:700;color:var(--gold);
+  letter-spacing:.05em;
 }
 .brand-name{font-family:'Playfair Display',serif;letter-spacing:3px;font-size:.88rem;font-weight:600}
 .nav-r{display:flex;align-items:center;gap:8px}
@@ -60,7 +61,7 @@ nav.solid{background:rgba(4,7,20,0.95);backdrop-filter:blur(20px);border-bottom:
   min-height:100vh;
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  padding:80px 6% 80px;
+  padding:90px 6% 80px;
   text-align:center;
   position:relative;overflow:hidden;
 }
@@ -131,7 +132,7 @@ nav.solid{background:rgba(4,7,20,0.95);backdrop-filter:blur(20px);border-bottom:
 
 /* ── FRASE / MANIFESTO ── */
 .manifesto{
-  padding:100px 6%;
+  padding:80px 6%;
   border-top:1px solid rgba(255,255,255,0.04);
   display:flex;align-items:center;justify-content:center;
 }
@@ -156,7 +157,7 @@ nav.solid{background:rgba(4,7,20,0.95);backdrop-filter:blur(20px);border-bottom:
 
 /* ── PRODUTOS ── */
 .produtos{
-  padding:80px 6% 100px;
+  padding:60px 6% 90px;
 }
 .produtos-label{
   text-align:center;
@@ -344,12 +345,56 @@ footer{
 .fb-links a:hover{color:var(--muted)}
 
 /* ── ANIMAÇÕES ── */
-.appear{opacity:0;transform:translateY(24px);transition:opacity .75s ease,transform .75s ease}
+.appear{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
 .appear.visible{opacity:1;transform:none}
-.appear-l{opacity:0;transform:translateX(-24px);transition:opacity .75s ease,transform .75s ease}
+.appear-l{opacity:0;transform:translateX(-24px);transition:opacity .7s ease,transform .7s ease}
 .appear-l.visible{opacity:1;transform:none}
-.appear-r{opacity:0;transform:translateX(24px);transition:opacity .75s ease,transform .75s ease}
+.appear-r{opacity:0;transform:translateX(24px);transition:opacity .7s ease,transform .7s ease}
 .appear-r.visible{opacity:1;transform:none}
+/* Fallback: show everything if JS fails */
+.no-js .appear,.no-js .appear-l,.no-js .appear-r{opacity:1;transform:none}
+
+/* ── LOGGED IN BANNER ── */
+.user-bar{
+  display:none;
+  background:linear-gradient(90deg,rgba(232,201,122,0.07),rgba(232,201,122,0.03));
+  border-bottom:1px solid var(--border);
+  padding:10px 6%;
+}
+.user-bar.show{display:block}
+.ub-inner{
+  max-width:1000px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.ub-greeting{font-size:.85rem;color:var(--muted);font-weight:300}
+.ub-greeting strong{color:var(--gold);font-weight:600}
+.ub-actions{display:flex;align-items:center;gap:8px}
+.ub-btn{
+  font-size:.78rem;font-weight:600;padding:6px 14px;
+  border-radius:7px;cursor:pointer;font-family:'Outfit',sans-serif;
+  transition:all .18s;border:none;
+}
+.ub-btn-primary{background:var(--gold);color:#06091a}
+.ub-btn-primary:hover{background:var(--gold2)}
+.ub-btn-ghost{background:none;color:var(--muted);border:1px solid var(--border)}
+.ub-btn-ghost:hover{color:var(--text);border-color:rgba(255,255,255,0.2)}
+.nav-user-pill{
+  display:none;align-items:center;gap:8px;
+  padding:5px 12px 5px 5px;
+  border:1px solid var(--border);border-radius:100px;
+  background:rgba(255,255,255,0.03);cursor:pointer;
+  transition:all .2s;
+}
+.nav-user-pill:hover{border-color:var(--border2)}
+.nav-user-pill.show{display:flex}
+.nup-avatar{
+  width:24px;height:24px;border-radius:50%;
+  background:rgba(232,201,122,0.15);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:700;color:var(--gold);
+  flex-shrink:0;font-family:'Playfair Display',serif;
+}
+.nup-name{font-size:.78rem;color:var(--text);font-weight:500;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ── MOBILE ── */
 @media(max-width:860px){
@@ -444,18 +489,42 @@ footer{
 </style>
 </head>
 <body>
+<script>
+// Immediately add loaded class to show hero
+document.addEventListener('DOMContentLoaded',function(){
+  document.body.classList.add('loaded');
+  document.querySelectorAll('.intro .appear,.intro .appear-l,.intro .appear-r').forEach(function(el){
+    el.classList.add('visible');
+  });
+});
+</script>
 
 <!-- NAV -->
 <nav id="nav">
   <div class="brand" onclick="window.scrollTo({top:0,behavior:'smooth'})">
     <div class="brand-mark">VF</div>
-    <span class="brand-name">VOFOR<span style="display:block;font-size:.5rem;letter-spacing:.18em;color:var(--muted2);font-weight:400;font-family:'Outfit',sans-serif;margin-top:-3px;text-transform:uppercase">educação</span></span>
+    <span class="brand-name" style="line-height:1.1">VOFOR<span style="display:block;font-size:.48rem;letter-spacing:.2em;color:var(--muted2);font-weight:500;font-family:'Outfit',sans-serif;text-transform:uppercase;margin-top:1px">educação</span></span>
   </div>
   <div class="nav-r">
+    <div class="nav-user-pill" id="nav-pill" onclick="window.location.href='painel.html'">
+      <div class="nup-avatar" id="nav-avatar">?</div>
+      <span class="nup-name" id="nav-name-pill">—</span>
+    </div>
     <button class="nav-login" onclick="window.location.href='login.html'" id="nav-login">Entrar</button>
     <button class="nav-start" onclick="window.location.href='cadastro.html'" id="nav-start">Começar</button>
   </div>
 </nav>
+
+<!-- USER BAR (logged in) -->
+<div class="user-bar" id="user-bar">
+  <div class="ub-inner">
+    <span class="ub-greeting">Olá, <strong id="ub-name">—</strong> 👋 Bem-vindo de volta à Vofor!</span>
+    <div class="ub-actions">
+      <button class="ub-btn ub-btn-primary" onclick="window.location.href='painel.html'">Ir para o painel →</button>
+      <button class="ub-btn ub-btn-ghost" onclick="fazerLogout()">Sair</button>
+    </div>
+  </div>
+</div>
 
 <!-- INTRO -->
 <section class="intro">
@@ -463,7 +532,7 @@ footer{
   <div class="intro-orb"></div>
   <div class="intro-inner">
 
-    <span class="intro-v appear" style="transition-delay:.05s">V</span>
+    <span class="intro-v appear" style="transition-delay:.05s">VF</span>
 
     <h1 class="intro-title appear" style="transition-delay:.15s">
       O conhecimento que<br>
@@ -495,13 +564,12 @@ footer{
 <section class="manifesto" id="manifesto">
   <div class="manifesto-inner appear">
     <p class="manifesto-quote">
-      "Estudar muito não é o mesmo que estudar <em>certo</em>.<br>
-      A diferença entre os dois é o que a Vofor resolve."
+      "Estudar muito não é o mesmo que<br>estudar <em>certo</em>.<br>A diferença entre os dois<br>é o que a Vofor resolve."
     </p>
     <div class="manifesto-line"></div>
     <p class="manifesto-sub">
       Cada aluno é único. Cada objetivo é diferente. Cada hora de estudo deveria valer mais do que a anterior.
-      Construímos a Vofor para que isso seja possível.
+      Construímos a Vofor com essa premissa.
     </p>
   </div>
 </section>
@@ -654,7 +722,7 @@ footer{
     <div class="ft-brand">
       <div style="display:flex;align-items:center;gap:10px">
         <div class="brand-mark">VF</div>
-        <span class="brand-name">VOFOR<span style="display:block;font-size:.5rem;letter-spacing:.18em;color:var(--muted2);font-weight:400;font-family:'Outfit',sans-serif;margin-top:-3px;text-transform:uppercase">educação</span></span>
+        <span class="brand-name" style="line-height:1.1">VOFOR<span style="display:block;font-size:.48rem;letter-spacing:.2em;color:var(--muted2);font-weight:500;font-family:'Outfit',sans-serif;text-transform:uppercase;margin-top:1px">educação</span></span>
       </div>
       <p>Inteligência artificial para quem quer estudar com método e chegar mais longe.</p>
     </div>
@@ -686,33 +754,86 @@ footer{
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+// Show hero elements immediately
+document.querySelectorAll('.intro .appear').forEach(el=>el.classList.add('visible'));
+
+// Animate other sections on scroll
 const obs=new IntersectionObserver(entries=>entries.forEach(e=>{
   if(e.isIntersecting)e.target.classList.add('visible');
-}),{threshold:0.05,rootMargin:'0px 0px -20px 0px'});
-document.querySelectorAll('.appear,.appear-l,.appear-r').forEach(el=>obs.observe(el));
-// Trigger immediately for elements already in viewport
-setTimeout(()=>{
-  document.querySelectorAll('.appear,.appear-l,.appear-r').forEach(el=>{
-    const r=el.getBoundingClientRect();
-    if(r.top<window.innerHeight)el.classList.add('visible');
-  });
-},100);
+}),{threshold:0.05,rootMargin:'0px 0px -10px 0px'});
+document.querySelectorAll('.manifesto .appear,.produtos .appear,.sobre .appear-l,.sobre .appear-r,.cta .appear').forEach(el=>obs.observe(el));
 
 const nav=document.getElementById('nav');
 window.addEventListener('scroll',()=>nav.classList.toggle('solid',scrollY>50),{passive:true});
 
-try{
-  const k=Object.keys(localStorage).find(k=>k.includes('supabase.auth'));
-  if(k){
-    const s=JSON.parse(localStorage.getItem(k));
-    if(s?.access_token){
-      document.getElementById('nav-start').textContent='Meu painel →';
-      document.getElementById('nav-start').onclick=()=>window.location.href='painel.html';
+// Supabase session check
+(async function(){
+  try{
+    const{createClient}=supabase;
+    const sb=createClient(
+      'https://lklmzhunhiwqsbhnymaw.supabase.co',
+      'sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU'
+    );
+
+    const{data:{session}}=await sb.auth.getSession();
+
+    if(session){
+      const user=session.user;
+      const nome=user.user_metadata?.full_name||user.email.split('@')[0]||'';
+      const iniciais=nome.substring(0,2).toUpperCase();
+
+      // Mostra user bar
+      document.getElementById('user-bar').classList.add('show');
+      document.getElementById('ub-name').textContent=nome;
+
+      // Mostra pill na nav
+      const pill=document.getElementById('nav-pill');
+      pill.classList.add('show');
+      document.getElementById('nav-avatar').textContent=iniciais;
+      document.getElementById('nav-name-pill').textContent=nome;
+
+      // Esconde botões padrão
       document.getElementById('nav-login').style.display='none';
+      document.getElementById('nav-start').style.display='none';
+
+      // Salva no localStorage para acesso rápido
+      localStorage.setItem('vofor_user_nome', nome);
+      localStorage.setItem('vofor_user_email', user.email);
+
+    } else {
+      // Não logado — limpa dados locais
+      localStorage.removeItem('vofor_user_nome');
+      localStorage.removeItem('vofor_user_email');
     }
-  }
-}catch(e){}
+
+    // Ouve mudanças de auth
+    sb.auth.onAuthStateChange((event, session)=>{
+      if(event==='SIGNED_OUT'){
+        document.getElementById('user-bar').classList.remove('show');
+        document.getElementById('nav-pill').classList.remove('show');
+        document.getElementById('nav-login').style.display='';
+        document.getElementById('nav-start').style.display='';
+      }
+    });
+
+  } catch(e){ console.log('Auth check:', e.message); }
+})();
+
+async function fazerLogout(){
+  try{
+    const{createClient}=supabase;
+    const sb=createClient(
+      'https://lklmzhunhiwqsbhnymaw.supabase.co',
+      'sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU'
+    );
+    await sb.auth.signOut();
+    localStorage.removeItem('vofor_user_nome');
+    localStorage.removeItem('vofor_user_email');
+    window.location.reload();
+  } catch(e){}
+}
 
 function csSubmitEmail(page){
   const input=document.getElementById('cs-email-'+page);
