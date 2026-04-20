@@ -439,6 +439,88 @@ nav{
 .nup-name{font-size:.78rem;color:var(--text);font-weight:500;
   max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
+
+/* SEMANA ATUAL */
+.semana-atual{
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:var(--radius);overflow:hidden;
+  margin-bottom:18px;
+}
+.sa-header{
+  padding:16px 20px;background:var(--bg3);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.sa-header-left{display:flex;align-items:center;gap:12px}
+.sa-semana-badge{
+  width:32px;height:32px;border-radius:8px;
+  background:rgba(232,201,122,0.1);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:var(--gold);
+  font-family:'Playfair Display',serif;flex-shrink:0;
+}
+.sa-titulo{font-size:.95rem;font-weight:600}
+.sa-subtitulo{font-size:.75rem;color:var(--muted);margin-top:2px}
+.sa-prog-wrap{display:flex;align-items:center;gap:10px}
+.sa-prog-pct{font-size:.8rem;font-weight:600;color:var(--gold);white-space:nowrap}
+.sa-prog-bar{width:80px;height:4px;background:rgba(255,255,255,0.08);border-radius:10px;overflow:hidden}
+.sa-prog-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--gold3),var(--gold));transition:width .5s ease}
+.sa-body{padding:16px 20px;display:flex;flex-direction:column;gap:8px}
+.sa-disc{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 14px;background:var(--bg3);
+  border-radius:10px;border:1px solid var(--border);
+  transition:border-color .2s;cursor:pointer;
+}
+.sa-disc:hover{border-color:var(--border2)}
+.sa-disc.done{opacity:.55}
+.sa-disc.done .sa-disc-nome{text-decoration:line-through;color:var(--muted2)}
+.sa-disc-icon{
+  width:34px;height:34px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+}
+.sa-disc-info{flex:1;min-width:0}
+.sa-disc-nome{font-size:.88rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sa-disc-meta{font-size:.72rem;color:var(--muted2);margin-top:2px}
+.sa-disc-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.sa-prio{font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:100px}
+.prio-alta{background:rgba(224,84,84,.1);color:var(--red);border:1px solid rgba(224,84,84,.2)}
+.prio-media{background:rgba(232,201,122,.08);color:var(--gold);border:1px solid var(--border)}
+.prio-baixa{background:rgba(15,169,104,.08);color:var(--green);border:1px solid rgba(15,169,104,.2)}
+.sa-check{
+  width:22px;height:22px;border-radius:50%;
+  border:1.5px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;flex-shrink:0;background:transparent;
+}
+.sa-check:hover{border-color:var(--green);background:rgba(15,169,104,.08)}
+.sa-check.done{background:var(--green);border-color:var(--green)}
+.sa-check svg{width:11px;height:11px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;display:none}
+.sa-check.done svg{display:block}
+.sa-footer{
+  padding:12px 20px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.sa-footer-txt{font-size:.75rem;color:var(--muted2);font-weight:300}
+.sa-btn-plano{
+  font-size:.75rem;color:var(--gold);font-weight:600;
+  background:none;border:1px solid var(--border2);
+  border-radius:6px;padding:5px 12px;cursor:pointer;
+  font-family:'Outfit',sans-serif;transition:all .15s;
+}
+.sa-btn-plano:hover{background:rgba(232,201,122,.08)}
+.sa-empty{
+  padding:24px;text-align:center;
+  font-size:.85rem;color:var(--muted2);font-weight:300;line-height:1.7;
+}
+.sa-loading{
+  padding:24px;text-align:center;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  font-size:.82rem;color:var(--muted2);
+}
+.sa-spinner{width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite}
+
 </style>
 </head>
 <body>
@@ -552,6 +634,34 @@ nav{
         <div class="stat-label">Dias seguidos</div>
         <div class="stat-value">1</div>
         <div class="stat-sub">sequência atual</div>
+      </div>
+    </div>
+
+
+    <!-- SEMANA ATUAL -->
+    <div class="semana-atual" id="semana-atual-card">
+      <div class="sa-header">
+        <div class="sa-header-left">
+          <div class="sa-semana-badge" id="sa-num">—</div>
+          <div>
+            <div class="sa-titulo" id="sa-titulo">Carregando plano...</div>
+            <div class="sa-subtitulo" id="sa-subtitulo">semana atual</div>
+          </div>
+        </div>
+        <div class="sa-prog-wrap">
+          <span class="sa-prog-pct" id="sa-pct">0%</span>
+          <div class="sa-prog-bar"><div class="sa-prog-fill" id="sa-prog-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="sa-body" id="sa-body">
+        <div class="sa-loading">
+          <div class="sa-spinner"></div>
+          Carregando sua semana...
+        </div>
+      </div>
+      <div class="sa-footer">
+        <span class="sa-footer-txt" id="sa-footer-txt">Marque as disciplinas conforme estudar</span>
+        <button class="sa-btn-plano" onclick="window.location.href='plano.html'">Ver plano completo →</button>
       </div>
     </div>
 
@@ -752,6 +862,7 @@ async function init(){
   document.getElementById('nav-user').textContent=nome;
   await carregarPerfil();
   await carregarHistorico();
+  carregarSemanaAtual();
   carregarNota();
 }
 
@@ -774,6 +885,145 @@ async function carregarPerfil(){
       }
     }
   }catch(e){console.log('Perfil:',e)}
+}
+
+
+// ═══════════════════════════════════════
+// SEMANA ATUAL — PLANO DE ESTUDOS
+// ═══════════════════════════════════════
+const DISC_ICONS_MAP = {
+  'Direito Penal':'⚖️','Direito Processual Penal':'🔍','Direito Constitucional':'📜',
+  'Direito Administrativo':'🏛️','Raciocínio Lógico':'🧠','Português':'📝',
+  'Informática':'💻','Matemática':'➗','Matemática Financeira':'💰',
+  'Conhecimentos Bancários':'🏦','Dir Processual Penal':'🔍',
+  'Legislação Especial':'📋','Legislação de Trânsito':'🚦',
+  'Conhecimentos Pedagógicos':'👨‍🏫','Legislação Educacional':'📖',
+  'Primeiros Socorros':'🩺','Conhecimentos Gerais':'🌎',
+  'Contabilidade':'📊','Direito Tributário':'💼','Direito Aduaneiro':'🛃',
+  'Direito Civil':'⚖️','Direito Processual Civil':'⚖️',
+  'Mercado Financeiro':'📈','Atualidades do Mercado Financeiro':'📈',
+  'Vendas e Negociação':'🤝','Tecnologia e Inovação':'🚀',
+  'Desenvolvimento Regional':'🌿','Direito do Trabalho':'👷',
+};
+const DISC_COLORS = ['#e8c97a','#0fa968','#378add','#e05454','#7B6FE8','#f2d98e','#0F6E56'];
+
+function carregarSemanaAtual() {
+  try {
+    const planoSalvo = localStorage.getItem('vofor_plano_' + userId);
+    if (!planoSalvo) {
+      mostrarSemanaVazia('Nenhum plano gerado ainda.');
+      return;
+    }
+    const plano = JSON.parse(planoSalvo);
+    if (!plano.semanas?.length) { mostrarSemanaVazia('Plano sem semanas.'); return; }
+
+    // Calcula semana atual baseado na data de criação do plano
+    const criadoEm = localStorage.getItem('vofor_plano_data_' + userId);
+    let semanaAtual = 1;
+    if (criadoEm) {
+      const diasPassados = Math.floor((Date.now() - new Date(criadoEm)) / (864e5));
+      semanaAtual = Math.min(Math.floor(diasPassados / 7) + 1, plano.semanas.length);
+    }
+
+    const sem = plano.semanas[semanaAtual - 1];
+    if (!sem) { mostrarSemanaVazia('Semana não encontrada.'); return; }
+
+    // Header
+    document.getElementById('sa-num').textContent = sem.numero || semanaAtual;
+    document.getElementById('sa-titulo').textContent = sem.titulo || ('Semana ' + semanaAtual);
+    document.getElementById('sa-subtitulo').textContent =
+      sem.foco ? '📌 ' + sem.foco : 'semana atual';
+
+    // Checks salvos
+    const checks = JSON.parse(localStorage.getItem('vofor_checks_' + userId) || '{}');
+
+    // Calcula progresso
+    const total = sem.disciplinas?.length || 0;
+    const feitos = sem.disciplinas?.filter((_, di) => checks['d_' + sem.numero + '_' + di]).length || 0;
+    const pct = total > 0 ? Math.round(feitos / total * 100) : 0;
+    document.getElementById('sa-pct').textContent = pct + '%';
+    document.getElementById('sa-prog-fill').style.width = pct + '%';
+
+    if (feitos === total && total > 0) {
+      document.getElementById('sa-footer-txt').textContent = '✓ Semana concluída! Veja o plano completo.';
+    } else {
+      document.getElementById('sa-footer-txt').textContent =
+        feitos + ' de ' + total + ' disciplinas concluídas esta semana';
+    }
+
+    // Renderiza disciplinas
+    const body = document.getElementById('sa-body');
+    if (!sem.disciplinas?.length) {
+      body.innerHTML = '<div class="sa-empty">Nenhuma disciplina nesta semana.</div>';
+      return;
+    }
+
+    body.innerHTML = sem.disciplinas.map((disc, di) => {
+      const discId = 'd_' + sem.numero + '_' + di;
+      const isDone = checks[discId] || false;
+      const cor = DISC_COLORS[di % DISC_COLORS.length];
+      const icon = DISC_ICONS_MAP[disc.nome] || '📚';
+      const prio = disc.prioridade || 'media';
+      const prioLabel = prio === 'alta' ? 'Alta' : prio === 'baixa' ? 'Baixa' : 'Média';
+      const assuntos = disc.assuntos?.length || 0;
+
+      return `<div class="sa-disc${isDone ? ' done' : ''}" id="sadisc_${discId}">
+        <div class="sa-disc-icon" style="background:${cor}18;border:1px solid ${cor}30">${icon}</div>
+        <div class="sa-disc-info">
+          <div class="sa-disc-nome">${disc.nome}</div>
+          <div class="sa-disc-meta">${assuntos} assuntos · ${disc.meta_questoes || 20} questões</div>
+        </div>
+        <div class="sa-disc-right">
+          <span class="sa-prio prio-${prio}">${prioLabel}</span>
+          <div class="sa-check${isDone ? ' done' : ''}" id="sacheck_${discId}"
+            onclick="toggleSemanaCheck('${discId}', ${sem.numero})">
+            <svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+
+  } catch(e) {
+    console.error('Erro semana atual:', e);
+    mostrarSemanaVazia('Erro ao carregar plano.');
+  }
+}
+
+function mostrarSemanaVazia(msg) {
+  document.getElementById('sa-body').innerHTML =
+    `<div class="sa-empty">${msg}<br><span style="font-size:.8rem;color:var(--gold);cursor:pointer" onclick="window.location.href='plano.html'">Gerar meu plano →</span></div>`;
+  document.getElementById('sa-num').textContent = '?';
+  document.getElementById('sa-titulo').textContent = 'Sem plano ativo';
+  document.getElementById('sa-subtitulo').textContent = 'crie seu plano de estudos';
+  document.getElementById('sa-pct').textContent = '0%';
+}
+
+function toggleSemanaCheck(discId, semNum) {
+  const checks = JSON.parse(localStorage.getItem('vofor_checks_' + userId) || '{}');
+  checks[discId] = !checks[discId];
+  localStorage.setItem('vofor_checks_' + userId, JSON.stringify(checks));
+
+  // Update visual
+  const checkEl = document.getElementById('sacheck_' + discId);
+  const discEl = document.getElementById('sadisc_' + discId);
+  if (checkEl) checkEl.classList.toggle('done', checks[discId]);
+  if (discEl) discEl.classList.toggle('done', checks[discId]);
+
+  // Recalcula progresso
+  const planoSalvo = localStorage.getItem('vofor_plano_' + userId);
+  if (!planoSalvo) return;
+  const plano = JSON.parse(planoSalvo);
+  const sem = plano.semanas?.find(s => s.numero == semNum);
+  if (!sem) return;
+  const total = sem.disciplinas?.length || 0;
+  const feitos = sem.disciplinas?.filter((_, di) => checks['d_' + semNum + '_' + di]).length || 0;
+  const pct = total > 0 ? Math.round(feitos / total * 100) : 0;
+  document.getElementById('sa-pct').textContent = pct + '%';
+  document.getElementById('sa-prog-fill').style.width = pct + '%';
+  document.getElementById('sa-footer-txt').textContent =
+    feitos === total && total > 0
+      ? '✓ Semana concluída! Veja o plano completo.'
+      : feitos + ' de ' + total + ' disciplinas concluídas esta semana';
 }
 
 async function carregarHistorico(){

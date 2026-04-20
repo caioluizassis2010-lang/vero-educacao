@@ -482,6 +482,10 @@ async function gerarPlano(){
 
     // Salva localmente e no Supabase
     localStorage.setItem('vofor_plano_'+userId,JSON.stringify(planoAtual));
+    // Salva data de criação para calcular semana atual
+    if(!localStorage.getItem('vofor_plano_data_'+userId)){
+      localStorage.setItem('vofor_plano_data_'+userId, new Date().toISOString());
+    }
     await salvarPlanoSupabase(planoAtual);
 
     clearInterval(stepTimer);
