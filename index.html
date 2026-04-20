@@ -57,9 +57,10 @@ nav.solid{background:rgba(4,7,20,0.95);backdrop-filter:blur(20px);border-bottom:
 /* ── INTRO / HERO ── */
 .intro{
   min-height:100svh;
+  min-height:100vh;
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  padding:80px 6% 60px;
+  padding:80px 6% 80px;
   text-align:center;
   position:relative;overflow:hidden;
 }
@@ -548,7 +549,7 @@ footer{
       </button>
       <button class="btn-secondary" onclick="window.location.href='concursos.html'">Explorar Concursos</button>
     </div>
-    <p class="cta-note">Sem cartão de crédito · Cancele quando quiser</p>
+
   </div>
 </section>
 
@@ -593,8 +594,15 @@ footer{
 <script>
 const obs=new IntersectionObserver(entries=>entries.forEach(e=>{
   if(e.isIntersecting)e.target.classList.add('visible');
-}),{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+}),{threshold:0.05,rootMargin:'0px 0px -20px 0px'});
 document.querySelectorAll('.appear,.appear-l,.appear-r').forEach(el=>obs.observe(el));
+// Trigger immediately for elements already in viewport
+setTimeout(()=>{
+  document.querySelectorAll('.appear,.appear-l,.appear-r').forEach(el=>{
+    const r=el.getBoundingClientRect();
+    if(r.top<window.innerHeight)el.classList.add('visible');
+  });
+},100);
 
 const nav=document.getElementById('nav');
 window.addEventListener('scroll',()=>nav.classList.toggle('solid',scrollY>50),{passive:true});
