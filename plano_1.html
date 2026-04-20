@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vofor — Meu Plano de Estudos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06091a;--bg2:#0a1035;--bg3:#0d1540;--bg4:#040714;
+  --gold:#e8c97a;--gold2:#f2d98e;
+  --text:#eef2ff;--muted:#7a90c8;--muted2:rgba(180,200,255,0.28);
+  --border:rgba(232,201,122,0.12);--border2:rgba(232,201,122,0.28);
+  --green:#0fa968;--red:#e05454;--blue:#378add;--purple:#7B6FE8;
+  --radius:12px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg4);color:var(--text);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+a{text-decoration:none;color:inherit}
+
+nav{padding:0 28px;height:58px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg4);position:sticky;top:0;z-index:100}
+.brand{display:inline-flex;align-items:center;gap:12px}
+.brand-mark{width:34px;height:34px;border-radius:8px;border:1.5px solid var(--border2);background:var(--bg3);color:var(--gold);display:grid;place-items:center;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700}
+.brand-name{font-family:'Playfair Display',serif;color:var(--text);letter-spacing:3px;font-size:.95rem;font-weight:600}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-user{font-size:.78rem;color:var(--text);font-weight:500;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-back{font-size:12px;color:var(--muted);padding:6px 14px;border:1px solid var(--border);border-radius:7px;cursor:pointer;transition:all .15s;font-weight:500}
+.nav-back:hover{color:var(--gold);border-color:var(--border2)}
+.btn-sair{font-size:12px;color:var(--muted);padding:6px 14px;border:1px solid var(--border);border-radius:7px;cursor:pointer;background:none;font-family:'Outfit',sans-serif;transition:all .15s}
+.btn-sair:hover{color:var(--gold);border-color:var(--border2)}
+
+.layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 58px)}
+
+/* SIDEBAR */
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:28px 16px 24px;display:flex;flex-direction:column;gap:2px}
+.sb-section{font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted2);padding:0 14px;margin:22px 0 8px}
+.sb-section:first-child{margin-top:0}
+.sb-item{display:flex;align-items:center;gap:13px;padding:11px 14px;border-radius:9px;font-size:14px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .18s;border:1px solid transparent;margin-bottom:2px}
+.sb-item:hover{background:rgba(180,200,255,0.05);color:var(--text)}
+.sb-item.active{background:rgba(232,201,122,0.08);color:var(--gold);border-color:rgba(232,201,122,0.15)}
+.sb-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(180,200,255,0.05);flex-shrink:0}
+.sb-item.active .sb-icon{background:rgba(232,201,122,0.1);border:1px solid rgba(232,201,122,0.2)}
+.sb-icon svg{width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.sb-item.active .sb-icon svg,.sb-item:hover .sb-icon svg{stroke:var(--gold)}
+.sb-divider{height:1px;background:var(--border);margin:12px 4px}
+.sb-spacer{flex:1}
+.sb-plan{margin:0 0 4px;padding:14px;background:rgba(232,201,122,0.05);border:1px solid rgba(232,201,122,0.15);border-radius:10px}
+.sb-plan-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.sb-plan-label{font-size:9px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.sb-plan-badge{font-size:9px;font-weight:700;padding:2px 8px;background:rgba(232,201,122,0.12);color:var(--gold);border-radius:100px;border:1px solid rgba(232,201,122,0.25)}
+.sb-plan-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
+.sb-plan-desc{font-size:11px;color:var(--muted2);font-weight:300;margin-bottom:10px}
+.sb-plan-btn{width:100%;padding:8px;background:var(--gold);color:#0a1035;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Outfit',sans-serif;transition:all .15s}
+.sb-plan-btn:hover{background:var(--gold2)}
+
+/* MAIN */
+.main{padding:28px 30px;overflow-y:auto}
+@media(max-width:768px){.main{padding:16px 14px 80px}}
+
+.page-hd{margin-bottom:28px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.page-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;line-height:1.1}
+.page-title em{font-style:italic;color:var(--gold)}
+.page-sub{font-size:12px;color:var(--muted);margin-top:5px;font-weight:300}
+.btn-gerar{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;background:var(--gold);color:#0a1035;border:none;border-radius:9px;font-size:.88rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .18s}
+.btn-gerar:hover{background:var(--gold2);transform:translateY(-1px)}
+.btn-gerar:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-gerar svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+
+/* PERFIL CARD */
+.perfil-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;margin-bottom:22px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.pc-item{display:flex;flex-direction:column;gap:3px}
+.pc-label{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2)}
+.pc-value{font-size:13px;font-weight:600;color:var(--text)}
+.pc-divider{width:1px;height:32px;background:var(--border);flex-shrink:0}
+
+/* LOADING STATE */
+.loading-wrap{text-align:center;padding:80px 20px}
+.loading-spinner{width:44px;height:44px;border:3px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-txt{font-size:.95rem;color:var(--muted);font-weight:300;margin-bottom:6px}
+.loading-sub{font-size:.82rem;color:var(--muted2);font-weight:300}
+
+/* ESTADO VAZIO */
+.empty-wrap{text-align:center;padding:80px 20px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius)}
+.empty-icon{font-size:44px;margin-bottom:16px;opacity:.7}
+.empty-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:8px}
+.empty-sub{font-size:.9rem;color:var(--muted);font-weight:300;max-width:400px;margin:0 auto 28px;line-height:1.7}
+
+/* PLANO GERADO */
+.plano-wrap{display:flex;flex-direction:column;gap:20px}
+
+/* RESUMO DO PLANO */
+.plano-resumo{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 28px;display:flex;align-items:center;justify-content:space-around;gap:0}
+.pr-item{text-align:center;padding:0 20px;position:relative}
+.pr-item+.pr-item::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);height:28px;width:1px;background:var(--border)}
+.pr-num{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--gold);line-height:1;margin-bottom:4px}
+.pr-label{font-size:9px;color:var(--muted2);font-weight:500;text-transform:uppercase;letter-spacing:.12em}
+
+/* SEMANAS */
+.semana-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.semana-header{padding:14px 20px;background:var(--bg3);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background .15s}
+.semana-header:hover{background:rgba(13,21,64,0.9)}
+.semana-left{display:flex;align-items:center;gap:12px}
+.semana-num{width:28px;height:28px;border-radius:7px;background:rgba(232,201,122,0.1);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--gold)}
+.semana-titulo{font-size:.95rem;font-weight:600;color:var(--text)}
+.semana-sub{font-size:11px;color:var(--muted2);margin-top:2px;font-weight:300}
+.semana-prog{display:flex;align-items:center;gap:10px}
+.semana-pct{font-size:12px;color:var(--muted2)}
+.semana-chevron{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;transition:transform .2s}
+.semana-chevron.open{transform:rotate(180deg)}
+.semana-body{display:none;padding:16px 20px;display:flex;flex-direction:column;gap:10px}
+
+/* DISCIPLINA ITEM */
+.disc-item{background:var(--bg3);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .2s}
+.disc-item.done-disc{opacity:.65}
+.disc-item.done-disc .disc-nome{text-decoration:line-through;color:var(--muted2)}
+.disc-header{padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.disc-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.disc-info{flex:1}
+.disc-nome{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.disc-meta{font-size:11px;color:var(--muted2);font-weight:300}
+.disc-right{display:flex;align-items:center;gap:8px}
+.disc-prioridade{font-size:9px;font-weight:700;padding:3px 9px;border-radius:100px}
+.prio-alta{background:rgba(224,84,84,.12);color:var(--red);border:1px solid rgba(224,84,84,.25)}
+.prio-media{background:rgba(232,201,122,.1);color:var(--gold);border:1px solid var(--border2)}
+.prio-baixa{background:rgba(15,169,104,.1);color:var(--green);border:1px solid rgba(15,169,104,.25)}
+.disc-check{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;background:transparent}
+.disc-check:hover{border-color:var(--green);background:rgba(15,169,104,0.08)}
+.disc-check.done{background:var(--green);border-color:var(--green)}
+.disc-check svg{width:11px;height:11px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;display:none}
+.disc-check.done svg{display:block}
+
+/* ASSUNTOS */
+.assuntos-lista{padding:0 16px 14px;display:flex;flex-direction:column;gap:6px}
+.assunto-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg2);border-radius:7px;border:1px solid var(--border);transition:all .18s}
+.assunto-item:hover{border-color:var(--border2)}
+.assunto-item.done-item{opacity:.55}
+.assunto-item.done-item .as-nome{text-decoration:line-through;color:var(--muted2)}
+.as-bullet{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.as-nome{flex:1;font-size:12px;color:var(--text);font-weight:300}
+.as-qtd{font-size:10px;color:var(--muted2);white-space:nowrap}
+.as-check{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;background:transparent}
+.as-check:hover{border-color:var(--green);background:rgba(15,169,104,0.08)}
+.as-check.done{background:var(--green);border-color:var(--green)}
+.as-check svg{width:10px;height:10px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;display:none}
+.as-check.done svg{display:block}
+
+/* ALERTA IA */
+.ia-tip{background:rgba(232,201,122,0.04);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:9px;padding:14px 18px;display:flex;gap:12px;align-items:flex-start}
+.ia-tip-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.ia-tip-txt{font-size:.88rem;color:var(--muted);font-weight:300;line-height:1.75}
+.ia-tip-strong{color:var(--text);font-weight:500}
+
+@media(max-width:960px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .plano-resumo{grid-template-columns:1fr 1fr}
+}
+
+/* MOBILE */
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:60px;background:var(--bg2);border-top:1px solid var(--border);z-index:200;align-items:center;justify-content:space-around;padding:0 8px}
+.mn-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 10px;border-radius:9px;cursor:pointer;transition:all .18s;flex:1;color:var(--muted)}
+.mn-item.active{color:var(--gold)}
+.mn-icon{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.mn-label{font-size:9px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+@media(max-width:768px){
+  .layout{grid-template-columns:1fr !important}
+  .sidebar{display:none !important}
+  .mobile-nav{display:flex}
+  nav{padding:0 16px}
+}
+@media(min-width:769px){.mobile-nav{display:none !important}}
+
+.nav-user-pill{
+  display:flex;align-items:center;gap:7px;
+  padding:5px 12px 5px 5px;
+  border:1px solid var(--border);border-radius:100px;
+  background:rgba(255,255,255,0.03);cursor:pointer;
+  transition:all .2s;text-decoration:none;
+}
+.nav-user-pill:hover{border-color:var(--border2)}
+.nup-avatar{
+  width:24px;height:24px;border-radius:50%;
+  background:rgba(232,201,122,0.15);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.62rem;font-weight:700;color:var(--gold);
+  flex-shrink:0;font-family:'Playfair Display',serif;
+}
+.nup-name{font-size:.78rem;color:var(--text);font-weight:500;
+  max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="brand">
+    <div class="brand-mark">VF</div>
+    <div class="brand-name">VOFOR</div>
+  </a>
+  <div class="nav-right">
+    <a href="painel.html" class="nav-back">← Painel</a>
+    <div class="nav-user-pill" id="nav-pill">
+      <div class="nup-avatar" id="nav-avatar">?</div>
+      <span class="nup-name" id="nav-user">—</span>
+    </div>
+    <button class="btn-sair" onclick="sair()">Sair</button>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sb-section">Menu principal</div>
+    <div class="sb-item" onclick="window.location.href='painel.html'">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+      Início
+    </div>
+    <div class="sb-item" onclick="window.location.href='questoes.html'">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+      Questões do dia
+    </div>
+    <div class="sb-item active">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
+      Meu plano
+    </div>
+    <div class="sb-item" onclick="window.location.href='desempenho.html'">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M8 21V10M12 21V3M16 21v-7M4 21v-4"/></svg></div>
+      Desempenho
+    </div>
+    <div class="sb-item" onclick="window.location.href='anotacoes.html'">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+      Anotações
+    </div>
+    <div class="sb-item" onclick="window.location.href='simulados.html'">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      Simulados
+    </div>
+    <div class="sb-item" onclick="alert('Em breve!')">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+      Relatórios
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-section">Minha jornada</div>
+    <div class="sb-item">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <span id="sb-concurso">—</span>
+    </div>
+    <div class="sb-spacer"></div>
+    <div class="sb-plan">
+      <div class="sb-plan-row">
+        <div class="sb-plan-label">Plano atual</div>
+        <div class="sb-plan-badge">Grátis
+      <div class="sb-plan-name">Plano Gratuito</div>
+      <div class="sb-plan-desc">20 questões por dia.</div>
+      <button class="sb-plan-btn" onclick="alert('Em breve!')">Upgrade →</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="page-hd">
+      <div>
+        <h1 class="page-title">Meu plano de <em>estudos</em></h1>
+        <p class="page-sub" id="page-sub">Gerado pela IA com base no seu perfil e desempenho.</p>
+      </div>
+      <button class="btn-gerar" id="btn-gerar" onclick="gerarPlano()">
+        <svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+        Gerar novo plano
+      </button>
+    </div>
+
+    <!-- PERFIL RESUMO -->
+    <div class="perfil-card" id="perfil-card" style="display:none">
+      <div class="pc-item">
+        <div class="pc-label">Concurso</div>
+        <div class="pc-value" id="pc-concurso">—</div>
+      </div>
+      <div class="pc-divider"></div>
+      <div class="pc-item">
+        <div class="pc-label">Nível</div>
+        <div class="pc-value" id="pc-nivel">—</div>
+      </div>
+      <div class="pc-divider"></div>
+      <div class="pc-item">
+        <div class="pc-label">Disponibilidade</div>
+        <div class="pc-value" id="pc-horas">—</div>
+      </div>
+      <div class="pc-divider"></div>
+      <div class="pc-item">
+        <div class="pc-label">Data da prova</div>
+        <div class="pc-value" id="pc-data">Não informada</div>
+      </div>
+      <div class="pc-divider"></div>
+      <div class="pc-item">
+        <div class="pc-label">Questões respondidas</div>
+        <div class="pc-value" id="pc-questoes">—</div>
+      </div>
+    </div>
+
+    <!-- LOADING -->
+    <div id="loading-wrap" style="display:none">
+      <div class="loading-wrap">
+        <div class="loading-spinner"></div>
+        <div class="loading-txt">A IA está analisando seu perfil...</div>
+        <div class="loading-sub" id="loading-step">Carregando seus dados de desempenho</div>
+      </div>
+    </div>
+
+    <!-- VAZIO -->
+    <div id="empty-wrap">
+      <div class="empty-wrap">
+        <div class="empty-icon">🗓️</div>
+        <h2 class="empty-title">Seu plano personalizado</h2>
+        <p class="empty-sub">A IA vai analisar seu concurso, seu nível atual, seu desempenho por disciplina e criar um cronograma semanal sob medida para você.</p>
+        <button class="btn-gerar" onclick="gerarPlano()">
+          <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          Gerar meu plano agora
+        </button>
+      </div>
+    </div>
+
+    <!-- PLANO GERADO -->
+    <div id="plano-wrap" style="display:none" class="plano-wrap"></div>
+
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- v2 -->
+<script>
+const{createClient}=supabase;
+const sb=createClient('https://lklmzhunhiwqsbhnymaw.supabase.co','sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU');
+
+const DISC_ICONS={
+  'Direito Penal':'⚖️','Direito Processual Penal':'🔍','Direito Constitucional':'📜',
+  'Direito Administrativo':'🏛️','Raciocínio Lógico':'🧠','Português':'📝',
+  'Informática':'💻','Matemática Financeira':'💰','Conhecimentos Bancários':'🏦',
+  'Conhecimentos Pedagógicos':'👨‍🏫','Didática':'📖','Direito Civil':'⚖️',
+  'Direito do Trabalho':'👷','Legislação Educacional':'📋','Conhecimentos Específicos':'🎯',
+};
+const DISC_COLORS=['#e8c97a','#0fa968','#378add','#e05454','#7B6FE8','#f2d98e','#0F6E56'];
+
+let userId=null, perfil=null, planoAtual=null;
+
+// Mapa compacto de disciplinas por concurso
+const DISC_MAP={};
+function identificarEdital(c){
+  const u=(c||'').toUpperCase();
+  if(u.includes('PC-BA')||u.includes('INVESTIGADOR'))return 'pc_inv';
+  if(u.includes('PM-')||u.includes('SOLDADO'))return 'pm';
+  if(u.includes('INSS'))return 'inss';
+  if(u.includes('RECEITA'))return 'receita';
+  if(u.includes('BANCO DO BRASIL')||u.includes('BB —'))return 'bb';
+  if(u.includes('TJ')||u.includes('TRIBUNAL'))return 'tj';
+  if(u.includes('PF')||u.includes('POLÍCIA FEDERAL'))return 'pf';
+  if(u.includes('PRF'))return 'prf';
+  return 'generico';
+}
+// Disciplinas compactas por chave
+const DISCS={
+  pc_inv:'Português(15%),Raciocínio Lógico(10%),Direito Constitucional(15%),Direito Penal(20%),Dir Processual Penal(15%),Legislação Especial(10%),Direito Administrativo(10%),Informática(5%)',
+  pm:'Português(20%),Matemática(15%),Raciocínio Lógico(10%),Direito Constitucional(15%),Direito Penal(15%),Direito Administrativo(10%),Conhecimentos Gerais(10%),Primeiros Socorros(5%)',
+  inss:'Português(15%),Raciocínio Lógico(10%),Direito Constitucional(10%),Direito Administrativo(15%),Direito Previdenciário(25%),Legislação Previdenciária(15%),Informática(10%)',
+  receita:'Direito Tributário(25%),Direito Aduaneiro(15%),Contabilidade(20%),Direito Constitucional(10%),Direito Administrativo(10%),Raciocínio Lógico(10%),TI(5%),Português(5%)',
+  bb:'Português(15%),Matemática(20%),Mercado Financeiro(15%),Conhecimentos Bancários(20%),Legislação(10%),Tecnologia(10%),Vendas(10%)',
+  tj:'Português(15%),Raciocínio Lógico(10%),Direito Constitucional(20%),Direito Administrativo(20%),Direito Civil(15%),Direito Processual Civil(15%),Informática(5%)',
+  pf:'Português(10%),Raciocínio Lógico(10%),Direito Constitucional(10%),Direito Administrativo(10%),Direito Penal(15%),Dir Processual Penal(15%),Legislação Especial(15%),Informática(5%),Inglês(5%),Inteligência(5%)',
+  prf:'Português(10%),Lógica e Matemática(15%),Direito Constitucional(10%),Direito Administrativo(10%),Legislação de Trânsito(25%),Direito Penal(15%),Legislação Especial(10%),Primeiros Socorros(5%)',
+  generico:'Português(20%),Raciocínio Lógico(15%),Direito Constitucional(20%),Direito Administrativo(25%),Informática(10%),Conhecimentos Específicos(10%)'
+};
+
+
+async function init(){
+  const{data:{session}}=await sb.auth.getSession();
+  if(!session){window.location.href='login.html';return;}
+  userId=session.user.id;
+  const nome=session.user.user_metadata?.full_name||session.user.email.split('@')[0]||'';
+  const elUser=document.getElementById('nav-user');
+  if(elUser)elUser.textContent=nome;
+  const elAv=document.getElementById('nav-avatar');
+  if(elAv)elAv.textContent=nome.substring(0,2).toUpperCase();
+
+  const{data:p,error:pe}=await sb.from('perfis').select('*').eq('id',userId).single();
+  console.log('Perfil carregado:', p, 'Erro:', pe);
+  if(!p||!p.concurso){
+    console.warn('Perfil sem concurso — redirecionando para perfil.html');
+    window.location.href='perfil.html';
+    return;
+  }
+  perfil=p;
+  console.log('Concurso:', p.concurso, 'Área:', p.area);
+
+  // Sidebar concurso
+  const el=document.getElementById('sb-concurso');
+  if(el){
+    const label=p.concurso.length>26?p.concurso.substring(0,26)+'...':p.concurso;
+    el.textContent=label;
+    el.title=p.concurso;
+  }
+
+  // Preenche perfil card
+  document.getElementById('pc-concurso').textContent=p.concurso.length>30?p.concurso.substring(0,30)+'...':p.concurso;
+  document.getElementById('pc-nivel').textContent=({iniciante:'Iniciante',basico:'Básico',intermediario:'Intermediário',avancado:'Avançado'})[p.nivel]||p.nivel||'—';
+  document.getElementById('pc-horas').textContent=p.horas_dia||'—';
+  if(p.data_prova){
+    const d=new Date(p.data_prova+'T00:00:00');
+    document.getElementById('pc-data').textContent=d.toLocaleDateString('pt-BR');
+  }
+  document.getElementById('perfil-card').style.display='flex';
+
+  // Conta questões
+  const{count}=await sb.from('questoes_respondidas').select('*',{count:'exact',head:true}).eq('user_id',userId);
+  document.getElementById('pc-questoes').textContent=(count||0)+' questões';
+
+  // Verifica plano salvo
+  const saved=localStorage.getItem('vofor_plano_'+userId);
+  if(saved){
+    try{planoAtual=JSON.parse(saved);renderPlano(planoAtual);}catch(e){}
+  }
+}
+
+async function gerarPlano(){
+  const btn=document.getElementById('btn-gerar');
+  btn.disabled=true;
+  document.getElementById('empty-wrap').style.display='none';
+  document.getElementById('plano-wrap').style.display='none';
+  document.getElementById('loading-wrap').style.display='block';
+
+  const steps=['Carregando seus dados de desempenho','Analisando disciplinas mais cobradas','Calculando prioridades por assunto','Gerando cronograma semanal personalizado','Finalizando seu plano...'];
+  let si=0;
+  const stepTimer=setInterval(()=>{
+    if(si<steps.length){document.getElementById('loading-step').textContent=steps[si++];}
+  },1200);
+
+  try{
+    console.log('Gerando plano para:', perfil?.concurso, '| área:', perfil?.area);
+    // Busca desempenho real
+    const{data:qs}=await sb.from('questoes_respondidas').select('disciplina,acertou').eq('user_id',userId);
+    const desempenho={};
+    if(qs&&qs.length){
+      qs.forEach(q=>{
+        if(!desempenho[q.disciplina])desempenho[q.disciplina]={acertos:0,total:0};
+        desempenho[q.disciplina].total++;
+        if(q.acertou)desempenho[q.disciplina].acertos++;
+      });
+    }
+
+    // Calcula semanas
+    let numSemanas=4;
+    if(perfil.data_prova){
+      const dias=Math.ceil((new Date(perfil.data_prova+'T00:00:00')-new Date())/(864e5));
+      if(dias>0)numSemanas=Math.min(Math.max(Math.ceil(dias/7),4),6);
+    }
+
+    const discList=(DISCS[identificarEdital(perfil.concurso)]||'Português(15%),Raciocínio Lógico(10%),Direito Constitucional(15%),Direito Administrativo(20%),Conhecimentos Específicos(40%)');
+
+    const prompt='Crie plano de estudos JSON para: concurso="'+perfil.concurso+'", nivel='+
+      (perfil.nivel||'intermediario')+', '+(perfil.horas_dia||'2h')+'/dia, '+numSemanas+' semanas.'+
+      ' Disciplinas: '+discList+'.'+
+      ' REGRAS: 2 disciplinas por semana maximo, 2 assuntos por disciplina maximo, ultima semana e revisao.'+
+      ' RESPONDA APENAS JSON: {"semanas":[{"numero":1,"titulo":"string","foco":"string","tipo":"introducao","disciplinas":[{"nome":"string","peso":15,"prioridade":"alta","meta_questoes":20,"horas_semana":4,"assuntos":["assunto1","assunto2"]}]}],"dica_ia":"string","resumo":"string","total_semanas":'+numSemanas+',"total_horas":0,"disciplinas_criticas":[],"disciplinas_ok":[]}';
+
+    const groqR=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer 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'},
+      body:JSON.stringify({
+        model:'llama-3.3-70b-versatile',
+        messages:[
+          {role:'system',content:'Responda APENAS JSON puro válido sem markdown.'},
+          {role:'user',content:prompt}
+        ],
+        temperature:0.2,max_tokens:1500
+      })
+    });
+    const groqData=await groqR.json();
+    if(groqData.error)throw new Error(groqData.error.message||JSON.stringify(groqData.error));
+    let txt=groqData.choices[0].message.content.replace(/```json|```/g,'').trim();
+    const ji=txt.indexOf('{'),je=txt.lastIndexOf('}');
+    if(ji>=0&&je>ji)txt=txt.substring(ji,je+1);
+    planoAtual=JSON.parse(txt);
+
+    // Salva localmente e no Supabase
+    localStorage.setItem('vofor_plano_'+userId,JSON.stringify(planoAtual));
+    // Salva data de criação para calcular semana atual
+    if(!localStorage.getItem('vofor_plano_data_'+userId)){
+      localStorage.setItem('vofor_plano_data_'+userId, new Date().toISOString());
+    }
+    await salvarPlanoSupabase(planoAtual);
+
+    clearInterval(stepTimer);
+    document.getElementById('loading-wrap').style.display='none';
+    renderPlano(planoAtual);
+
+  }catch(err){
+    clearInterval(stepTimer);
+    document.getElementById('loading-wrap').style.display='none';
+    document.getElementById('empty-wrap').style.display='block';
+    document.getElementById('empty-wrap').querySelector('.empty-sub').innerHTML=
+      '<strong style="color:var(--red)">Erro: '+err.message+'</strong><br><br>Verifique se o arquivo api/plano.js foi enviado ao GitHub e tente novamente.';
+    console.error('Erro completo:', err);
+  }
+  btn.disabled=false;
+}
+
+async function salvarPlanoSupabase(plano){
+  if(!plano.semanas)return;
+  // Deleta plano anterior
+  await sb.from('planos_estudo').delete().eq('user_id',userId);
+  // Insere novo
+  const rows=[];
+  plano.semanas.forEach(s=>{
+    s.disciplinas?.forEach(d=>{
+      d.assuntos?.forEach(a=>{
+        rows.push({user_id:userId,concurso:perfil.concurso,semana:s.numero,disciplina:d.nome,assunto:a,meta_questoes:d.meta_questoes||20,prioridade:d.prioridade||'media',concluido:false});
+      });
+    });
+  });
+  if(rows.length)await sb.from('planos_estudo').insert(rows);
+}
+
+function renderPlano(plano){
+  document.getElementById('empty-wrap').style.display='none';
+  document.getElementById('loading-wrap').style.display='none';
+  const wrap=document.getElementById('plano-wrap');
+  wrap.style.display='flex';
+
+  const initChecks=JSON.parse(localStorage.getItem('vofor_checks_'+userId)||'{}');
+  let html='';
+
+  const totalDisc=new Set(plano.semanas?.flatMap(s=>s.disciplinas?.map(d=>d.nome)||[])||[]).size;
+  const totalAssuntos=plano.semanas?.reduce((a,s)=>(s.disciplinas?.reduce((b,d)=>b+(d.assuntos?.length||0),0)||0)+a,0)||0;
+  const totalHoras=plano.semanas?.reduce((a,s)=>(s.disciplinas?.reduce((b,d)=>b+(d.horas_semana||0),0)||0)+a,0)||plano.total_horas||0;
+
+  html+=`<div class="plano-resumo">
+    <div class="pr-item"><div class="pr-num">${plano.total_semanas||4}</div><div class="pr-label">Semanas</div></div>
+    <div class="pr-item"><div class="pr-num">${totalDisc}</div><div class="pr-label">Disciplinas</div></div>
+    <div class="pr-item"><div class="pr-num">${totalAssuntos}</div><div class="pr-label">Assuntos</div></div>
+    <div class="pr-item"><div class="pr-num">${totalHoras}h</div><div class="pr-label">Horas totais</div></div>
+  </div>`;
+
+  if(plano.resumo){
+    html+=`<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;font-size:.9rem;color:var(--muted);font-weight:300;line-height:1.7"><span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted2);display:block;margin-bottom:6px">Resumo do plano</span>${plano.resumo}</div>`;
+  }
+
+  if(plano.disciplinas_criticas?.length||plano.disciplinas_ok?.length){
+    let tags='';
+    plano.disciplinas_criticas?.forEach(d=>{tags+=`<span style="font-size:11px;padding:4px 12px;border-radius:100px;background:rgba(224,84,84,.1);color:var(--red);border:1px solid rgba(224,84,84,.25)">⚠️ ${d}</span>`;});
+    plano.disciplinas_ok?.forEach(d=>{tags+=`<span style="font-size:11px;padding:4px 12px;border-radius:100px;background:rgba(15,169,104,.08);color:var(--green);border:1px solid rgba(15,169,104,.2)">✓ ${d}</span>`;});
+    html+=`<div style="display:flex;gap:8px;flex-wrap:wrap">${tags}</div>`;
+  }
+
+  if(plano.dica_ia){
+    html+=`<div class="ia-tip"><div class="ia-tip-icon">💡</div><div class="ia-tip-txt"><span class="ia-tip-strong">Dica estratégica: </span>${plano.dica_ia}</div></div>`;
+  }
+
+  plano.semanas?.forEach((sem,si)=>{
+    const semId='sem-'+sem.numero;
+    const tipoBadge=sem.tipo==='revisao'
+      ?`<span style="font-size:9px;padding:2px 8px;border-radius:100px;background:rgba(15,169,104,.1);color:var(--green);border:1px solid rgba(15,169,104,.2);font-weight:700">REVISÃO</span>`
+      :sem.tipo==='introducao'
+      ?`<span style="font-size:9px;padding:2px 8px;border-radius:100px;background:rgba(55,138,221,.1);color:var(--blue);border:1px solid rgba(55,138,221,.2);font-weight:700">INTRO</span>`
+      :'';
+
+    html+=`<div class="semana-card">
+      <div class="semana-header" onclick="toggleSemana('${semId}')">
+        <div class="semana-left">
+          <div class="semana-num">${sem.numero}</div>
+          <div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="semana-titulo">${sem.titulo||'Semana '+sem.numero}</div>
+              ${tipoBadge}
+            </div>
+            <div class="semana-sub">📌 ${sem.foco||'—'}</div>
+          </div>
+        </div>
+        <div class="semana-prog">
+          <span class="semana-pct">${sem.disciplinas?.length||0} disciplinas</span>
+          <svg class="semana-chevron${si===0?' open':''}" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div class="semana-body" id="${semId}" style="${si===0?'display:flex':'display:none'}">`;
+
+    sem.disciplinas?.forEach((disc,di)=>{
+      const cor=DISC_COLORS[di%DISC_COLORS.length];
+      const icon=DISC_ICONS[disc.nome]||'📚';
+      const discId=`d_${sem.numero}_${di}`;
+      const isDone=initChecks[discId]||false;
+      html+=`<div class="disc-item">
+        <div class="disc-header" onclick="toggleDisc('assuntos_${discId}')">
+          <div class="disc-icon" style="background:${cor}18;border:1px solid ${cor}30">${icon}</div>
+          <div class="disc-info">
+            <div class="disc-nome">${disc.nome}</div>
+            <div class="disc-meta">${disc.assuntos?.length||0} assuntos · ${disc.meta_questoes||20} questões${disc.horas_semana?' · '+disc.horas_semana+'h/semana':''}</div>
+          </div>
+          <div class="disc-right">
+            <span class="disc-prioridade prio-${disc.prioridade||'media'}">${disc.prioridade==='alta'?'Alta prioridade':disc.prioridade==='baixa'?'Baixa prioridade':'Média prioridade'}</span>
+            <div class="disc-check${isDone?' done':''}" id="check_${discId}" onclick="event.stopPropagation();toggleCheck('${discId}')">
+              <svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="assuntos-lista" id="assuntos_${discId}" style="display:none">`;
+
+      disc.assuntos?.forEach((a,ai)=>{
+        const asId=`a_${sem.numero}_${di}_${ai}`;
+        const asDone=initChecks[asId]||false;
+        html+=`<div class="assunto-item">
+          <div class="as-bullet" style="background:${cor}"></div>
+          <div class="as-nome">${a}</div>
+          <div class="as-qtd">${disc.assuntos.length>0?Math.round((disc.meta_questoes||20)/disc.assuntos.length):0} questões</div>
+          <div class="as-check${asDone?' done':''}" id="check_${asId}" onclick="toggleCheck('${asId}')">
+            <svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg>
+          </div>
+        </div>`;
+      });
+
+      html+=`</div></div>`;
+    });
+
+    html+=`</div></div>`;
+  });
+
+  wrap.innerHTML=html;
+
+  // Restaura estados de done
+  const savedChecks=JSON.parse(localStorage.getItem('vofor_checks_'+userId)||'{}');
+  Object.entries(savedChecks).forEach(([id,done])=>{
+    if(!done)return;
+    const el=document.getElementById('check_'+id);
+    if(el){
+      el.classList.add('done');
+      if(id.startsWith('a_')){
+        el.closest('.assunto-item')?.classList.add('done-item');
+      }
+      if(id.startsWith('d_')){
+        el.closest('.disc-item')?.classList.add('done-disc');
+      }
+    }
+  });
+  atualizarProgresso();
+}
+
+
+function toggleSemana(id){
+  const el=document.getElementById(id);
+  const chevron=el.previousElementSibling.querySelector('.semana-chevron');
+  const isOpen=el.style.display!=='none';
+  el.style.display=isOpen?'none':'flex';
+  if(chevron)chevron.classList.toggle('open',!isOpen);
+}
+
+function toggleDisc(id){
+  const el=document.getElementById(id);
+  if(el)el.style.display=el.style.display==='none'?'flex':'none';
+}
+
+function toggleCheck(id){
+  const tChecks=JSON.parse(localStorage.getItem('vofor_checks_'+userId)||'{}');
+  tChecks[id]=!tChecks[id];
+  localStorage.setItem('vofor_checks_'+userId,JSON.stringify(tChecks));
+
+  const el=document.getElementById('check_'+id);
+  if(el)el.classList.toggle('done',tChecks[id]);
+
+  // Se é assunto (começa com 'a_'), atualiza visual do item pai
+  if(id.startsWith('a_')){
+    const assuntoEl=el?.closest('.assunto-item');
+    if(assuntoEl)assuntoEl.classList.toggle('done-item',tChecks[id]);
+    // Verifica se todos assuntos da disciplina foram marcados
+    const listaEl=el?.closest('.assuntos-lista');
+    if(listaEl){
+      const todos=listaEl.querySelectorAll('.as-check');
+      const feitos=listaEl.querySelectorAll('.as-check.done');
+      const discCheck=listaEl.closest('.disc-item')?.querySelector('.disc-check');
+      if(discCheck&&todos.length>0){
+        const allDone=todos.length===feitos.length;
+        discCheck.classList.toggle('done',allDone);
+        discCheck.closest('.disc-item')?.classList.toggle('done-disc',allDone);
+        // Salva check da disciplina
+        const discId=discCheck.id.replace('check_','');
+        tChecks[discId]=allDone;
+        localStorage.setItem('vofor_checks_'+userId,JSON.stringify(tChecks));
+      }
+    }
+  }
+  // Se é disciplina (começa com 'd_'), marca/desmarca todos assuntos
+  if(id.startsWith('d_')){
+    const discItem=el?.closest('.disc-item');
+    if(discItem){
+      discItem.classList.toggle('done-disc',tChecks[id]);
+      const assuntoEls=discItem.querySelectorAll('.assunto-item');
+      const asChecks=discItem.querySelectorAll('.as-check');
+      asChecks.forEach((ac,i)=>{
+        const asId=ac.id.replace('check_','');
+        tChecks[asId]=tChecks[id];
+        ac.classList.toggle('done',tChecks[id]);
+        if(assuntoEls[i])assuntoEls[i].classList.toggle('done-item',tChecks[id]);
+      });
+      localStorage.setItem('vofor_checks_'+userId,JSON.stringify(tChecks));
+    }
+  }
+
+  // Atualiza contador de progresso geral
+  atualizarProgresso();
+}
+
+function atualizarProgresso(){
+  const pChecks=JSON.parse(localStorage.getItem('vofor_checks_'+userId)||'{}');
+  const totalAs=document.querySelectorAll('.as-check').length;
+  const feitosAs=document.querySelectorAll('.as-check.done').length;
+  if(totalAs>0){
+    const pct=Math.round(feitosAs/totalAs*100);
+    document.getElementById('page-sub').textContent=
+      `${feitosAs} de ${totalAs} assuntos concluídos — ${pct}% do plano`;
+  }
+}
+
+async function sair(){await sb.auth.signOut();window.location.href='index.html';}
+init();
+</script>
+
+<div class="mobile-nav">
+  <div class="mn-item" onclick="window.location.href='painel.html'">
+    <svg class="mn-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+    <span class="mn-label">Início</span>
+  </div>
+  <div class="mn-item" onclick="window.location.href='questoes.html'">
+    <svg class="mn-icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+    <span class="mn-label">Questões</span>
+  </div>
+  <div class="mn-item active" onclick="window.location.href='plano.html'">
+    <svg class="mn-icon" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+    <span class="mn-label">Plano</span>
+  </div>
+  <div class="mn-item" onclick="window.location.href='anotacoes.html'">
+    <svg class="mn-icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    <span class="mn-label">Notas</span>
+  </div>
+  <div class="mn-item" onclick="sair()">
+    <svg class="mn-icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    <span class="mn-label">Sair</span>
+  </div>
+</div>
+
+</body>
+</html>
