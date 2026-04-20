@@ -192,6 +192,74 @@ footer{padding:56px 6% 36px;background:var(--bg4);border-top:1px solid var(--bor
   .ft{grid-template-columns:1fr 1fr}
   section{padding:70px 5%}
 }
+
+/* ── CONNECT STRIP ── */
+.connect-strip{
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:22px 6%;
+}
+.cs-inner{
+  max-width:1000px;margin:0 auto;
+  display:flex;align-items:center;gap:24px;flex-wrap:wrap;
+}
+.cs-text{flex:1;min-width:200px}
+.cs-title{font-size:.88rem;font-weight:600;margin-bottom:3px}
+.cs-sub{font-size:.78rem;color:var(--muted);font-weight:300}
+.cs-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cs-form{display:flex;align-items:center;gap:6px}
+.cs-input{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:7px;padding:8px 13px;
+  font-size:.8rem;color:var(--text);
+  font-family:'Outfit',sans-serif;outline:none;
+  transition:border-color .2s;color-scheme:dark;
+  width:190px;
+}
+.cs-input:focus{border-color:var(--border2)}
+.cs-input::placeholder{color:var(--muted2)}
+.cs-btn-email{
+  padding:8px 14px;background:var(--gold);color:#06091a;
+  border:none;border-radius:7px;font-size:.78rem;font-weight:700;
+  cursor:pointer;font-family:'Outfit',sans-serif;transition:all .18s;
+  white-space:nowrap;
+}
+.cs-btn-email:hover{background:var(--gold2)}
+.cs-divider{width:1px;height:20px;background:var(--border);flex-shrink:0}
+.cs-btn-wpp{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 14px;background:rgba(37,211,102,0.1);
+  color:#25d366;border:1px solid rgba(37,211,102,0.22);
+  border-radius:7px;font-size:.78rem;font-weight:600;
+  cursor:pointer;transition:all .18s;font-family:'Outfit',sans-serif;
+  white-space:nowrap;
+}
+.cs-btn-wpp:hover{background:rgba(37,211,102,0.18)}
+.cs-btn-sms{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 14px;background:rgba(180,200,255,0.06);
+  color:var(--muted);border:1px solid var(--border);
+  border-radius:7px;font-size:.78rem;font-weight:600;
+  cursor:pointer;transition:all .18s;font-family:'Outfit',sans-serif;
+  white-space:nowrap;
+}
+.cs-btn-sms:hover{background:rgba(180,200,255,0.1);color:var(--text)}
+.cs-success{
+  display:none;font-size:.78rem;color:var(--green);
+  font-weight:500;padding:8px 14px;
+  background:rgba(15,169,104,0.08);border:1px solid rgba(15,169,104,0.2);
+  border-radius:7px;
+}
+@media(max-width:768px){
+  .connect-strip{padding:18px 5%}
+  .cs-inner{gap:14px}
+  .cs-form{flex-wrap:wrap;width:100%}
+  .cs-input{width:100%;flex:1;min-width:0}
+  .cs-actions{width:100%;gap:6px}
+  .cs-divider{display:none}
+}
+
 </style>
 </head>
 <body>
@@ -413,6 +481,18 @@ document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
 window.addEventListener('scroll',()=>{
   document.getElementById('nav').style.background=window.scrollY>50?'rgba(6,9,26,0.98)':'rgba(6,9,26,0.9)';
 });
+
+function csSubmitEmail(page){
+  const input=document.getElementById('cs-email-'+page);
+  if(!input||!input.value.includes('@'))return;
+  const success=document.getElementById('cs-success-'+page);
+  // Aqui integraria com Mailchimp/Resend/etc
+  console.log('Email capturado:',input.value,'página:',page);
+  input.parentElement.style.display='none';
+  if(success)success.style.display='block';
+}
+function csKeydown(e,page){if(e.key==='Enter')csSubmitEmail(page)}
+
 </script>
 </body>
 </html>
