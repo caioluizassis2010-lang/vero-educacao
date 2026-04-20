@@ -292,15 +292,15 @@ footer{
   </div>
 
   <div class="nav-produtos">
-    <button class="nav-prod-btn active" onclick="scrollTo('#produtos')">
+    <button class="nav-prod-btn active" onclick="window.location.href='concursos.html'">
       <span class="nav-prod-dot" style="background:var(--gold)"></span>
       Concursos
     </button>
-    <button class="nav-prod-btn" onclick="scrollTo('#produtos')">
+    <button class="nav-prod-btn" onclick="document.getElementById('produtos').scrollIntoView({behavior:'smooth'})">
       <span class="nav-prod-dot" style="background:var(--blue)"></span>
       Medicina
     </button>
-    <button class="nav-prod-btn" onclick="scrollTo('#produtos')">
+    <button class="nav-prod-btn" onclick="document.getElementById('produtos').scrollIntoView({behavior:'smooth'})">
       <span class="nav-prod-dot" style="background:var(--green)"></span>
       ENEM
     </button>
