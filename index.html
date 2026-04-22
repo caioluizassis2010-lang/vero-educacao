@@ -9,10 +9,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#06091a;--bg2:#0a1035;--bg3:#0d1540;--bg4:#040714;
-  --gold:#e8c97a;--gold2:#f2d98e;--gold3:#c9a84c;
-  --text:#eef2ff;--muted:#7a90c8;--muted2:rgba(180,200,255,0.25);
-  --border:rgba(232,201,122,0.1);--border2:rgba(232,201,122,0.28);
+  --bg:#0f0d0b;--bg2:#1c1814;--bg3:#2e2520;--bg4:#080604;
+  --gold:#b4afa8;--gold2:#ccc8c2;--gold3:#8a8680;
+  --text:#ede8e2;--muted:#8a7d70;--muted2:rgba(180,200,255,0.25);
+  --border:rgba(180,175,168,0.1);--border2:rgba(180,175,168,0.35);
   --green:#0fa968;--blue:#378add;--purple:#7B6FE8;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -31,13 +31,13 @@ nav{
   display:flex;align-items:center;justify-content:space-between;
   transition:background .4s;
 }
-nav.solid{background:rgba(4,7,20,0.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.05)}
+nav.solid{background:rgba(8,6,4,0.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.05)}
 .brand{display:flex;align-items:center;gap:10px;cursor:pointer}
 .brand-mark{
   width:36px;height:36px;border-radius:9px;
-  background:var(--bg3);border:1.5px solid var(--border2);
+  background:#1a1a1a;border:1.5px solid rgba(255,255,255,0.15);
   display:grid;place-items:center;
-  font-family:'Playfair Display',serif;font-size:.75rem;font-weight:700;color:var(--gold);
+  font-family:'Playfair Display',serif;font-size:.75rem;font-weight:700;color:#ffffff;
   letter-spacing:.05em;
 }
 .brand-name{font-family:'Playfair Display',serif;letter-spacing:3px;font-size:.88rem;font-weight:600}
@@ -49,7 +49,7 @@ nav.solid{background:rgba(4,7,20,0.95);backdrop-filter:blur(20px);border-bottom:
 }
 .nav-login:hover{color:var(--text);border-color:rgba(255,255,255,0.2)}
 .nav-start{
-  font-size:.8rem;color:#06091a;padding:8px 18px;
+  font-size:.8rem;color:#0f0d0b;padding:8px 18px;
   background:var(--gold);border:none;border-radius:7px;
   cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;transition:all .2s;
 }
@@ -91,7 +91,7 @@ nav.solid{background:rgba(4,7,20,0.95);backdrop-filter:blur(20px);border-bottom:
   font-size:clamp(5rem,14vw,10rem);
   font-weight:900;
   color:transparent;
-  -webkit-text-stroke:1px rgba(232,201,122,0.15);
+  -webkit-text-stroke:1px rgba(180,175,168,0.18);
   line-height:1;
   margin-bottom:-16px;
   letter-spacing:-.04em;
@@ -188,8 +188,8 @@ nav.solid{background:rgba(4,7,20,0.95);backdrop-filter:blur(20px);border-bottom:
 .pcard:hover .pcard-glow{opacity:1}
 
 /* Concursos */
-.pcard.co .pcard-glow{background:radial-gradient(ellipse at 50% 0%,rgba(232,201,122,0.1),transparent 65%)}
-.pcard.co:hover{border-color:rgba(232,201,122,0.3);box-shadow:0 28px 70px rgba(0,0,0,.45),0 0 50px rgba(232,201,122,.06)}
+.pcard.co .pcard-glow{background:radial-gradient(ellipse at 50% 0%,rgba(180,175,168,0.1),transparent 65%)}
+.pcard.co:hover{border-color:rgba(180,175,168,0.38);box-shadow:0 28px 70px rgba(0,0,0,.45),0 0 50px rgba(232,201,122,.06)}
 /* Medicina */
 .pcard.md .pcard-glow{background:radial-gradient(ellipse at 50% 0%,rgba(55,138,221,0.1),transparent 65%)}
 .pcard.md:hover{border-color:rgba(55,138,221,0.3);box-shadow:0 28px 70px rgba(0,0,0,.45),0 0 50px rgba(55,138,221,.06)}
@@ -225,7 +225,7 @@ nav.solid{background:rgba(4,7,20,0.95);backdrop-filter:blur(20px);border-bottom:
   border:1px solid rgba(255,255,255,0.1);transition:all .2s;
 }
 .pcard:hover .pcard-arrow{transform:translate(3px,-3px)}
-.pcard.co .pcard-arrow{border-color:rgba(232,201,122,0.2)}
+.pcard.co .pcard-arrow{border-color:rgba(180,175,168,0.22)}
 .pcard.md .pcard-arrow{border-color:rgba(55,138,221,0.2)}
 .pcard.en .pcard-arrow{border-color:rgba(15,169,104,0.2)}
 .pcard-soon{
@@ -306,7 +306,7 @@ nav.solid{background:rgba(4,7,20,0.95);backdrop-filter:blur(20px);border-bottom:
 }
 .cta-btns{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
 .btn-primary{
-  padding:14px 34px;background:var(--gold);color:#06091a;
+  padding:14px 34px;background:var(--gold);color:#0f0d0b;
   border:none;border-radius:10px;font-size:.95rem;font-weight:700;
   cursor:pointer;font-family:'Outfit',sans-serif;
   transition:all .25s;display:inline-flex;align-items:center;gap:8px;
@@ -376,7 +376,7 @@ footer{
   border-radius:7px;cursor:pointer;font-family:'Outfit',sans-serif;
   transition:all .18s;border:none;
 }
-.ub-btn-primary{background:var(--gold);color:#06091a}
+.ub-btn-primary{background:var(--gold);color:#0f0d0b}
 .ub-btn-primary:hover{background:var(--gold2)}
 .ub-btn-ghost{background:none;color:var(--muted);border:1px solid var(--border)}
 .ub-btn-ghost:hover{color:var(--text);border-color:rgba(255,255,255,0.2)}
@@ -391,7 +391,7 @@ footer{
 .nav-user-pill.show{display:flex}
 .nup-avatar{
   width:24px;height:24px;border-radius:50%;
-  background:rgba(232,201,122,0.15);border:1px solid var(--border2);
+  background:rgba(180,175,168,0.18);border:1px solid var(--border2);
   display:flex;align-items:center;justify-content:center;
   font-size:.65rem;font-weight:700;color:var(--gold);
   flex-shrink:0;font-family:'Playfair Display',serif;
@@ -403,6 +403,26 @@ footer{
   .prod-grid{grid-template-columns:1fr;max-width:440px;margin:0 auto}
   .pcard{min-height:auto}
 }
+
+.connect-strip{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:20px 6%}
+.cs-inner{max-width:1000px;margin:0 auto;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.cs-text{flex:1;min-width:180px}
+.cs-title{font-size:.88rem;font-weight:600;margin-bottom:3px}
+.cs-sub{font-size:.76rem;color:var(--muted);font-weight:300}
+.cs-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.cs-form{display:flex;align-items:center;gap:6px}
+.cs-input{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:8px 12px;font-size:.78rem;color:var(--text);font-family:'Outfit',sans-serif;outline:none;transition:border-color .2s;color-scheme:dark;width:180px}
+.cs-input:focus{border-color:var(--border2)}
+.cs-input::placeholder{color:var(--muted2)}
+.cs-btn-email{padding:8px 13px;background:var(--gold);color:#0f0d0b;border:none;border-radius:7px;font-size:.77rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .18s;white-space:nowrap}
+.cs-btn-email:hover{background:var(--gold2)}
+.cs-divider{width:1px;height:18px;background:var(--border);flex-shrink:0}
+.cs-btn-wpp{display:inline-flex;align-items:center;gap:5px;padding:8px 13px;background:rgba(37,211,102,0.08);color:#25d366;border:1px solid rgba(37,211,102,0.2);border-radius:7px;font-size:.77rem;font-weight:600;cursor:pointer;transition:all .18s;font-family:'Outfit',sans-serif;white-space:nowrap;text-decoration:none}
+.cs-btn-wpp:hover{background:rgba(37,211,102,0.16)}
+.cs-btn-sms{display:inline-flex;align-items:center;gap:5px;padding:8px 13px;background:rgba(200,188,175,0.05);color:var(--muted);border:1px solid var(--border);border-radius:7px;font-size:.77rem;font-weight:600;cursor:pointer;transition:all .18s;font-family:'Outfit',sans-serif;white-space:nowrap}
+.cs-btn-sms:hover{background:rgba(200,188,175,0.1);color:var(--text)}
+.cs-success{display:none;font-size:.77rem;color:#0fa968;font-weight:600;padding:8px 12px;background:rgba(15,169,104,0.08);border:1px solid rgba(15,169,104,0.2);border-radius:7px}
+
 @media(max-width:768px){
   nav{padding:0 4%}
   .nav-login{display:none}
@@ -438,7 +458,7 @@ footer{
   .ft{grid-template-columns:1fr}
   .intro-title{font-size:2rem}
 }
-</style></style>
+</style>
 </head>
 <body>
 <script>
