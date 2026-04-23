@@ -72,6 +72,9 @@ nav{
   font-family:'Outfit',sans-serif;transition:all .15s;font-weight:500;
 }
 .btn-sair:hover{color:var(--gold);border-color:var(--border2)}
+.btn-admin{font-size:12px;color:var(--red);padding:6px 14px;border:1px solid rgba(224,84,84,.3);border-radius:7px;cursor:pointer;background:rgba(224,84,84,.06);font-family:'Outfit',sans-serif;transition:all .15s;font-weight:600;display:none;text-decoration:none}
+.btn-admin:hover{background:rgba(224,84,84,.12);border-color:rgba(224,84,84,.5)}
+
 
 /* LAYOUT */
 .layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 58px)}
@@ -539,7 +542,7 @@ nav{
       <div class="nup-avatar" id="nav-avatar">?</div>
       <span class="nup-name" id="nav-user">—</span>
     </div>
-    <button class="btn-sair" onclick="sair()">Sair</button>
+    <a href="admin.html" class="btn-admin" id="btn-admin">⚙ Admin</a><button class="btn-sair" onclick="sair()">Sair</button>
   </div>
 </nav>
 
@@ -869,6 +872,7 @@ async function init(){
 async function carregarPerfil(){
   try{
     const{data:perfil}=await sb.from('perfis').select('*').eq('id',userId).single();
+    if(perfil?.is_admin){const ab=document.getElementById('btn-admin');if(ab)ab.style.display='inline-flex';}
     if(perfil&&perfil.concurso){
       const label=document.getElementById('sb-concurso-label');
       if(label){
