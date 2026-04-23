@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — VOFOR Educação</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f0d0b;--bg2:#1c1814;--bg3:#2e2520;--bg4:#080604;
+  --gold:#b4afa8;--gold2:#ccc8c2;
+  --text:#ede8e2;--muted:#8a7d70;--muted2:rgba(200,188,175,0.28);
+  --border:rgba(180,175,168,0.15);--border2:rgba(180,175,168,0.35);
+  --green:#0fa968;--red:#e05454;--radius:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg4);color:var(--text);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+a{text-decoration:none;color:inherit}
+
+nav{padding:0 28px;height:58px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg4);position:sticky;top:0;z-index:100}
+.brand{display:inline-flex;align-items:center;gap:12px}
+.brand-mark{width:34px;height:34px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.15);background:#1a1a1a;color:#fff;display:grid;place-items:center;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700}
+.brand-name{font-family:'Playfair Display',serif;color:var(--text);letter-spacing:3px;font-size:.95rem;font-weight:600}
+.admin-badge{font-size:.68rem;font-weight:700;padding:2px 9px;border-radius:20px;background:rgba(224,84,84,.15);color:var(--red);border:1px solid rgba(224,84,84,.3);letter-spacing:.06em;text-transform:uppercase}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-user-pill{display:flex;align-items:center;gap:7px;padding:5px 12px 5px 5px;border:1px solid var(--border);border-radius:100px;background:rgba(255,255,255,0.03)}
+.nup-avatar{width:24px;height:24px;border-radius:50%;background:rgba(180,175,168,0.18);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;color:var(--gold);flex-shrink:0;font-family:'Playfair Display',serif}
+.nup-name{font-size:.78rem;color:var(--text);font-weight:500}
+.btn-sair{font-size:12px;color:var(--muted);padding:6px 14px;border:1px solid var(--border);border-radius:7px;cursor:pointer;background:none;font-family:'Outfit',sans-serif;transition:all .15s}
+.btn-sair:hover{color:var(--gold);border-color:var(--border2)}
+.btn-painel{font-size:12px;color:var(--muted);padding:6px 14px;border:1px solid var(--border);border-radius:7px;cursor:pointer;background:none;font-family:'Outfit',sans-serif;transition:all .15s;text-decoration:none}
+.btn-painel:hover{color:var(--gold);border-color:var(--border2)}
+
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 58px)}
+
+/* SIDEBAR */
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:24px 12px;display:flex;flex-direction:column;gap:2px}
+.sb-section{font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted2);padding:0 12px;margin:18px 0 7px}
+.sb-section:first-child{margin-top:0}
+.sb-item{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .18s;border:1px solid transparent;margin-bottom:2px}
+.sb-item:hover{background:rgba(200,188,175,0.05);color:var(--text)}
+.sb-item.active{background:rgba(180,175,168,0.08);color:var(--gold);border-color:rgba(180,175,168,0.18)}
+.sb-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;background:rgba(200,188,175,0.05);flex-shrink:0}
+.sb-item.active .sb-icon,.sb-item:hover .sb-icon{background:rgba(180,175,168,0.1)}
+.sb-icon svg{width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.sb-item.active .sb-icon svg,.sb-item:hover .sb-icon svg{stroke:var(--gold)}
+.sb-divider{height:1px;background:var(--border);margin:10px 4px}
+.sb-spacer{flex:1}
+
+/* MAIN */
+.main{padding:28px 30px;overflow-y:auto;background:var(--bg4)}
+.page-hd{margin-bottom:24px}
+.page-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700}
+.page-title em{font-style:italic;color:var(--gold)}
+.page-sub{font-size:12px;color:var(--muted);margin-top:5px;font-weight:300}
+
+/* STATS GRID */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;transition:border-color .2s}
+.stat:hover{border-color:var(--border2)}
+.stat-label{font-size:9px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:10px;font-weight:600}
+.stat-val{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--gold);line-height:1}
+.stat-sub{font-size:11px;color:var(--muted2);margin-top:5px;font-weight:300}
+
+/* TABS */
+.tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:0}
+.tab{padding:10px 18px;font-size:.85rem;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;font-family:'Outfit',sans-serif;background:none;border-top:none;border-left:none;border-right:none}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* PANELS */
+.panel{display:none}
+.panel.active{display:block}
+
+/* TABLE */
+.tbl-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.tbl-header{padding:14px 20px;border-bottom:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.tbl-title{font-size:.85rem;font-weight:600}
+.tbl-search{background:var(--bg4);border:1px solid var(--border);border-radius:7px;padding:7px 12px;font-size:.8rem;color:var(--text);font-family:'Outfit',sans-serif;outline:none;width:220px;transition:border-color .15s}
+.tbl-search:focus{border-color:var(--border2)}
+.tbl-search::placeholder{color:var(--muted2)}
+table{width:100%;border-collapse:collapse}
+thead tr{border-bottom:1px solid var(--border)}
+thead th{padding:11px 16px;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);text-align:left}
+tbody tr{border-bottom:1px solid var(--border);transition:background .12s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:rgba(180,175,168,.03)}
+tbody td{padding:12px 16px;font-size:.83rem}
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:100px;font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.badge-gratis{background:rgba(180,175,168,.1);color:var(--muted);border:1px solid var(--border)}
+.badge-basic{background:rgba(180,175,168,.15);color:var(--gold);border:1px solid rgba(180,175,168,.28)}
+.badge-pro{background:rgba(15,169,104,.1);color:var(--green);border:1px solid rgba(15,169,104,.25)}
+.badge-admin{background:rgba(224,84,84,.1);color:var(--red);border:1px solid rgba(224,84,84,.25)}
+.btn-sm{padding:4px 10px;border-radius:6px;font-size:.72rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s;border:1px solid var(--border);background:transparent;color:var(--muted)}
+.btn-sm:hover{border-color:var(--border2);color:var(--text)}
+.btn-sm.danger{color:var(--red);border-color:rgba(224,84,84,.3)}
+.btn-sm.danger:hover{background:rgba(224,84,84,.08)}
+.btn-sm.success{color:var(--green);border-color:rgba(15,169,104,.3)}
+.btn-sm.success:hover{background:rgba(15,169,104,.08)}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center}
+.modal-bg.show{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:28px;width:100%;max-width:440px}
+.modal-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:6px}
+.modal-sub{font-size:.82rem;color:var(--muted);margin-bottom:20px}
+.modal-field{margin-bottom:14px}
+.modal-label{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:block}
+.modal-select{width:100%;background:var(--bg3);color:var(--text);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;font-size:.85rem;font-family:'Outfit',sans-serif;outline:none;appearance:none}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
+.btn-modal{padding:9px 20px;border-radius:8px;font-size:.83rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s}
+.btn-modal.primary{background:var(--gold);color:#1c1814;border:none}
+.btn-modal.primary:hover{background:var(--gold2)}
+.btn-modal.ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.btn-modal.ghost:hover{color:var(--text);border-color:var(--border2)}
+
+/* LOADING */
+.loading-row td{text-align:center;padding:32px;color:var(--muted);font-size:.85rem}
+
+/* EMPTY */
+.empty-row td{text-align:center;padding:32px;color:var(--muted2);font-size:.85rem}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;padding:12px 18px;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;font-size:.85rem;color:var(--text);z-index:999;transform:translateY(60px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:8px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-dot{width:8px;height:8px;border-radius:50%}
+.toast.success .toast-dot{background:var(--green)}
+.toast.error .toast-dot{background:var(--red)}
+
+@media(max-width:960px){.layout{grid-template-columns:1fr}.sidebar{display:none}.stats-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="brand">
+    <div class="brand-mark">VF</div>
+    <div class="brand-name">VOFOR</div>
+  </a>
+  <span class="admin-badge">Admin</span>
+  <div class="nav-right">
+    <a href="painel.html" class="btn-painel">← Painel</a>
+    <div class="nav-user-pill">
+      <div class="nup-avatar" id="nav-avatar">?</div>
+      <span class="nup-name" id="nav-user">—</span>
+    </div>
+    <button class="btn-sair" onclick="sair()">Sair</button>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sb-section">Painel Admin</div>
+    <div class="sb-item active" onclick="showPanel('usuarios')">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+      Usuários
+    </div>
+    <div class="sb-item" onclick="showPanel('metricas')">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M8 21V10M12 21V3M16 21v-7M4 21v-4"/></svg></div>
+      Métricas
+    </div>
+    <div class="sb-item" onclick="showPanel('questoes-admin')">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div>
+      Questões
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-section">Sistema</div>
+    <div class="sb-item" onclick="window.location.href='painel.html'">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+      Ir para o Painel
+    </div>
+    <div class="sb-spacer"></div>
+  </aside>
+
+  <main class="main">
+
+    <!-- STATS -->
+    <div class="stats-grid" id="stats-grid">
+      <div class="stat"><div class="stat-label">Total usuários</div><div class="stat-val" id="st-usuarios">—</div><div class="stat-sub">cadastrados</div></div>
+      <div class="stat"><div class="stat-label">Questões respondidas</div><div class="stat-val" id="st-questoes">—</div><div class="stat-sub">no total</div></div>
+      <div class="stat"><div class="stat-label">Planos gerados</div><div class="stat-val" id="st-planos">—</div><div class="stat-sub">no total</div></div>
+      <div class="stat"><div class="stat-label">Taxa média de acerto</div><div class="stat-val" id="st-taxa">—</div><div class="stat-sub">geral</div></div>
+    </div>
+
+    <!-- PANEL USUÁRIOS -->
+    <div class="panel active" id="panel-usuarios">
+      <div class="tbl-wrap">
+        <div class="tbl-header">
+          <span class="tbl-title">Usuários cadastrados</span>
+          <input class="tbl-search" id="search-usuarios" placeholder="Buscar por nome ou email..." oninput="filtrarUsuarios()">
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Usuário</th>
+              <th>Concurso</th>
+              <th>Nível</th>
+              <th>Plano</th>
+              <th>Questões</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-usuarios">
+            <tr class="loading-row"><td colspan="6">Carregando usuários...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PANEL MÉTRICAS -->
+    <div class="panel" id="panel-metricas">
+      <div class="tbl-wrap" style="margin-bottom:16px">
+        <div class="tbl-header"><span class="tbl-title">Disciplinas mais respondidas</span></div>
+        <table>
+          <thead><tr><th>Disciplina</th><th>Total questões</th><th>Taxa de acerto</th></tr></thead>
+          <tbody id="tbody-disciplinas"><tr class="loading-row"><td colspan="3">Carregando...</td></tr></tbody>
+        </table>
+      </div>
+      <div class="tbl-wrap">
+        <div class="tbl-header"><span class="tbl-title">Concursos mais estudados</span></div>
+        <table>
+          <thead><tr><th>Concurso</th><th>Usuários</th></tr></thead>
+          <tbody id="tbody-concursos"><tr class="loading-row"><td colspan="2">Carregando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PANEL QUESTÕES -->
+    <div class="panel" id="panel-questoes-admin">
+      <div class="tbl-wrap">
+        <div class="tbl-header"><span class="tbl-title">Últimas questões respondidas</span></div>
+        <table>
+          <thead><tr><th>Usuário</th><th>Disciplina</th><th>Banca</th><th>Acertou</th><th>Data</th></tr></thead>
+          <tbody id="tbody-questoes"><tr class="loading-row"><td colspan="5">Carregando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- MODAL EDITAR USUÁRIO -->
+<div class="modal-bg" id="modal-usuario">
+  <div class="modal">
+    <div class="modal-title">Editar usuário</div>
+    <div class="modal-sub" id="modal-email-display">—</div>
+    <div class="modal-field">
+      <label class="modal-label">Plano</label>
+      <select class="modal-select" id="modal-plano">
+        <option value="gratis">Grátis</option>
+        <option value="basic">Basic</option>
+        <option value="pro">Pro</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">Admin</label>
+      <select class="modal-select" id="modal-admin">
+        <option value="false">Não</option>
+        <option value="true">Sim — acesso total</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">Nível</label>
+      <select class="modal-select" id="modal-nivel">
+        <option value="iniciante">Iniciante</option>
+        <option value="basico">Básico</option>
+        <option value="intermediario">Intermediário</option>
+        <option value="avancado">Avançado</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-modal ghost" onclick="fecharModal()">Cancelar</button>
+      <button class="btn-modal primary" onclick="salvarUsuario()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><div class="toast-dot"></div><span id="toast-msg"></span></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const{createClient}=supabase;
+const sb=createClient('https://lklmzhunhiwqsbhnymaw.supabase.co','sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU');
+
+let todosUsuarios=[], usuarioEditando=null;
+
+async function init(){
+  const{data:{session}}=await sb.auth.getSession();
+  if(!session){window.location.href='login.html';return;}
+
+  // Verifica se é admin
+  const{data:perfil}=await sb.from('perfis').select('is_admin').eq('id',session.user.id).single();
+  if(!perfil?.is_admin){window.location.href='painel.html';return;}
+
+  const nome=session.user.user_metadata?.full_name||session.user.email.split('@')[0];
+  document.getElementById('nav-avatar').textContent=nome.substring(0,2).toUpperCase();
+  document.getElementById('nav-user').textContent=nome;
+
+  await Promise.all([carregarStats(), carregarUsuarios()]);
+}
+
+async function carregarStats(){
+  const[{count:qtdUsuarios},{count:qtdQuestoes},{count:qtdPlanos},{data:acertos}]=await Promise.all([
+    sb.from('perfis').select('*',{count:'exact',head:true}),
+    sb.from('questoes_respondidas').select('*',{count:'exact',head:true}),
+    sb.from('planos_estudo').select('*',{count:'exact',head:true}),
+    sb.from('questoes_respondidas').select('acertou')
+  ]);
+  document.getElementById('st-usuarios').textContent=qtdUsuarios||0;
+  document.getElementById('st-questoes').textContent=qtdQuestoes||0;
+  document.getElementById('st-planos').textContent=qtdPlanos||0;
+  if(acertos?.length){
+    const taxa=Math.round(acertos.filter(q=>q.acertou).length/acertos.length*100);
+    document.getElementById('st-taxa').textContent=taxa+'%';
+  }
+}
+
+async function carregarUsuarios(){
+  // Busca perfis
+  const{data:perfis}=await sb.from('perfis').select('*').order('id');
+  // Busca contagem de questões por user
+  const{data:questoes}=await sb.from('questoes_respondidas').select('user_id');
+  const qtdPorUser={};
+  questoes?.forEach(q=>{qtdPorUser[q.user_id]=(qtdPorUser[q.user_id]||0)+1;});
+
+  // Busca emails dos usuários via auth (só disponível para admin no Supabase)
+  // Como não temos acesso direto, usamos os dados do perfil + metadata
+  todosUsuarios=(perfis||[]).map(p=>({...p, qtd_questoes: qtdPorUser[p.id]||0}));
+  renderUsuarios(todosUsuarios);
+}
+
+function renderUsuarios(lista){
+  const tbody=document.getElementById('tbody-usuarios');
+  if(!lista.length){tbody.innerHTML='<tr class="empty-row"><td colspan="6">Nenhum usuário encontrado.</td></tr>';return;}
+  tbody.innerHTML=lista.map(u=>`
+    <tr>
+      <td>
+        <div style="font-weight:500">${u.id.substring(0,8)}...</div>
+        <div style="font-size:.72rem;color:var(--muted)">${u.concurso?u.concurso.substring(0,30)+'...':'-'}</div>
+      </td>
+      <td style="color:var(--muted);font-size:.8rem">${u.concurso?u.concurso.substring(0,24):'—'}</td>
+      <td style="font-size:.8rem">${u.nivel||'—'}</td>
+      <td>
+        <span class="badge badge-${u.plano||'gratis'}">${u.plano||'grátis'}</span>
+        ${u.is_admin?'<span class="badge badge-admin" style="margin-left:4px">admin</span>':''}
+      </td>
+      <td style="font-family:\'Playfair Display\',serif;font-size:1rem;color:var(--gold)">${u.qtd_questoes}</td>
+      <td>
+        <button class="btn-sm" onclick="abrirModal('${u.id}','${u.plano||'gratis'}','${u.is_admin?'true':'false'}','${u.nivel||'intermediario'}')">Editar</button>
+      </td>
+    </tr>`).join('');
+}
+
+function filtrarUsuarios(){
+  const q=document.getElementById('search-usuarios').value.toLowerCase();
+  const filtrado=todosUsuarios.filter(u=>
+    (u.concurso||'').toLowerCase().includes(q)||
+    (u.id||'').toLowerCase().includes(q)||
+    (u.nivel||'').toLowerCase().includes(q)
+  );
+  renderUsuarios(filtrado);
+}
+
+async function carregarMetricas(){
+  const{data}=await sb.from('questoes_respondidas').select('disciplina,banca,acertou,user_id,concurso');
+  if(!data)return;
+  // Por disciplina
+  const disc={};
+  data.forEach(q=>{
+    if(!disc[q.disciplina])disc[q.disciplina]={total:0,acertos:0};
+    disc[q.disciplina].total++;
+    if(q.acertou)disc[q.disciplina].acertos++;
+  });
+  const discSorted=Object.entries(disc).sort((a,b)=>b[1].total-a[1].total);
+  document.getElementById('tbody-disciplinas').innerHTML=discSorted.map(([d,v])=>{
+    const taxa=Math.round(v.acertos/v.total*100);
+    const cor=taxa>=70?'var(--green)':taxa>=50?'var(--gold)':'var(--red)';
+    return`<tr><td>${d}</td><td style="font-family:'Playfair Display',serif;color:var(--gold)">${v.total}</td><td style="color:${cor};font-weight:600">${taxa}%</td></tr>`;
+  }).join('')||'<tr class="empty-row"><td colspan="3">Sem dados</td></tr>';
+
+  // Por concurso
+  const{data:perfis}=await sb.from('perfis').select('concurso');
+  const conc={};
+  perfis?.forEach(p=>{if(p.concurso)conc[p.concurso]=(conc[p.concurso]||0)+1;});
+  const concSorted=Object.entries(conc).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('tbody-concursos').innerHTML=concSorted.map(([c,n])=>
+    `<tr><td>${c}</td><td style="font-family:'Playfair Display',serif;color:var(--gold)">${n}</td></tr>`
+  ).join('')||'<tr class="empty-row"><td colspan="2">Sem dados</td></tr>';
+}
+
+async function carregarQuestoesAdmin(){
+  const{data}=await sb.from('questoes_respondidas').select('user_id,disciplina,banca,acertou,created_at').order('created_at',{ascending:false}).limit(50);
+  if(!data)return;
+  document.getElementById('tbody-questoes').innerHTML=data.map(q=>{
+    const data_fmt=new Date(q.created_at).toLocaleDateString('pt-BR');
+    return`<tr>
+      <td style="font-size:.75rem;color:var(--muted)">${q.user_id.substring(0,8)}...</td>
+      <td>${q.disciplina||'—'}</td>
+      <td style="color:var(--muted)">${q.banca||'—'}</td>
+      <td><span style="color:${q.acertou?'var(--green)':'var(--red)';font-weight:600}">${q.acertou?'✓ Sim':'✗ Não'}</span></td>
+      <td style="color:var(--muted);font-size:.78rem">${data_fmt}</td>
+    </tr>`;
+  }).join('')||'<tr class="empty-row"><td colspan="5">Sem dados</td></tr>';
+}
+
+function showPanel(nome){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  document.getElementById('panel-'+nome).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if(nome==='metricas')carregarMetricas();
+  if(nome==='questoes-admin')carregarQuestoesAdmin();
+}
+
+function abrirModal(id,plano,isAdmin,nivel){
+  usuarioEditando=id;
+  document.getElementById('modal-email-display').textContent='ID: '+id;
+  document.getElementById('modal-plano').value=plano;
+  document.getElementById('modal-admin').value=isAdmin;
+  document.getElementById('modal-nivel').value=nivel;
+  document.getElementById('modal-usuario').classList.add('show');
+}
+
+function fecharModal(){
+  document.getElementById('modal-usuario').classList.remove('show');
+  usuarioEditando=null;
+}
+
+async function salvarUsuario(){
+  if(!usuarioEditando)return;
+  const plano=document.getElementById('modal-plano').value;
+  const isAdmin=document.getElementById('modal-admin').value==='true';
+  const nivel=document.getElementById('modal-nivel').value;
+  const{error}=await sb.from('perfis').update({plano,is_admin:isAdmin,nivel}).eq('id',usuarioEditando);
+  if(error){showToast('Erro ao salvar','error');return;}
+  showToast('Usuário atualizado!','success');
+  fecharModal();
+  // Atualiza local
+  const u=todosUsuarios.find(x=>x.id===usuarioEditando);
+  if(u){u.plano=plano;u.is_admin=isAdmin;u.nivel=nivel;}
+  renderUsuarios(todosUsuarios);
+}
+
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  document.getElementById('toast-msg').textContent=msg;
+  t.className=`toast ${type} show`;
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+async function sair(){await sb.auth.signOut();window.location.href='index.html';}
+init();
+</script>
+</body>
+</html>

@@ -142,7 +142,13 @@ document.getElementById('form-login').addEventListener('submit', async (e) => {
     return;
   }
 
-  window.location.href = 'painel.html';
+  // Verifica se é admin
+  const { data: perfil } = await sb.from('perfis').select('is_admin').eq('id', data.user.id).single();
+  if (perfil?.is_admin) {
+    window.location.href = 'admin.html';
+  } else {
+    window.location.href = 'painel.html';
+  }
 });
 
 function toggleSenha(id, btn) {
