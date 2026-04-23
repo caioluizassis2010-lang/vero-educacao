@@ -16,25 +16,20 @@
   --border:rgba(180,175,168,0.15);--border2:rgba(180,175,168,0.35);
   --green:#0fa968;--red:#e05454;--radius:10px;
 }
-html{scroll-behavior:smooth}
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;overflow-x:hidden}
 
 /* ══ SIDEBAR ══ */
 .sidebar{width:240px;min-height:100vh;background:var(--bg4);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;transition:width .28s cubic-bezier(.4,0,.2,1),transform .28s ease;z-index:100}
 .sidebar.collapsed{width:64px}
-
-/* Header com hambúrguer */
 .sidebar-header{padding:0 14px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);height:64px}
 .brand-mark{width:34px;height:34px;background:var(--gold);color:var(--bg4);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:.85rem;flex-shrink:0}
-.brand-name{font-family:'Playfair Display',serif;letter-spacing:3px;font-size:.88rem;font-weight:600;line-height:1;display:flex;flex-direction:column;align-items:flex-start;overflow:hidden;max-width:130px;transition:max-width .28s,opacity .2s}
+.brand-name{font-family:'Playfair Display',serif;letter-spacing:3px;font-size:.88rem;font-weight:600;line-height:1;display:flex;flex-direction:column;overflow:hidden;max-width:130px;transition:max-width .28s,opacity .2s}
 .brand-edu{font-size:.4rem;letter-spacing:.22em;color:var(--muted);font-weight:500;font-family:'Outfit',sans-serif;text-transform:uppercase;margin-top:3px}
 .sidebar.collapsed .brand-name{max-width:0;opacity:0}
 .hamburger{margin-left:auto;width:32px;height:32px;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:4px;border-radius:8px;flex-shrink:0;transition:background .15s}
 .hamburger:hover{background:rgba(180,175,168,0.1)}
 .hamburger span{display:block;width:16px;height:1.5px;background:var(--muted);border-radius:2px;transition:background .15s}
 .hamburger:hover span{background:var(--text)}
-
-/* Nav items com ícone em caixinha */
 .sidebar-nav{flex:1;padding:10px 8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
 .nav-item{display:flex;align-items:center;gap:11px;padding:8px 8px;border-radius:10px;color:var(--muted);text-decoration:none;font-size:.87rem;font-weight:500;transition:all .15s;position:relative;overflow:hidden}
 .nav-item:hover{background:rgba(180,175,168,0.07);color:var(--text)}
@@ -43,18 +38,14 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 .nav-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;border:1px solid transparent;background:rgba(180,175,168,0.06)}
 .nav-item:hover .nav-icon{background:rgba(180,175,168,0.12);border-color:var(--border)}
 .nav-item.active .nav-icon{background:rgba(180,175,168,0.14);border-color:rgba(180,175,168,0.22)}
-.nav-icon svg{stroke:var(--muted);transition:stroke .15s;flex-shrink:0}
+.nav-icon svg{stroke:var(--muted);transition:stroke .15s}
 .nav-item:hover .nav-icon svg,.nav-item.active .nav-icon svg{stroke:var(--gold2)}
 .nav-label{flex:1;overflow:hidden;max-width:160px;transition:max-width .28s,opacity .2s;white-space:nowrap}
 .sidebar.collapsed .nav-label{max-width:0;opacity:0}
 .nav-badge{font-size:.67rem;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(180,175,168,0.12);color:var(--gold);border:1px solid rgba(180,175,168,0.22);flex-shrink:0;transition:opacity .2s}
 .sidebar.collapsed .nav-badge{opacity:0;pointer-events:none}
-
-/* Tooltip no collapsed */
 .nav-item .nav-tip{display:none;position:absolute;left:58px;top:50%;transform:translateY(-50%);background:var(--bg3);color:var(--text);font-size:.78rem;font-weight:500;padding:5px 10px;border-radius:7px;border:1px solid var(--border2);white-space:nowrap;z-index:200;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.4)}
 .sidebar.collapsed .nav-item:hover .nav-tip{display:block}
-
-/* Footer user */
 .sidebar-footer{padding:10px 8px;border-top:1px solid var(--border)}
 .nup{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;transition:background .15s}
 .nup:hover{background:rgba(180,175,168,0.07)}
@@ -73,7 +64,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 .topbar-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700}
 .topbar-title em{font-style:italic;color:var(--gold)}
 .topbar-sub{font-size:.75rem;color:var(--muted);margin-top:1px}
-.mobile-menu-btn{display:none;background:none;border:none;color:var(--text);cursor:pointer;padding:4px;margin-right:4px}
+.mobile-menu-btn{display:none;background:none;border:none;color:var(--text);cursor:pointer;padding:4px}
 
 /* ══ CONTENT ══ */
 .content{padding:22px 28px;flex:1}
@@ -87,23 +78,27 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 .prog-num{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--gold);line-height:1;text-align:right}
 .prog-num-sub{font-size:8px;color:var(--muted);text-align:center;margin-top:2px;letter-spacing:.06em;text-transform:uppercase}
 
-/* ══ FILTROS (novos) ══ */
-.filtros-row{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
-.filtro-grupo{display:flex;flex-direction:column;gap:5px;flex:1;min-width:160px}
-.filtro-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-left:2px}
-.filtro-select{background:var(--bg2);color:var(--text);border:1px solid var(--border2);border-radius:9px;padding:9px 32px 9px 12px;font-size:.85rem;font-family:'Outfit',sans-serif;cursor:pointer;outline:none;transition:all .15s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238a7d70' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;font-weight:500;width:100%}
-.filtro-select:hover,.filtro-select:focus{border-color:var(--gold);color:var(--text)}
-.filtro-select option{background:var(--bg2);color:var(--text)}
-
-/* ══ GRID QUESTÃO ══ */
+/* ══ GRID ══ */
 .q-grid{display:grid;grid-template-columns:1fr 260px;gap:16px}
 
 /* ══ CARD QUESTÃO ══ */
 .q-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column}
-.q-header{padding:12px 18px;border-bottom:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;gap:10px}
+
+/* Header com chips + filtros inline */
+.q-header{padding:10px 16px;border-bottom:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.q-header-left{display:flex;align-items:center;gap:8px}
 .q-label{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
-.q-chip{font-size:10px;padding:3px 10px;border-radius:100px;border:1px solid var(--border);color:var(--muted);background:var(--bg2)}
+.q-chip{font-size:10px;padding:3px 10px;border-radius:100px;border:1px solid var(--border);color:var(--muted);background:var(--bg2);white-space:nowrap}
 .q-chip.gold{border-color:rgba(180,175,168,0.4);color:var(--gold);background:rgba(180,175,168,0.07)}
+
+/* Filtros compactos dentro do header */
+.q-filters{display:flex;gap:6px;align-items:center}
+.q-filter-wrap{display:flex;flex-direction:column;gap:3px}
+.q-filter-label{font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-left:2px}
+.q-filter{background:var(--bg2);color:var(--text);border:1px solid var(--border2);border-radius:8px;padding:6px 26px 6px 10px;font-size:.78rem;font-family:'Outfit',sans-serif;cursor:pointer;outline:none;transition:all .15s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='8' height='5' viewBox='0 0 8 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L4 4L7 1' stroke='%238a7d70' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;font-weight:500;min-width:140px}
+.q-filter:hover,.q-filter:focus{border-color:var(--gold);color:var(--text)}
+.q-filter option{background:var(--bg2);color:var(--text)}
+
 .q-body{padding:22px;flex:1}
 .q-loading{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:13px;padding:12px 0}
 .q-spinner{width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
@@ -129,12 +124,19 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 .q-count-txt{font-size:11px;color:var(--muted);font-weight:300}
 
 /* ══ COLUNA DIREITA ══ */
-.right-col{display:flex;flex-direction:column;gap:14px}
+.right-col{display:flex;flex-direction:column;gap:12px}
 .r-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
-.r-header{padding:12px 16px;border-bottom:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;gap:8px}
-.r-icon{width:26px;height:26px;border-radius:7px;background:rgba(180,175,168,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.r-header{padding:11px 16px;border-bottom:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;gap:8px}
+.r-icon{width:24px;height:24px;border-radius:7px;background:rgba(180,175,168,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .r-title{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .r-body{padding:14px 16px}
+
+/* Card concurso */
+.concurso-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;gap:12px}
+.concurso-icon{width:36px;height:36px;border-radius:9px;background:rgba(180,175,168,0.1);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.concurso-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.concurso-nome{font-size:.85rem;font-weight:600;color:var(--gold2);line-height:1.3}
+
 .s-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
 .s-row:last-child{border-bottom:none}
 .s-label{font-size:12px;color:var(--muted);font-weight:400;display:flex;align-items:center;gap:7px}
@@ -147,9 +149,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 .h-err{background:rgba(224,84,84,.12);color:#e05454}
 .hist-disc{flex:1;font-size:11px;color:var(--muted);font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hist-banca{font-size:10px;color:var(--muted);background:rgba(180,175,168,0.08);padding:1px 6px;border-radius:4px}
-.hist-empty{font-size:11px;color:var(--muted);font-weight:300;text-align:center;padding:16px 0}
+.hist-empty{font-size:11px;color:var(--muted);text-align:center;padding:16px 0}
 
-/* ══ OVERLAY / MOBILE ══ */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;display:none}
 .overlay.show{display:block}
 @media(max-width:960px){.q-grid{grid-template-columns:1fr}}
@@ -160,13 +161,14 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
   .content{padding:14px}
   .mobile-menu-btn{display:flex!important}
   .topbar{padding:0 16px}
-  .filtros-row{flex-direction:column}
+  .q-header{flex-direction:column;align-items:flex-start}
+  .q-filters{width:100%}
+  .q-filter{min-width:unset;flex:1}
 }
 </style>
 </head>
 <body>
 
-<!-- ══ SIDEBAR ══ -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div class="brand-mark">VF</div>
@@ -175,55 +177,41 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
       <span></span><span></span><span></span>
     </button>
   </div>
-
   <nav class="sidebar-nav">
     <a href="painel.html" class="nav-item">
-      <div class="nav-icon">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-      </div>
+      <div class="nav-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
       <span class="nav-label">Início</span>
       <span class="nav-tip">Início</span>
     </a>
     <a href="questoes.html" class="nav-item active">
-      <div class="nav-icon">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
-      </div>
+      <div class="nav-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div>
       <span class="nav-label">Questões do dia</span>
       <span class="nav-badge" id="sb-badge">20</span>
       <span class="nav-tip">Questões</span>
     </a>
     <a href="plano.html" class="nav-item">
-      <div class="nav-icon">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-      </div>
+      <div class="nav-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
       <span class="nav-label">Meu plano</span>
       <span class="nav-tip">Meu plano</span>
     </a>
     <a href="desempenho.html" class="nav-item">
-      <div class="nav-icon">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-      </div>
+      <div class="nav-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
       <span class="nav-label">Desempenho</span>
       <span class="nav-tip">Desempenho</span>
     </a>
     <a href="anotacoes.html" class="nav-item">
-      <div class="nav-icon">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-      </div>
+      <div class="nav-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
       <span class="nav-label">Anotações</span>
       <span class="nav-tip">Anotações</span>
     </a>
     <a href="simulados.html" class="nav-item">
-      <div class="nav-icon">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-      </div>
+      <div class="nav-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
       <span class="nav-label">Simulados</span>
       <span class="nav-tip">Simulados</span>
     </a>
   </nav>
-
   <div class="sidebar-footer">
-    <div class="nup" id="nav-pill">
+    <div class="nup">
       <div class="nup-avatar" id="nav-avatar">?</div>
       <div class="nup-info">
         <div class="nup-name" id="nav-user">—</div>
@@ -234,7 +222,6 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 </aside>
 <div class="overlay" id="overlay"></div>
 
-<!-- ══ MAIN ══ -->
 <div class="main">
   <header class="topbar">
     <button class="mobile-menu-btn" id="mobile-menu-btn">
@@ -263,54 +250,49 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
       </div>
     </div>
 
-    <!-- Filtros organizados -->
-    <div class="filtros-row">
-      <div class="filtro-grupo">
-        <div class="filtro-label">
-          <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
-          Disciplina
-        </div>
-        <select class="filtro-select" id="sel-disciplina">
-          <option value="">Todas as disciplinas</option>
-          <option value="Direito Constitucional">Direito Constitucional</option>
-          <option value="Direito Administrativo">Direito Administrativo</option>
-          <option value="Raciocínio Lógico">Raciocínio Lógico</option>
-          <option value="Português">Português</option>
-          <option value="Direito Penal">Direito Penal</option>
-          <option value="Direito Civil">Direito Civil</option>
-          <option value="Informática">Informática</option>
-          <option value="Matemática">Matemática</option>
-          <option value="Atualidades">Atualidades</option>
-        </select>
-      </div>
-      <div class="filtro-grupo">
-        <div class="filtro-label">
-          <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          Banca
-        </div>
-        <select class="filtro-select" id="sel-banca">
-          <option value="">Todas as bancas</option>
-          <option value="CESPE">CESPE / CEBRASPE</option>
-          <option value="FCC">FCC</option>
-          <option value="FGV">FGV</option>
-          <option value="VUNESP">VUNESP</option>
-          <option value="IBFC">IBFC</option>
-          <option value="AOCP">AOCP</option>
-          <option value="IADES">IADES</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Grid -->
+    <!-- Grid principal -->
     <div class="q-grid">
 
-      <!-- Questão -->
+      <!-- Coluna questão -->
       <div class="q-card">
         <div class="q-header">
-          <div class="q-label">Questão</div>
-          <span class="q-chip" id="q-disciplina">—</span>
-          <span class="q-chip gold" id="q-banca">—</span>
+          <div class="q-header-left">
+            <div class="q-label">Questão</div>
+            <span class="q-chip" id="q-disciplina">—</span>
+            <span class="q-chip gold" id="q-banca">—</span>
+          </div>
+          <!-- Filtros compactos dentro do header -->
+          <div class="q-filters">
+            <div class="q-filter-wrap">
+              <div class="q-filter-label">Disciplina</div>
+              <select class="q-filter" id="sel-disciplina">
+                <option value="">Aleatória</option>
+                <option value="Direito Constitucional">Dir. Constitucional</option>
+                <option value="Direito Administrativo">Dir. Administrativo</option>
+                <option value="Raciocínio Lógico">Raciocínio Lógico</option>
+                <option value="Português">Português</option>
+                <option value="Direito Penal">Direito Penal</option>
+                <option value="Direito Civil">Direito Civil</option>
+                <option value="Informática">Informática</option>
+                <option value="Matemática">Matemática</option>
+              </select>
+            </div>
+            <div class="q-filter-wrap">
+              <div class="q-filter-label">Banca</div>
+              <select class="q-filter" id="sel-banca">
+                <option value="">Aleatória</option>
+                <option value="CESPE">CESPE</option>
+                <option value="FCC">FCC</option>
+                <option value="FGV">FGV</option>
+                <option value="VUNESP">VUNESP</option>
+                <option value="IBFC">IBFC</option>
+                <option value="AOCP">AOCP</option>
+                <option value="IADES">IADES</option>
+              </select>
+            </div>
+          </div>
         </div>
+
         <div class="q-body">
           <div id="q-loading" class="q-loading">
             <div class="q-spinner"></div>
@@ -325,6 +307,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
             </div>
           </div>
         </div>
+
         <div class="q-footer">
           <button class="btn-nova" id="btn-nova" onclick="gerarQuestao()">Nova questão →</button>
           <span class="q-count-txt" id="q-counter"></span>
@@ -333,31 +316,33 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 
       <!-- Coluna direita -->
       <div class="right-col">
+
+        <!-- Card concurso -->
+        <div class="concurso-card" id="concurso-card" style="display:none">
+          <div class="concurso-icon">
+            <svg width="16" height="16" fill="none" stroke="var(--gold)" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div>
+            <div class="concurso-label">Seu concurso</div>
+            <div class="concurso-nome" id="concurso-nome">—</div>
+          </div>
+        </div>
+
+        <!-- Sessão -->
         <div class="r-card">
           <div class="r-header">
             <div class="r-icon"><svg width="13" height="13" fill="none" stroke="var(--gold)" stroke-width="1.8" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></div>
             <div class="r-title">Sessão de hoje</div>
           </div>
           <div class="r-body">
-            <div class="s-row">
-              <span class="s-label"><span class="s-dot" style="background:var(--gold)"></span>Respondidas</span>
-              <span class="s-val" style="color:var(--gold)" id="s-resp">0</span>
-            </div>
-            <div class="s-row">
-              <span class="s-label"><span class="s-dot" style="background:var(--green)"></span>Acertos</span>
-              <span class="s-val" style="color:var(--green)" id="s-ok">0</span>
-            </div>
-            <div class="s-row">
-              <span class="s-label"><span class="s-dot" style="background:var(--red)"></span>Erros</span>
-              <span class="s-val" style="color:var(--red)" id="s-err">0</span>
-            </div>
-            <div class="s-row">
-              <span class="s-label"><span class="s-dot" style="background:var(--muted)"></span>Taxa</span>
-              <span class="s-val" style="color:var(--gold);font-size:1.1rem" id="s-taxa">—</span>
-            </div>
+            <div class="s-row"><span class="s-label"><span class="s-dot" style="background:var(--gold)"></span>Respondidas</span><span class="s-val" style="color:var(--gold)" id="s-resp">0</span></div>
+            <div class="s-row"><span class="s-label"><span class="s-dot" style="background:var(--green)"></span>Acertos</span><span class="s-val" style="color:var(--green)" id="s-ok">0</span></div>
+            <div class="s-row"><span class="s-label"><span class="s-dot" style="background:var(--red)"></span>Erros</span><span class="s-val" style="color:var(--red)" id="s-err">0</span></div>
+            <div class="s-row"><span class="s-label"><span class="s-dot" style="background:var(--muted)"></span>Taxa</span><span class="s-val" style="color:var(--gold);font-size:1.1rem" id="s-taxa">—</span></div>
           </div>
         </div>
 
+        <!-- Histórico -->
         <div class="r-card">
           <div class="r-header">
             <div class="r-icon"><svg width="13" height="13" fill="none" stroke="var(--gold)" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
@@ -367,8 +352,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
             <div id="hist-list"><div class="hist-empty">Nenhuma questão respondida ainda</div></div>
           </div>
         </div>
-      </div>
 
+      </div>
     </div>
   </div>
 </div>
@@ -394,7 +379,16 @@ async function init(){
 }
 
 async function carregarPerfil(){
-  try{const{data}=await sb.from('perfis').select('*').eq('id',userId).single();if(data)perfilAluno=data;}catch(e){}
+  try{
+    const{data}=await sb.from('perfis').select('*').eq('id',userId).single();
+    if(data){
+      perfilAluno=data;
+      if(data.concurso){
+        document.getElementById('concurso-nome').textContent=data.concurso;
+        document.getElementById('concurso-card').style.display='flex';
+      }
+    }
+  }catch(e){}
 }
 
 async function gerarQuestao(){
