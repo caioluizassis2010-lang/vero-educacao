@@ -20,41 +20,6 @@
 body{background:var(--bg4);color:var(--text);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
 a{text-decoration:none;color:inherit}
 
-
-/* ── SIDEBAR NOVA ── */
-body{display:flex;overflow-x:hidden}
-.sidebar-new{width:240px;min-height:100vh;background:var(--bg4);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;transition:width .25s ease,transform .25s ease;z-index:100}
-.sidebar-new.collapsed{width:64px}
-.sidebar-header{padding:20px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);min-height:68px}
-.brand-mark-new{width:34px;height:34px;background:var(--gold);color:var(--bg4);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:.85rem;flex-shrink:0}
-.brand-name-new{font-family:'Playfair Display',serif;letter-spacing:3px;font-size:.9rem;font-weight:600;line-height:1;display:flex;flex-direction:column;align-items:center;overflow:hidden;transition:opacity .2s,width .2s}
-.brand-edu-new{display:block;font-size:.42rem;letter-spacing:.22em;color:var(--muted);font-weight:500;font-family:'Outfit',sans-serif;text-transform:uppercase;text-align:center;margin-top:2px}
-.sidebar-new.collapsed .brand-name-new{opacity:0;width:0}
-.sidebar-toggle-new{margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;border-radius:6px;flex-shrink:0;transition:color .2s}
-.sidebar-toggle-new:hover{color:var(--text)}
-.sidebar-nav-new{flex:1;padding:12px 8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
-.nav-item-new{display:flex;align-items:center;gap:12px;padding:10px 10px;border-radius:10px;color:var(--muted);text-decoration:none;font-size:.875rem;font-weight:500;transition:all .15s;white-space:nowrap;overflow:hidden;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:'Outfit',sans-serif}
-.nav-item-new:hover{background:var(--muted2);color:var(--text)}
-.nav-item-new.active{background:rgba(180,175,168,0.12);color:var(--gold2)}
-.nav-item-new svg{flex-shrink:0}
-.nav-label-new{overflow:hidden;transition:opacity .2s,width .2s;opacity:1}
-.sidebar-new.collapsed .nav-label-new{opacity:0;width:0}
-.sidebar-footer-new{padding:12px 8px;border-top:1px solid var(--border)}
-.nup-new{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer;transition:background .15s}
-.nup-new:hover{background:var(--muted2)}
-.nup-avatar-new{width:28px;height:28px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:600;color:var(--gold2);flex-shrink:0}
-.nup-name-new{font-size:.8rem;color:var(--muted);overflow:hidden;transition:opacity .2s,width .2s}
-.sidebar-new.collapsed .nup-name-new{opacity:0;width:0}
-.main-wrapper{flex:1;margin-left:240px;min-height:100vh;transition:margin-left .25s ease;display:flex;flex-direction:column}
-.sidebar-new.collapsed ~ .main-wrapper{margin-left:64px}
-.topbar-new{padding:16px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;background:var(--bg);position:sticky;top:0;z-index:50}
-.topbar-title-new{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600;color:var(--gold2)}
-.topbar-title-new em{font-style:italic;color:var(--gold)}
-.mobile-menu-btn-new{display:none;background:none;border:none;color:var(--text);cursor:pointer;padding:4px}
-.overlay-new{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;display:none}
-.overlay-new.show{display:block}
-@media(max-width:768px){.sidebar-new{transform:translateX(-100%)}.sidebar-new.mobile-open{transform:translateX(0)}.main-wrapper{margin-left:0!important}.mobile-menu-btn-new{display:flex!important}.topbar-new{padding:14px 16px}}
-
 /* NAV */
 nav{padding:0 28px;height:58px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg4);position:sticky;top:0;z-index:100}
 .brand{display:inline-flex;align-items:center;gap:12px}
@@ -247,43 +212,73 @@ nav{padding:0 28px;height:58px;border-bottom:1px solid var(--border);display:fle
 </head>
 <body>
 
-<aside class="sidebar-new" id="sidebar-new">
-  <div class="sidebar-header">
-    <div class="brand-mark-new">VF</div>
-    <div class="brand-name-new">VOFOR<small class="brand-edu-new">educação</small></div>
-    <button class="sidebar-toggle-new" id="sidebar-toggle-new">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
-    </button>
-  </div>
-  <nav class="sidebar-nav-new">
-    <a href="painel.html" class="nav-item-new"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span class="nav-label-new">Início</span></a>
-    <a href="questoes.html" class="nav-item-new"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg><span class="nav-label-new">Questões do dia</span></a>
-    <a href="plano.html" class="nav-item-new"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span class="nav-label-new">Meu plano</span></a>
-    <a href="desempenho.html" class="nav-item-new"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span class="nav-label-new">Desempenho</span></a>
-    <a href="anotacoes.html" class="nav-item-new active"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span class="nav-label-new">Anotações</span></a>
-    <a href="simulados.html" class="nav-item-new"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span class="nav-label-new">Simulados</span></a>
-  </nav>
-  <div class="sidebar-footer-new">
-    <div class="nup-new" id="nav-pill">
-      <div class="nup-avatar-new" id="nav-avatar">?</div>
-      <span class="nup-name-new" id="nav-user">—</span>
+<nav>
+  <a href="index.html" class="brand">
+    <div class="brand-mark">VF</div>
+    <div class="brand-name">VOFOR</div>
+  </a>
+  <div class="nav-right">
+    <a href="painel.html" class="nav-back">← Painel</a>
+    <div class="nav-user-pill" id="nav-pill">
+      <div class="nup-avatar" id="nav-avatar">?</div>
+      <span class="nup-name" id="nav-user">—</span>
     </div>
+    <button class="btn-sair" onclick="sair()">Sair</button>
   </div>
-</aside>
-<div class="overlay-new" id="overlay-new"></div>
-<div class="main-wrapper" id="main-wrapper">
-<div class="topbar-new">
-  <button class="mobile-menu-btn-new" id="mobile-menu-btn-new"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
-  <span class="topbar-title-new">Minhas <em>Anotações</em></span>
-  <button class="btn-nova" style="margin:0 0 0 auto;padding:7px 16px;font-size:.8rem" onclick="novaNota()">+ Nova anotação</button>
-</div>
+</nav>
 
-<div style="display:flex;flex:1;overflow:hidden">
+<div class="layout">
 
-  
+  <!-- SIDEBAR NAVEGAÇÃO -->
+  <aside class="sidebar">
+    <div class="sb-section">Menu principal</div>
+    <div class="sb-item" onclick="window.location.href='painel.html'">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+      Início
+    </div>
+    <div class="sb-item" onclick="window.location.href='questoes.html'">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+      Questões do dia
+    </div>
+    <div class="sb-item" onclick="window.location.href='plano.html'">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
+      Meu plano
+    </div>
+    <div class="sb-item" onclick="window.location.href='desempenho.html'">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M8 21V10M12 21V3M16 21v-7M4 21v-4"/></svg></div>
+      Desempenho
+    </div>
+    <div class="sb-item active">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+      Anotações
+    </div>
+    <div class="sb-item" onclick="window.location.href='simulados.html'">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      Simulados
+    </div>
+    <div class="sb-item" onclick="alert('Em breve!')">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+      Relatórios
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-section">Minha jornada</div>
+    <div class="sb-item">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <span id="sb-concurso">—</span>
+    </div>
+    <div class="sb-spacer"></div>
+    <div class="sb-plan">
+      <div class="sb-plan-row">
+        <div class="sb-plan-label">Plano</div>
+        <div class="sb-plan-badge">Grátis
+      <div class="sb-plan-name">Plano Gratuito</div>
+      <div class="sb-plan-desc">20 questões por dia.</div>
+      <button class="sb-plan-btn" onclick="alert('Em breve!')">Upgrade →</button>
+    </div>
+  </aside>
 
   <!-- MAIN -->
-  <div class="main" style="flex:1;overflow:hidden">
+  <div class="main">
 
     <!-- PAINEL ESQUERDO: CATEGORIAS + LISTA -->
     <div class="left-panel">
@@ -578,6 +573,11 @@ async function sair(){await sb.auth.signOut();window.location.href='index.html';
 init();
 </script>
 
+<div class="mobile-nav">
+  <div class="mn-item" onclick="window.location.href='painel.html'">
+    <svg class="mn-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+    <span class="mn-label">Início</span>
+  </div>
   <div class="mn-item" onclick="window.location.href='questoes.html'">
     <svg class="mn-icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
     <span class="mn-label">Questões</span>
@@ -596,12 +596,5 @@ init();
   </div>
 </div>
 
-</div></div>
-<script>
-document.getElementById("sidebar-toggle-new").addEventListener("click",()=>{const s=document.getElementById("sidebar-new");s.classList.toggle("collapsed");localStorage.setItem("vofor_sb_collapsed",s.classList.contains("collapsed"));});
-document.getElementById("mobile-menu-btn-new")?.addEventListener("click",()=>{document.getElementById("sidebar-new").classList.add("mobile-open");document.getElementById("overlay-new").classList.add("show");});
-document.getElementById("overlay-new").addEventListener("click",()=>{document.getElementById("sidebar-new").classList.remove("mobile-open");document.getElementById("overlay-new").classList.remove("show");});
-const _sc=localStorage.getItem("vofor_sb_collapsed")==="true";if(_sc)document.getElementById("sidebar-new").classList.add("collapsed");
-</script>
 </body>
 </html>
