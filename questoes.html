@@ -3,239 +3,318 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Questões do Dia — VOFOR Educação</title>
+<title>Vofor — Questões do Dia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0f0d0b;--bg2:#1c1814;--bg3:#2e2520;--bg4:#080604;
-  --gold:#b4afa8;--gold2:#ccc8c2;
-  --text:#ede8e2;--muted:#8a7d70;--muted2:rgba(200,188,175,0.28);
-  --border:rgba(180,175,168,0.15);--border2:rgba(180,175,168,0.35);
-  --green:#0fa968;--red:#e05454;--radius:10px;
+  --bg:#0f0d0b;
+  --bg2:#1c1814;
+  --bg3:#2e2520;
+  --bg4:#080604;
+  --gold:#b4afa8;
+  --gold2:#ccc8c2;
+  --text:#ede8e2;
+  --muted:#8a7d70;
+  --muted2:rgba(200,188,175,0.28);
+  --border:rgba(180,175,168,0.15);
+  --border2:rgba(180,175,168,0.28);
+  --green:#0fa968;
+  --red:#e05454;
+  --radius:10px;
 }
-body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;overflow-x:hidden}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg4);color:var(--text);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+a{text-decoration:none;color:inherit}
 
-/* ══ SIDEBAR ══ */
-.sidebar{width:240px;min-height:100vh;background:var(--bg4);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;transition:width .28s cubic-bezier(.4,0,.2,1),transform .28s ease;z-index:100}
-.sidebar.collapsed{width:64px}
-.sidebar-header{padding:0 14px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);height:64px}
-.brand-mark{width:34px;height:34px;background:var(--gold);color:var(--bg4);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:.85rem;flex-shrink:0}
-.brand-name{font-family:'Playfair Display',serif;letter-spacing:3px;font-size:.88rem;font-weight:600;line-height:1;display:flex;flex-direction:column;overflow:hidden;max-width:130px;transition:max-width .28s,opacity .2s}
-.brand-edu{font-size:.4rem;letter-spacing:.22em;color:var(--muted);font-weight:500;font-family:'Outfit',sans-serif;text-transform:uppercase;margin-top:3px}
-.sidebar.collapsed .brand-name{max-width:0;opacity:0}
-.hamburger{margin-left:auto;width:32px;height:32px;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:4px;border-radius:8px;flex-shrink:0;transition:background .15s}
-.hamburger:hover{background:rgba(180,175,168,0.1)}
-.hamburger span{display:block;width:16px;height:1.5px;background:var(--muted);border-radius:2px;transition:background .15s}
-.hamburger:hover span{background:var(--text)}
-.sidebar-nav{flex:1;padding:10px 8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
-.nav-item{display:flex;align-items:center;gap:11px;padding:8px 8px;border-radius:10px;color:var(--muted);text-decoration:none;font-size:.87rem;font-weight:500;transition:all .15s;position:relative;overflow:hidden}
-.nav-item:hover{background:rgba(180,175,168,0.07);color:var(--text)}
-.nav-item.active{background:rgba(180,175,168,0.11);color:var(--gold2)}
-.nav-item.active::before{content:'';position:absolute;left:0;top:25%;bottom:25%;width:3px;background:var(--gold);border-radius:0 3px 3px 0}
-.nav-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;border:1px solid transparent;background:rgba(180,175,168,0.06)}
-.nav-item:hover .nav-icon{background:rgba(180,175,168,0.12);border-color:var(--border)}
-.nav-item.active .nav-icon{background:rgba(180,175,168,0.14);border-color:rgba(180,175,168,0.22)}
-.nav-icon svg{stroke:var(--muted);transition:stroke .15s}
-.nav-item:hover .nav-icon svg,.nav-item.active .nav-icon svg{stroke:var(--gold2)}
-.nav-label{flex:1;overflow:hidden;max-width:160px;transition:max-width .28s,opacity .2s;white-space:nowrap}
-.sidebar.collapsed .nav-label{max-width:0;opacity:0}
-.nav-badge{font-size:.67rem;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(180,175,168,0.12);color:var(--gold);border:1px solid rgba(180,175,168,0.22);flex-shrink:0;transition:opacity .2s}
-.sidebar.collapsed .nav-badge{opacity:0;pointer-events:none}
-.nav-item .nav-tip{display:none;position:absolute;left:58px;top:50%;transform:translateY(-50%);background:var(--bg3);color:var(--text);font-size:.78rem;font-weight:500;padding:5px 10px;border-radius:7px;border:1px solid var(--border2);white-space:nowrap;z-index:200;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.4)}
-.sidebar.collapsed .nav-item:hover .nav-tip{display:block}
-.sidebar-footer{padding:10px 8px;border-top:1px solid var(--border)}
-.nup{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;transition:background .15s}
-.nup:hover{background:rgba(180,175,168,0.07)}
-.nup-avatar{width:32px;height:32px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:600;color:var(--gold2);flex-shrink:0;font-family:'Playfair Display',serif}
-.nup-info{overflow:hidden;max-width:140px;transition:max-width .28s,opacity .2s}
-.nup-name{font-size:.82rem;color:var(--text);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.nup-sub{font-size:.7rem;color:var(--muted)}
-.sidebar.collapsed .nup-info{max-width:0;opacity:0}
+nav{
+  padding:0 28px;height:58px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--bg4);position:sticky;top:0;z-index:100;
+}
+.brand{display:inline-flex;align-items:center;gap:12px}
+.brand-mark{width:34px;height:34px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.15);background:#1a1a1a;color:#ffffff;display:grid;place-items:center;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700}
+.brand-name{font-family:'Playfair Display',serif;color:var(--text);letter-spacing:3px;font-size:.95rem;font-weight:600}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-user{font-size:.78rem;color:var(--text);font-weight:500;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-back{font-size:12px;color:var(--muted);padding:6px 14px;border:1px solid var(--border);border-radius:7px;cursor:pointer;transition:all .15s;font-weight:500}
+.nav-back:hover{color:var(--gold);border-color:var(--border2)}
+.btn-sair{font-size:12px;color:var(--muted);padding:6px 14px;border:1px solid var(--border);border-radius:7px;cursor:pointer;background:none;font-family:'Outfit',sans-serif;transition:all .15s;font-weight:500}
+.btn-sair:hover{color:var(--gold);border-color:var(--border2)}
 
-/* ══ MAIN ══ */
-.main{flex:1;margin-left:240px;min-height:100vh;transition:margin-left .28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
-.sidebar.collapsed ~ .main{margin-left:64px}
+.layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 58px)}
 
-/* ══ TOPBAR ══ */
-.topbar{height:64px;padding:0 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;background:var(--bg);position:sticky;top:0;z-index:50}
-.topbar-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700}
-.topbar-title em{font-style:italic;color:var(--gold)}
-.topbar-sub{font-size:.75rem;color:var(--muted);margin-top:1px}
-.mobile-menu-btn{display:none;background:none;border:none;color:var(--text);cursor:pointer;padding:4px}
+/* SIDEBAR — idêntica ao painel */
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:28px 16px 24px;display:flex;flex-direction:column;gap:2px}
+.sb-section{font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted2);padding:0 14px;margin:22px 0 8px}
+.sb-section:first-child{margin-top:0}
+.sb-item{display:flex;align-items:center;gap:13px;padding:11px 14px;border-radius:9px;font-size:14px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .18s;border:1px solid transparent;margin-bottom:2px;letter-spacing:.01em}
+.sb-item:hover{background:rgba(200,188,175,0.05);color:var(--text)}
+.sb-item.active{background:rgba(180,175,168,0.08);color:var(--gold);border-color:rgba(180,175,168,0.18)}
+.sb-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(200,188,175,0.05);flex-shrink:0;transition:all .18s;border:1px solid transparent}
+.sb-item.active .sb-icon{background:rgba(180,175,168,0.1);border-color:rgba(180,175,168,0.22)}
+.sb-item:hover .sb-icon{background:rgba(200,188,175,0.08)}
+.sb-icon svg{width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:stroke .18s}
+.sb-item.active .sb-icon svg,.sb-item:hover .sb-icon svg{stroke:var(--gold)}
+.sb-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:rgba(180,175,168,0.1);color:var(--gold);border:1px solid rgba(180,175,168,0.22)}
+.sb-divider{height:1px;background:var(--border);margin:12px 4px}
+.sb-spacer{flex:1;min-height:20px}
+.sb-plan{margin:0 0 4px;padding:16px;background:rgba(232,201,122,0.05);border:1px solid rgba(180,175,168,0.18);border-radius:10px}
+.sb-plan-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.sb-plan-label{font-size:10px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.sb-plan-badge{font-size:10px;font-weight:700;padding:3px 9px;background:rgba(180,175,168,0.15);color:var(--gold);border-radius:100px;border:1px solid rgba(180,175,168,0.28)}
+.sb-plan-name{font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px}
+.sb-plan-desc{font-size:11px;color:var(--muted2);font-weight:300;margin-bottom:12px;line-height:1.5}
+.sb-plan-btn{width:100%;padding:9px;background:var(--gold);color:#1c1814;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Outfit',sans-serif;letter-spacing:.02em;transition:all .15s}
+.sb-plan-btn:hover{background:var(--gold2)}
 
-/* ══ CONTENT ══ */
-.content{padding:22px 28px;flex:1}
+/* MAIN */
+.main{padding:28px 30px;background:var(--bg4)}
 
-/* ══ PROGRESSO ══ */
-.prog-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 22px;margin-bottom:18px;display:flex;align-items:center;gap:24px}
+.page-hd{margin-bottom:24px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.page-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;line-height:1.1}
+.page-title em{font-style:italic;color:var(--gold)}
+.page-sub{font-size:12px;color:var(--muted);margin-top:5px;font-weight:300}
+
+/* PROGRESSO */
+.prog-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:18px 22px;
+  margin-bottom:20px;
+  display:flex;align-items:center;gap:24px;
+}
 .prog-info{flex:1}
-.prog-label{display:flex;justify-content:space-between;font-size:9px;color:var(--muted);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
-.prog-bg{height:4px;background:rgba(200,188,175,0.1);border-radius:2px}
-.prog-fill{height:4px;border-radius:2px;background:var(--gold);transition:width .5s ease}
-.prog-num{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--gold);line-height:1;text-align:right}
-.prog-num-sub{font-size:8px;color:var(--muted);text-align:center;margin-top:2px;letter-spacing:.06em;text-transform:uppercase}
+.prog-label{display:flex;justify-content:space-between;font-size:10px;color:var(--muted2);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.prog-bg{height:5px;background:rgba(200,188,175,0.1);border-radius:3px}
+.prog-fill{height:5px;border-radius:3px;background:var(--gold);transition:width .5s ease}
+.prog-num{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--gold);white-space:nowrap;line-height:1}
+.prog-num-sub{font-size:9px;color:var(--muted2);text-align:center;margin-top:3px;letter-spacing:.06em;text-transform:uppercase}
 
-/* ══ GRID ══ */
+/* GRID */
 .q-grid{display:grid;grid-template-columns:1fr 260px;gap:16px}
 
-/* ══ CARD QUESTÃO ══ */
-.q-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column}
-
-/* Header com chips + filtros inline */
-.q-header{padding:10px 16px;border-bottom:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.q-header-left{display:flex;align-items:center;gap:8px}
-.q-label{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
-.q-chip{font-size:10px;padding:3px 10px;border-radius:100px;border:1px solid var(--border);color:var(--muted);background:var(--bg2);white-space:nowrap}
-.q-chip.gold{border-color:rgba(180,175,168,0.4);color:var(--gold);background:rgba(180,175,168,0.07)}
-
-/* Filtros compactos dentro do header */
-.q-filters{display:flex;gap:6px;align-items:center}
-.q-filter-wrap{display:flex;flex-direction:column;gap:3px}
-.q-filter-label{font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-left:2px}
-.q-filter{background:var(--bg2);color:var(--text);border:1px solid var(--border2);border-radius:8px;padding:6px 26px 6px 10px;font-size:.78rem;font-family:'Outfit',sans-serif;cursor:pointer;outline:none;transition:all .15s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='8' height='5' viewBox='0 0 8 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L4 4L7 1' stroke='%238a7d70' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;font-weight:500;min-width:140px}
-.q-filter:hover,.q-filter:focus{border-color:var(--gold);color:var(--text)}
+/* QUESTÃO */
+.q-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.q-header{
+  padding:14px 20px;border-bottom:1px solid var(--border);
+  background:var(--bg3);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.q-header-left{display:flex;align-items:center;gap:10px}
+.q-label{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2)}
+.q-chips{display:flex;gap:6px}
+.q-chip{font-size:10px;padding:3px 10px;border-radius:100px;border:1px solid var(--border);color:var(--muted2);background:var(--bg2)}
+.q-chip.gold{border-color:var(--border2);color:var(--gold);background:rgba(232,201,122,0.07)}
+.q-filters{display:flex;gap:7px}
+.q-filter{
+  background:var(--bg2);color:var(--muted);
+  border:1px solid var(--border);border-radius:7px;
+  padding:6px 24px 6px 10px;font-size:11px;
+  font-family:'Outfit',sans-serif;cursor:pointer;outline:none;
+  transition:all .15s;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg width='8' height='5' viewBox='0 0 8 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L4 4L7 1' stroke='%237a90c8' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 8px center;
+  font-weight:500;
+}
+.q-filter:focus,.q-filter:hover{border-color:var(--border2);color:var(--text)}
 .q-filter option{background:var(--bg2);color:var(--text)}
 
-.q-body{padding:22px;flex:1}
+.q-body{padding:24px}
 .q-loading{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:13px;padding:12px 0}
 .q-spinner{width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
-.q-text{font-size:.94rem;line-height:1.88;color:var(--text);margin-bottom:20px;font-weight:300}
-.opcoes{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
-.opcao{display:flex;align-items:flex-start;gap:13px;padding:12px 16px;border:1px solid var(--border);border-radius:9px;cursor:pointer;transition:all .18s;font-size:.88rem;color:var(--text);background:transparent;font-weight:300}
-.opcao:hover{border-color:var(--border2);background:rgba(180,175,168,0.04)}
+
+.q-text{
+  font-size:.95rem;line-height:1.85;color:var(--text);
+  margin-bottom:22px;font-weight:300;letter-spacing:.01em;
+}
+.opcoes{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.opcao{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:13px 16px;border:1px solid var(--border);
+  border-radius:9px;cursor:pointer;transition:all .18s;
+  font-size:.9rem;color:var(--text);background:transparent;font-weight:300;
+}
+.opcao:hover{border-color:var(--border2);background:rgba(232,201,122,0.04)}
 .opcao.certa{background:rgba(15,169,104,.08);border-color:rgba(15,169,104,.3);color:#0fa968}
 .opcao.errada{background:rgba(224,84,84,.08);border-color:rgba(224,84,84,.3);color:var(--red)}
 .opcao.disabled{pointer-events:none}
-.opcao-letra{font-size:.82rem;font-weight:700;flex-shrink:0;color:var(--muted);width:28px;height:28px;border-radius:7px;background:rgba(200,188,175,0.06);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all .18s}
-.opcao:hover .opcao-letra{background:rgba(180,175,168,0.1);border-color:var(--border2);color:var(--gold)}
+.opcao-letra{
+  font-size:.85rem;font-weight:700;min-width:20px;flex-shrink:0;
+  margin-top:1px;color:var(--muted);
+  width:28px;height:28px;border-radius:6px;
+  background:rgba(200,188,175,0.06);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .18s;
+}
+.opcao:hover .opcao-letra{background:rgba(180,175,168,0.08);border-color:var(--border2);color:var(--gold)}
 .opcao.certa .opcao-letra{background:rgba(15,169,104,.12);border-color:rgba(15,169,104,.3);color:#0fa968}
 .opcao.errada .opcao-letra{background:rgba(224,84,84,.12);border-color:rgba(224,84,84,.3);color:var(--red)}
-.gabarito{background:rgba(180,175,168,.04);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:9px;padding:14px 16px;margin-top:12px;display:none}
-.gab-label{font-size:9px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px}
-.gab-text{font-size:.86rem;color:var(--muted);line-height:1.82;font-weight:300}
-.q-footer{padding:14px 18px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg3)}
-.btn-nova{padding:10px 22px;background:var(--gold);color:#1c1814;border:none;border-radius:8px;font-size:.87rem;font-weight:700;cursor:pointer;transition:all .18s;font-family:'Outfit',sans-serif}
+
+.gabarito{
+  background:rgba(232,201,122,.04);
+  border:1px solid var(--border);border-left:3px solid var(--gold);
+  border-radius:9px;padding:16px 18px;margin-top:14px;display:none;
+}
+.gab-label{font-size:9px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px}
+.gab-text{font-size:.88rem;color:var(--muted);line-height:1.82;font-weight:300}
+
+.q-footer{
+  padding:14px 20px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--bg3);
+}
+.btn-nova{
+  padding:10px 22px;background:var(--gold);color:#1c1814;
+  border:none;border-radius:8px;font-size:.88rem;font-weight:700;
+  cursor:pointer;transition:all .18s;font-family:'Outfit',sans-serif;letter-spacing:.01em;
+}
 .btn-nova:hover{background:var(--gold2);transform:translateY(-1px)}
 .btn-nova:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.q-count-txt{font-size:11px;color:var(--muted);font-weight:300}
+.q-count-txt{font-size:11px;color:var(--muted2);font-weight:300}
 
-/* ══ COLUNA DIREITA ══ */
-.right-col{display:flex;flex-direction:column;gap:12px}
+/* COLUNA DIREITA */
+.right-col{display:flex;flex-direction:column;gap:14px}
 .r-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
-.r-header{padding:11px 16px;border-bottom:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;gap:8px}
-.r-icon{width:24px;height:24px;border-radius:7px;background:rgba(180,175,168,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.r-title{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.r-body{padding:14px 16px}
+.r-header{padding:13px 18px;border-bottom:1px solid var(--border);background:var(--bg3)}
+.r-title{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2)}
+.r-body{padding:16px 18px}
 
-/* Card concurso */
-.concurso-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;gap:12px}
-.concurso-icon{width:36px;height:36px;border-radius:9px;background:rgba(180,175,168,0.1);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.concurso-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
-.concurso-nome{font-size:.85rem;font-weight:600;color:var(--gold2);line-height:1.3}
-
-.s-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
+.s-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
 .s-row:last-child{border-bottom:none}
-.s-label{font-size:12px;color:var(--muted);font-weight:400;display:flex;align-items:center;gap:7px}
-.s-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.s-val{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:700}
-.hist-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;background:var(--bg3);margin-bottom:5px;border:1px solid var(--border)}
+.s-label{font-size:12px;color:var(--muted);font-weight:300}
+.s-val{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700}
+
+/* HISTÓRICO SESSÃO */
+.hist-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;background:var(--bg3);margin-bottom:6px;border:1px solid var(--border)}
 .hist-item:last-child{margin-bottom:0}
 .hist-ico{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}
 .h-ok{background:rgba(15,169,104,.12);color:#0fa968}
 .h-err{background:rgba(224,84,84,.12);color:#e05454}
-.hist-disc{flex:1;font-size:11px;color:var(--muted);font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hist-banca{font-size:10px;color:var(--muted);background:rgba(180,175,168,0.08);padding:1px 6px;border-radius:4px}
-.hist-empty{font-size:11px;color:var(--muted);text-align:center;padding:16px 0}
+.hist-disc{flex:1;font-size:11px;color:var(--muted);font-weight:300;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist-banca{font-size:10px;color:var(--muted2)}
+.hist-empty{font-size:12px;color:var(--muted2);font-weight:300;text-align:center;padding:18px 0}
 
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;display:none}
-.overlay.show{display:block}
-@media(max-width:960px){.q-grid{grid-template-columns:1fr}}
-@media(max-width:768px){
-  .sidebar{transform:translateX(-100%)}
-  .sidebar.mobile-open{transform:translateX(0)}
-  .main{margin-left:0!important}
-  .content{padding:14px}
-  .mobile-menu-btn{display:flex!important}
-  .topbar{padding:0 16px}
-  .q-header{flex-direction:column;align-items:flex-start}
-  .q-filters{width:100%}
-  .q-filter{min-width:unset;flex:1}
+@media(max-width:960px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .q-grid{grid-template-columns:1fr}
 }
+
+/* MOBILE */
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:60px;background:var(--bg2);border-top:1px solid var(--border);z-index:200;align-items:center;justify-content:space-around;padding:0 8px}
+.mn-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 10px;border-radius:9px;cursor:pointer;transition:all .18s;flex:1;color:var(--muted)}
+.mn-item.active{color:var(--gold)}
+.mn-icon{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.mn-label{font-size:9px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+@media(max-width:768px){
+  .layout{grid-template-columns:1fr !important}
+  .sidebar{display:none !important}
+  .mobile-nav{display:flex}
+  nav{padding:0 16px}
+}
+@media(min-width:769px){.mobile-nav{display:none !important}}
+
+.nav-user-pill{
+  display:flex;align-items:center;gap:7px;
+  padding:5px 12px 5px 5px;
+  border:1px solid var(--border);border-radius:100px;
+  background:rgba(255,255,255,0.03);cursor:pointer;
+  transition:all .2s;text-decoration:none;
+}
+.nav-user-pill:hover{border-color:var(--border2)}
+.nup-avatar{
+  width:24px;height:24px;border-radius:50%;
+  background:rgba(180,175,168,0.18);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.62rem;font-weight:700;color:var(--gold);
+  flex-shrink:0;font-family:'Playfair Display',serif;
+}
+.nup-name{font-size:.78rem;color:var(--text);font-weight:500;
+  max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
 </style>
 </head>
 <body>
 
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-header">
+<nav>
+  <a href="index.html" class="brand">
     <div class="brand-mark">VF</div>
-    <div class="brand-name">VOFOR<span class="brand-edu">educação</span></div>
-    <button class="hamburger" id="sidebar-toggle" title="Menu">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-  <nav class="sidebar-nav">
-    <a href="painel.html" class="nav-item">
-      <div class="nav-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
-      <span class="nav-label">Início</span>
-      <span class="nav-tip">Início</span>
-    </a>
-    <a href="questoes.html" class="nav-item active">
-      <div class="nav-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div>
-      <span class="nav-label">Questões do dia</span>
-      <span class="nav-badge" id="sb-badge">20</span>
-      <span class="nav-tip">Questões</span>
-    </a>
-    <a href="plano.html" class="nav-item">
-      <div class="nav-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
-      <span class="nav-label">Meu plano</span>
-      <span class="nav-tip">Meu plano</span>
-    </a>
-    <a href="desempenho.html" class="nav-item">
-      <div class="nav-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-      <span class="nav-label">Desempenho</span>
-      <span class="nav-tip">Desempenho</span>
-    </a>
-    <a href="anotacoes.html" class="nav-item">
-      <div class="nav-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
-      <span class="nav-label">Anotações</span>
-      <span class="nav-tip">Anotações</span>
-    </a>
-    <a href="simulados.html" class="nav-item">
-      <div class="nav-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-      <span class="nav-label">Simulados</span>
-      <span class="nav-tip">Simulados</span>
-    </a>
-  </nav>
-  <div class="sidebar-footer">
-    <div class="nup">
+    <div class="brand-name">VOFOR</div>
+  </a>
+  <div class="nav-right">
+    <a href="painel.html" class="nav-back">← Painel</a>
+    <div class="nav-user-pill" id="nav-pill">
       <div class="nup-avatar" id="nav-avatar">?</div>
-      <div class="nup-info">
-        <div class="nup-name" id="nav-user">—</div>
-        <div class="nup-sub">Plano Gratuito</div>
+      <span class="nup-name" id="nav-user">—</span>
+    </div>
+    <button class="btn-sair" onclick="sair()">Sair</button>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- SIDEBAR IDÊNTICA AO PAINEL -->
+  <aside class="sidebar">
+    <div class="sb-section">Menu principal</div>
+    <div class="sb-item" onclick="window.location.href='painel.html'">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+      <span>Início</span>
+    </div>
+    <div class="sb-item active">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+      <span>Questões do dia</span>
+      <span class="sb-badge" id="sb-badge">20</span>
+    </div>
+    <div class="sb-item" onclick="window.location.href='plano.html'">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
+      <span>Meu plano de estudos</span>
+    </div>
+    <div class="sb-item" onclick="window.location.href='desempenho.html'">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M8 21V10M12 21V3M16 21v-7M4 21v-4"/></svg></div>
+      <span>Desempenho</span>
+    </div>
+    <div class="sb-item" onclick="window.location.href='anotacoes.html'">
+      <div class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+      <span>Anotações</span>
+    </div>
+    <div class="sb-item" onclick="window.location.href='simulados.html'">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      <span>Simulados</span>
+    </div>
+    <div class="sb-item" onclick="alert('Em breve!')">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+      <span>Relatórios</span>
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-section">Minha jornada</div>
+    <div class="sb-item active">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <span id="sb-concurso-label">Carregando...</span>
+    </div>
+    <div class="sb-spacer"></div>
+    <div class="sb-plan">
+      <div class="sb-plan-row">
+        <div class="sb-plan-label">Plano atual</div>
+        <div class="sb-plan-badge">Grátis
+      <div class="sb-plan-name">Plano Gratuito</div>
+      <div class="sb-plan-desc">20 questões por dia.</div>
+      <button class="sb-plan-btn" onclick="alert('Em breve!')">Fazer upgrade para Pro →</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="page-hd">
+      <div>
+        <h1 class="page-title">Questões do <em>dia</em></h1>
+        <p class="page-sub">Resolva questões no padrão da sua banca e acompanhe sua evolução.</p>
       </div>
     </div>
-  </div>
-</aside>
-<div class="overlay" id="overlay"></div>
 
-<div class="main">
-  <header class="topbar">
-    <button class="mobile-menu-btn" id="mobile-menu-btn">
-      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-    </button>
-    <div>
-      <div class="topbar-title">Questões do <em>dia</em></div>
-      <div class="topbar-sub">Resolva questões no padrão da sua banca</div>
-    </div>
-  </header>
-
-  <div class="content">
-
-    <!-- Progresso -->
+    <!-- PROGRESSO -->
     <div class="prog-card">
       <div class="prog-info">
         <div class="prog-label">
@@ -250,46 +329,37 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
       </div>
     </div>
 
-    <!-- Grid principal -->
     <div class="q-grid">
 
-      <!-- Coluna questão -->
+      <!-- QUESTÃO -->
       <div class="q-card">
         <div class="q-header">
           <div class="q-header-left">
             <div class="q-label">Questão</div>
-            <span class="q-chip" id="q-disciplina">—</span>
-            <span class="q-chip gold" id="q-banca">—</span>
+            <div class="q-chips">
+              <span class="q-chip" id="q-disciplina">—</span>
+              <span class="q-chip gold" id="q-banca">—</span>
+            </div>
           </div>
-          <!-- Filtros compactos dentro do header -->
           <div class="q-filters">
-            <div class="q-filter-wrap">
-              <div class="q-filter-label">Disciplina</div>
-              <select class="q-filter" id="sel-disciplina">
-                <option value="">Aleatória</option>
-                <option value="Direito Constitucional">Dir. Constitucional</option>
-                <option value="Direito Administrativo">Dir. Administrativo</option>
-                <option value="Raciocínio Lógico">Raciocínio Lógico</option>
-                <option value="Português">Português</option>
-                <option value="Direito Penal">Direito Penal</option>
-                <option value="Direito Civil">Direito Civil</option>
-                <option value="Informática">Informática</option>
-                <option value="Matemática">Matemática</option>
-              </select>
-            </div>
-            <div class="q-filter-wrap">
-              <div class="q-filter-label">Banca</div>
-              <select class="q-filter" id="sel-banca">
-                <option value="">Aleatória</option>
-                <option value="CESPE">CESPE</option>
-                <option value="FCC">FCC</option>
-                <option value="FGV">FGV</option>
-                <option value="VUNESP">VUNESP</option>
-                <option value="IBFC">IBFC</option>
-                <option value="AOCP">AOCP</option>
-                <option value="IADES">IADES</option>
-              </select>
-            </div>
+            <select class="q-filter" id="sel-disciplina">
+              <option value="">Disciplina</option>
+              <option value="Direito Constitucional">Dir. Constitucional</option>
+              <option value="Direito Administrativo">Dir. Administrativo</option>
+              <option value="Raciocínio Lógico">Raciocínio Lógico</option>
+              <option value="Português">Português</option>
+              <option value="Direito Penal">Direito Penal</option>
+              <option value="Direito Civil">Direito Civil</option>
+              <option value="Informática">Informática</option>
+            </select>
+            <select class="q-filter" id="sel-banca">
+              <option value="">Banca</option>
+              <option value="CESPE">CESPE</option>
+              <option value="FCC">FCC</option>
+              <option value="FGV">FGV</option>
+              <option value="VUNESP">VUNESP</option>
+              <option value="IBFC">IBFC</option>
+            </select>
           </div>
         </div>
 
@@ -302,7 +372,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
             <p class="q-text" id="q-text"></p>
             <div class="opcoes" id="opcoes"></div>
             <div class="gabarito" id="gabarito">
-              <div class="gab-label">✦ Explicação</div>
+              <div class="gab-label">Explicação da IA</div>
               <p class="gab-text" id="gab-text"></p>
             </div>
           </div>
@@ -314,81 +384,82 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
         </div>
       </div>
 
-      <!-- Coluna direita -->
+      <!-- COLUNA DIREITA -->
       <div class="right-col">
 
-        <!-- Card concurso -->
-        <div class="concurso-card" id="concurso-card" style="display:none">
-          <div class="concurso-icon">
-            <svg width="16" height="16" fill="none" stroke="var(--gold)" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
-          <div>
-            <div class="concurso-label">Seu concurso</div>
-            <div class="concurso-nome" id="concurso-nome">—</div>
+        <div class="r-card">
+          <div class="r-header"><div class="r-title">Sessão de hoje</div></div>
+          <div class="r-body">
+            <div class="s-row">
+              <span class="s-label">Respondidas</span>
+              <span class="s-val" style="color:var(--gold)" id="s-resp">0</span>
+            </div>
+            <div class="s-row">
+              <span class="s-label">Acertos</span>
+              <span class="s-val" style="color:var(--green)" id="s-ok">0</span>
+            </div>
+            <div class="s-row">
+              <span class="s-label">Erros</span>
+              <span class="s-val" style="color:var(--red)" id="s-err">0</span>
+            </div>
+            <div class="s-row">
+              <span class="s-label">Taxa</span>
+              <span class="s-val" style="color:var(--gold);font-size:1.1rem" id="s-taxa">—</span>
+            </div>
           </div>
         </div>
 
-        <!-- Sessão -->
         <div class="r-card">
-          <div class="r-header">
-            <div class="r-icon"><svg width="13" height="13" fill="none" stroke="var(--gold)" stroke-width="1.8" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></div>
-            <div class="r-title">Sessão de hoje</div>
-          </div>
+          <div class="r-header"><div class="r-title">Últimas respondidas</div></div>
           <div class="r-body">
-            <div class="s-row"><span class="s-label"><span class="s-dot" style="background:var(--gold)"></span>Respondidas</span><span class="s-val" style="color:var(--gold)" id="s-resp">0</span></div>
-            <div class="s-row"><span class="s-label"><span class="s-dot" style="background:var(--green)"></span>Acertos</span><span class="s-val" style="color:var(--green)" id="s-ok">0</span></div>
-            <div class="s-row"><span class="s-label"><span class="s-dot" style="background:var(--red)"></span>Erros</span><span class="s-val" style="color:var(--red)" id="s-err">0</span></div>
-            <div class="s-row"><span class="s-label"><span class="s-dot" style="background:var(--muted)"></span>Taxa</span><span class="s-val" style="color:var(--gold);font-size:1.1rem" id="s-taxa">—</span></div>
-          </div>
-        </div>
-
-        <!-- Histórico -->
-        <div class="r-card">
-          <div class="r-header">
-            <div class="r-icon"><svg width="13" height="13" fill="none" stroke="var(--gold)" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
-            <div class="r-title">Últimas respondidas</div>
-          </div>
-          <div class="r-body">
-            <div id="hist-list"><div class="hist-empty">Nenhuma questão respondida ainda</div></div>
+            <div id="hist-list">
+              <div class="hist-empty">Nenhuma questão respondida ainda</div>
+            </div>
           </div>
         </div>
 
       </div>
     </div>
-  </div>
+  </main>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const sb=supabase.createClient('https://lklmzhunhiwqsbhnymaw.supabase.co','sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU');
+const{createClient}=supabase;
+const sb=createClient('https://lklmzhunhiwqsbhnymaw.supabase.co','sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU');
+
 let questoesHoje=0,acertos=0,respondidas=0,questaoAtual=null;
-let disciplinaAtual='',bancaAtual='',historico=[];
-let userId=null,perfilAluno=null;
+let disciplinaAtual='',bancaAtual='';
+let historico=[];
+let userId=null;
+
+let perfilAluno = null;
 
 async function init(){
   const{data:{session}}=await sb.auth.getSession();
   if(!session){window.location.href='login.html';return;}
   userId=session.user.id;
-  const nome=session.user.user_metadata?.nome||session.user.user_metadata?.full_name||session.user.email.split('@')[0]||'';
-  const ini=nome.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
-  document.getElementById('nav-avatar').textContent=ini;
-  document.getElementById('nav-user').textContent=nome;
-  const collapsed=localStorage.getItem('vofor_sb_collapsed')==='true';
-  if(collapsed)document.getElementById('sidebar').classList.add('collapsed');
+  const nome=session.user.user_metadata?.full_name||session.user.email.split('@')[0]||'';
+  const elUser=document.getElementById('nav-user');
+  if(elUser)elUser.textContent=nome;
+  const elAv=document.getElementById('nav-avatar');
+  if(elAv)elAv.textContent=nome.substring(0,2).toUpperCase();
   await carregarPerfil();
   gerarQuestao();
 }
 
 async function carregarPerfil(){
   try{
-    const{data}=await sb.from('perfis').select('*').eq('id',userId).single();
-    if(data){
-      perfilAluno=data;
-      if(data.concurso){
-        document.getElementById('concurso-nome').textContent=data.concurso;
-        document.getElementById('concurso-card').style.display='flex';
+    const{data:perfil}=await sb.from('perfis').select('*').eq('id',userId).single();
+    if(perfil){
+      perfilAluno=perfil;
+      const label=document.getElementById('sb-concurso-label');
+      if(label&&perfil.concurso){
+        const s=perfil.concurso.length>28?perfil.concurso.substring(0,28)+'...':perfil.concurso;
+        label.textContent=s;
       }
     }
-  }catch(e){}
+  }catch(e){console.log('Perfil:',e)}
 }
 
 async function gerarQuestao(){
@@ -397,28 +468,48 @@ async function gerarQuestao(){
   document.getElementById('q-loading').style.display='flex';
   document.getElementById('q-content').style.display='none';
   document.getElementById('gabarito').style.display='none';
+
   const disciplinas=['Direito Constitucional','Direito Administrativo','Raciocínio Lógico','Português','Direito Penal','Direito Civil','Informática'];
   const bancas=['CESPE','FCC','FGV','VUNESP','IBFC'];
   disciplinaAtual=document.getElementById('sel-disciplina').value||disciplinas[Math.floor(Math.random()*disciplinas.length)];
   bancaAtual=document.getElementById('sel-banca').value||bancas[Math.floor(Math.random()*bancas.length)];
   document.getElementById('q-banca').textContent=bancaAtual;
   document.getElementById('q-disciplina').textContent=disciplinaAtual;
+
   try{
-    const prompt='Crie uma questão de múltipla escolha de '+disciplinaAtual+(perfilAluno?.concurso?' para o concurso "'+perfilAluno.concurso+'"':'')+' no estilo da banca '+bancaAtual+' em nível '+(perfilAluno?.nivel||'intermediario')+'. Responda APENAS JSON: {"enunciado":"texto","opcoes":["A) ...","B) ...","C) ...","D) ...","E) ..."],"gabarito":"A","explicacao":"explicação","assunto":"assunto"}';
-    const r=await fetch('/api/groq',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'system',content:'Especialista em concursos públicos brasileiros. Responda APENAS JSON puro válido sem markdown.'},{role:'user',content:prompt}],temperature:0.6,max_tokens:700})});
-    const d=await r.json();
-    if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));
-    let txt=d.choices[0].message.content.replace(/```json|```/g,'').trim();
+    // Chama Groq diretamente — evita timeout do Vercel
+    const prompt='Crie uma questão de múltipla escolha de '+disciplinaAtual+
+      (perfilAluno?.concurso?' para o concurso "'+perfilAluno.concurso+'"':'')+
+      ' no estilo da banca '+bancaAtual+' em nível '+(perfilAluno?.nivel||'intermediario')+'.'+
+      ' Responda APENAS JSON: {"enunciado":"texto","opcoes":["A) ...","B) ...","C) ...","D) ...","E) ..."],"gabarito":"A","explicacao":"explicação","assunto":"assunto"}';
+
+    const groqR=await fetch('/api/groq',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        messages:[
+          {role:'system',content:'Especialista em concursos públicos brasileiros. Responda APENAS JSON puro válido sem markdown.'},
+          {role:'user',content:prompt}
+        ],
+        temperature:0.6,max_tokens:700
+      })
+    });
+    const groqData=await groqR.json();
+    if(groqData.error)throw new Error(groqData.error.message||JSON.stringify(groqData.error));
+    let txt=groqData.choices[0].message.content.replace(/```json|```/g,'').trim();
     const ji=txt.indexOf('{'),je=txt.lastIndexOf('}');
     if(ji>=0&&je>ji)txt=txt.substring(ji,je+1);
     questaoAtual=JSON.parse(txt);
     document.getElementById('q-text').textContent=questaoAtual.enunciado;
-    const el=document.getElementById('opcoes');el.innerHTML='';
+    const el=document.getElementById('opcoes');
+    el.innerHTML='';
     questaoAtual.opcoes.forEach(op=>{
       const letra=op.charAt(0);
-      const div=document.createElement('div');div.className='opcao';
+      const div=document.createElement('div');
+      div.className='opcao';
       div.innerHTML=`<span class="opcao-letra">${letra}</span><span>${op.substring(3)}</span>`;
-      div.onclick=()=>responder(div,letra);el.appendChild(div);
+      div.onclick=()=>responder(div,letra);
+      el.appendChild(div);
     });
     document.getElementById('q-loading').style.display='none';
     document.getElementById('q-content').style.display='block';
@@ -436,13 +527,38 @@ function responder(el,letra){
   respondidas++;
   const acertou=letra===questaoAtual.gabarito;
   if(acertou){el.classList.add('certa');acertos++;}
-  else{el.classList.add('errada');document.querySelectorAll('.opcao').forEach(o=>{if(o.querySelector('.opcao-letra').textContent===questaoAtual.gabarito)o.classList.add('certa');});}
+  else{
+    el.classList.add('errada');
+    document.querySelectorAll('.opcao').forEach(o=>{
+      if(o.querySelector('.opcao-letra').textContent===questaoAtual.gabarito)o.classList.add('certa');
+    });
+  }
   document.getElementById('gab-text').textContent=questaoAtual.explicacao;
   document.getElementById('gabarito').style.display='block';
+
   if(userId&&questaoAtual){
-    sb.from('questoes_respondidas').insert({user_id:userId,disciplina:disciplinaAtual,banca:bancaAtual,acertou,enunciado:questaoAtual.enunciado?.substring(0,300)||'',gabarito:questaoAtual.gabarito||''}).then(()=>{});
-    if(questaoAtual.assunto)sb.from('assuntos_respondidos').insert({user_id:userId,concurso:perfilAluno?.concurso||null,disciplina:disciplinaAtual,assunto:questaoAtual.assunto,banca:bancaAtual,acertou,nivel_questao:perfilAluno?.nivel||'intermediario'}).then(()=>{});
+    sb.from('questoes_respondidas').insert({
+      user_id:userId,
+      disciplina:disciplinaAtual,
+      banca:bancaAtual,
+      acertou,
+      enunciado:questaoAtual.enunciado?.substring(0,300)||'',
+      gabarito:questaoAtual.gabarito||''
+    }).then(()=>{});
+    // Salva também em assuntos_respondidos se tiver assunto
+    if(questaoAtual.assunto){
+      sb.from('assuntos_respondidos').insert({
+        user_id:userId,
+        concurso:perfilAluno?.concurso||null,
+        disciplina:disciplinaAtual,
+        assunto:questaoAtual.assunto,
+        banca:bancaAtual,
+        acertou,
+        nivel_questao:perfilAluno?.nivel||'intermediario'
+      }).then(()=>{});
+    }
   }
+
   questoesHoje++;
   const pct=Math.min(questoesHoje/20*100,100);
   document.getElementById('prog-txt').textContent=questoesHoje+' de 20 questões';
@@ -453,7 +569,10 @@ function responder(el,letra){
   document.getElementById('s-ok').textContent=acertos;
   document.getElementById('s-err').textContent=respondidas-acertos;
   document.getElementById('s-taxa').textContent=taxa+'%';
-  document.getElementById('sb-badge').textContent=Math.max(0,20-questoesHoje);
+
+  const restantes=Math.max(0,20-questoesHoje);
+  document.getElementById('sb-badge').textContent=restantes;
+
   historico.unshift({disciplina:disciplinaAtual,banca:bancaAtual,acertou});
   renderHistorico();
 }
@@ -461,24 +580,40 @@ function responder(el,letra){
 function renderHistorico(){
   const el=document.getElementById('hist-list');
   if(!historico.length){el.innerHTML='<div class="hist-empty">Nenhuma questão respondida ainda</div>';return;}
-  el.innerHTML=historico.slice(0,8).map(h=>`<div class="hist-item"><div class="hist-ico ${h.acertou?'h-ok':'h-err'}">${h.acertou?'✓':'✗'}</div><div class="hist-disc">${h.disciplina}</div><div class="hist-banca">${h.banca}</div></div>`).join('');
+  el.innerHTML=historico.slice(0,8).map(h=>`
+    <div class="hist-item">
+      <div class="hist-ico ${h.acertou?'h-ok':'h-err'}">${h.acertou?'✓':'✗'}</div>
+      <div class="hist-disc">${h.disciplina}</div>
+      <div class="hist-banca">${h.banca}</div>
+    </div>`).join('');
 }
 
-document.getElementById('sidebar-toggle').addEventListener('click',()=>{
-  const s=document.getElementById('sidebar');
-  s.classList.toggle('collapsed');
-  localStorage.setItem('vofor_sb_collapsed',s.classList.contains('collapsed'));
-});
-document.getElementById('mobile-menu-btn')?.addEventListener('click',()=>{
-  document.getElementById('sidebar').classList.add('mobile-open');
-  document.getElementById('overlay').classList.add('show');
-});
-document.getElementById('overlay').addEventListener('click',()=>{
-  document.getElementById('sidebar').classList.remove('mobile-open');
-  document.getElementById('overlay').classList.remove('show');
-});
 async function sair(){await sb.auth.signOut();window.location.href='index.html';}
 init();
 </script>
+
+<div class="mobile-nav">
+  <div class="mn-item" onclick="window.location.href='painel.html'">
+    <svg class="mn-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+    <span class="mn-label">Início</span>
+  </div>
+  <div class="mn-item active" onclick="window.location.href='questoes.html'">
+    <svg class="mn-icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+    <span class="mn-label">Questões</span>
+  </div>
+  <div class="mn-item" onclick="window.location.href='plano.html'">
+    <svg class="mn-icon" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+    <span class="mn-label">Plano</span>
+  </div>
+  <div class="mn-item" onclick="window.location.href='anotacoes.html'">
+    <svg class="mn-icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    <span class="mn-label">Notas</span>
+  </div>
+  <div class="mn-item" onclick="sair()">
+    <svg class="mn-icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    <span class="mn-label">Sair</span>
+  </div>
+</div>
+
 </body>
 </html>
