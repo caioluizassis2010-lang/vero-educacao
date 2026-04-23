@@ -17,7 +17,7 @@
   --gold2:#ccc8c2;
   --text:#ede8e2;
   --muted:#8a7d70;
-  --muted2:rgba(180,200,255,0.3);
+  --muted2:rgba(200,188,175,0.28);
   --border:rgba(180,175,168,0.15);
   --border2:rgba(180,175,168,0.28);
   --green:#0fa968;
@@ -483,11 +483,10 @@ async function gerarQuestao(){
       ' no estilo da banca '+bancaAtual+' em nível '+(perfilAluno?.nivel||'intermediario')+'.'+
       ' Responda APENAS JSON: {"enunciado":"texto","opcoes":["A) ...","B) ...","C) ...","D) ...","E) ..."],"gabarito":"A","explicacao":"explicação","assunto":"assunto"}';
 
-    const groqR=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+    const groqR=await fetch('/api/groq',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer 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'},
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'llama-3.3-70b-versatile',
         messages:[
           {role:'system',content:'Especialista em concursos públicos brasileiros. Responda APENAS JSON puro válido sem markdown.'},
           {role:'user',content:prompt}

@@ -3,745 +3,654 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vofor — Meu Plano de Estudos</title>
+<title>Meu Plano — VOFOR Educação</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#0f0d0b;--bg2:#1c1814;--bg3:#2e2520;--bg4:#080604;
-  --gold:#b4afa8;--gold2:#ccc8c2;
+  --gold:#b4afa8;--gold2:#ccc8c2;--gold3:#8a8680;
   --text:#ede8e2;--muted:#8a7d70;--muted2:rgba(200,188,175,0.28);
   --border:rgba(180,175,168,0.15);--border2:rgba(180,175,168,0.35);
-  --green:#0fa968;--red:#e05454;--blue:#378add;--purple:#7B6FE8;
-  --radius:12px;
+  --green:#0fa968;--red:#e05454;--radius:12px;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg4);color:var(--text);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
-a{text-decoration:none;color:inherit}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;overflow-x:hidden}
 
-nav{padding:0 28px;height:58px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg4);position:sticky;top:0;z-index:100}
-.brand{display:inline-flex;align-items:center;gap:12px}
-.brand-mark{width:34px;height:34px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.15);background:#1a1a1a;color:#ffffff;display:grid;place-items:center;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700}
-.brand-name{font-family:'Playfair Display',serif;color:var(--text);letter-spacing:3px;font-size:.95rem;font-weight:600}
-.nav-right{display:flex;align-items:center;gap:12px}
-.nav-user{font-size:.78rem;color:var(--text);font-weight:500;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.nav-back{font-size:12px;color:var(--muted);padding:6px 14px;border:1px solid var(--border);border-radius:7px;cursor:pointer;transition:all .15s;font-weight:500}
-.nav-back:hover{color:var(--gold);border-color:var(--border2)}
-.btn-sair{font-size:12px;color:var(--muted);padding:6px 14px;border:1px solid var(--border);border-radius:7px;cursor:pointer;background:none;font-family:'Outfit',sans-serif;transition:all .15s}
-.btn-sair:hover{color:var(--gold);border-color:var(--border2)}
+/* ── SIDEBAR ── */
+.sidebar{
+  width:240px;min-height:100vh;background:var(--bg4);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;
+  transition:width .25s ease,transform .25s ease;z-index:100;
+}
+.sidebar.collapsed{width:64px}
+.sidebar-header{padding:20px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);min-height:68px}
+.brand-mark{width:34px;height:34px;background:var(--gold);color:var(--bg4);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:.85rem;flex-shrink:0}
+.brand-name{font-family:'Playfair Display',serif;letter-spacing:3px;font-size:.9rem;font-weight:600;line-height:1;display:flex;flex-direction:column;align-items:center;overflow:hidden;transition:opacity .2s,width .2s}
+.brand-edu{display:block;font-size:.42rem;letter-spacing:.22em;color:var(--muted);font-weight:500;font-family:'Outfit',sans-serif;text-transform:uppercase;text-align:center;margin-top:2px}
+.sidebar.collapsed .brand-name{opacity:0;width:0}
+.sidebar-toggle{margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;border-radius:6px;flex-shrink:0;transition:color .2s}
+.sidebar-toggle:hover{color:var(--text)}
+.sidebar-nav{flex:1;padding:12px 8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 10px;border-radius:10px;color:var(--muted);text-decoration:none;font-size:.875rem;font-weight:500;transition:all .15s;white-space:nowrap;overflow:hidden}
+.nav-item:hover{background:var(--muted2);color:var(--text)}
+.nav-item.active{background:rgba(180,175,168,0.12);color:var(--gold2)}
+.nav-item svg{flex-shrink:0}
+.nav-label{overflow:hidden;transition:opacity .2s,width .2s;opacity:1}
+.sidebar.collapsed .nav-label{opacity:0;width:0}
+.sidebar-footer{padding:12px 8px;border-top:1px solid var(--border)}
+.nav-user-pill{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer;transition:background .15s}
+.nav-user-pill:hover{background:var(--muted2)}
+.nup-avatar{width:28px;height:28px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:600;color:var(--gold2);flex-shrink:0}
+.nup-name{font-size:.8rem;color:var(--muted);overflow:hidden;transition:opacity .2s,width .2s}
+.sidebar.collapsed .nup-name{opacity:0;width:0}
 
-.layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 58px)}
+/* ── MAIN ── */
+.main{flex:1;margin-left:240px;min-height:100vh;transition:margin-left .25s ease;display:flex;flex-direction:column}
+.sidebar.collapsed ~ .main{margin-left:64px}
 
-/* SIDEBAR */
-.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:28px 16px 24px;display:flex;flex-direction:column;gap:2px}
-.sb-section{font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted2);padding:0 14px;margin:22px 0 8px}
-.sb-section:first-child{margin-top:0}
-.sb-item{display:flex;align-items:center;gap:13px;padding:11px 14px;border-radius:9px;font-size:14px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .18s;border:1px solid transparent;margin-bottom:2px}
-.sb-item:hover{background:rgba(200,188,175,0.05);color:var(--text)}
-.sb-item.active{background:rgba(180,175,168,0.08);color:var(--gold);border-color:rgba(180,175,168,0.18)}
-.sb-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(200,188,175,0.05);flex-shrink:0}
-.sb-item.active .sb-icon{background:rgba(180,175,168,0.1);border:1px solid rgba(180,175,168,0.22)}
-.sb-icon svg{width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-.sb-item.active .sb-icon svg,.sb-item:hover .sb-icon svg{stroke:var(--gold)}
-.sb-divider{height:1px;background:var(--border);margin:12px 4px}
-.sb-spacer{flex:1}
-.sb-plan{margin:0 0 4px;padding:14px;background:rgba(232,201,122,0.05);border:1px solid rgba(180,175,168,0.18);border-radius:10px}
-.sb-plan-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.sb-plan-label{font-size:9px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;font-weight:600}
-.sb-plan-badge{font-size:9px;font-weight:700;padding:2px 8px;background:rgba(180,175,168,0.15);color:var(--gold);border-radius:100px;border:1px solid rgba(180,175,168,0.28)}
-.sb-plan-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
-.sb-plan-desc{font-size:11px;color:var(--muted2);font-weight:300;margin-bottom:10px}
-.sb-plan-btn{width:100%;padding:8px;background:var(--gold);color:#1c1814;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Outfit',sans-serif;transition:all .15s}
-.sb-plan-btn:hover{background:var(--gold2)}
+/* ── TOPBAR ── */
+.topbar{padding:16px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;background:var(--bg);position:sticky;top:0;z-index:50}
+.topbar-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600;color:var(--gold2)}
+.topbar-sub{font-size:.8rem;color:var(--muted);margin-left:auto}
 
-/* MAIN */
-.main{padding:28px 30px;overflow-y:auto}
-@media(max-width:768px){.main{padding:16px 14px 80px}}
+/* ── CONTENT ── */
+.content{padding:28px;max-width:960px;width:100%;flex:1}
 
-.page-hd{margin-bottom:28px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:14px}
-.page-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;line-height:1.1}
-.page-title em{font-style:italic;color:var(--gold)}
-.page-sub{font-size:12px;color:var(--muted);margin-top:5px;font-weight:300}
-.btn-gerar{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;background:var(--gold);color:#1c1814;border:none;border-radius:9px;font-size:.88rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .18s}
-.btn-gerar:hover{background:var(--gold2);transform:translateY(-1px)}
-.btn-gerar:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.btn-gerar svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+/* ── PLAN HEADER ── */
+.plan-header{margin-bottom:28px}
+.plan-concurso{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--gold2);font-weight:600;margin-bottom:6px}
+.plan-meta{font-size:.85rem;color:var(--muted);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.plan-meta span{display:flex;align-items:center;gap:5px}
+.badge-nivel{padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.badge-nivel.iniciante{background:rgba(15,169,104,.12);color:var(--green)}
+.badge-nivel.intermediario{background:rgba(180,175,168,.1);color:var(--gold)}
+.badge-nivel.avancado{background:rgba(224,84,84,.1);color:var(--red)}
 
-/* PERFIL CARD */
-.perfil-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;margin-bottom:22px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
-.pc-item{display:flex;flex-direction:column;gap:3px}
-.pc-label{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2)}
-.pc-value{font-size:13px;font-weight:600;color:var(--text)}
-.pc-divider{width:1px;height:32px;background:var(--border);flex-shrink:0}
+/* ── PROGRESS CARD ── */
+.progress-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;gap:20px}
+.progress-ring-wrap{position:relative;flex-shrink:0}
+.progress-ring-wrap svg{transform:rotate(-90deg)}
+.progress-ring-bg{fill:none;stroke:var(--border2);stroke-width:5}
+.progress-ring-fill{fill:none;stroke:var(--green);stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset .6s ease}
+.progress-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:600;color:var(--green);font-family:'Playfair Display',serif}
+.progress-info{flex:1}
+.progress-title{font-size:1rem;font-weight:600;color:var(--text);margin-bottom:4px}
+.progress-desc{font-size:.82rem;color:var(--muted)}
+.progress-counts{display:flex;gap:20px;margin-top:10px}
+.progress-counts span{font-size:.82rem;color:var(--muted)}
+.progress-counts strong{color:var(--text)}
+.sync-badge{font-size:.72rem;padding:3px 10px;border-radius:20px;background:rgba(15,169,104,.1);color:var(--green);border:1px solid rgba(15,169,104,.2)}
+.sync-badge.syncing{background:rgba(180,175,168,.08);color:var(--muted);border-color:var(--border)}
 
-/* LOADING STATE */
-.loading-wrap{text-align:center;padding:80px 20px}
-.loading-spinner{width:44px;height:44px;border:3px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 20px}
+/* ── WEEK TABS ── */
+.week-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.week-tab{padding:7px 16px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:.82rem;font-family:'Outfit',sans-serif;cursor:pointer;transition:all .15s;font-weight:500}
+.week-tab:hover{border-color:var(--border2);color:var(--text)}
+.week-tab.active{background:var(--gold);color:var(--bg4);border-color:var(--gold);font-weight:600}
+
+/* ── DISCIPLINE SECTION ── */
+.disc-section{margin-bottom:20px}
+.disc-header{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius) var(--radius) 0 0;cursor:pointer;user-select:none;transition:background .15s}
+.disc-header:hover{background:var(--bg3)}
+.disc-icon{width:8px;height:8px;border-radius:50%;background:var(--gold3);flex-shrink:0}
+.disc-name{font-weight:600;font-size:.92rem;flex:1}
+.disc-progress-mini{font-size:.78rem;color:var(--muted)}
+.disc-chevron{color:var(--muted);transition:transform .25s}
+.disc-chevron.open{transform:rotate(180deg)}
+.disc-body{border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);overflow:hidden;display:none}
+.disc-body.open{display:block}
+
+/* ── TASK ITEM ── */
+.task-item{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;border-bottom:1px solid var(--border);transition:background .12s}
+.task-item:last-child{border-bottom:none}
+.task-item:hover{background:rgba(180,175,168,.03)}
+.task-item.done{opacity:.55}
+.task-cb{position:relative;flex-shrink:0;margin-top:1px}
+.task-cb input{position:absolute;opacity:0;width:0;height:0}
+.task-cb label{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;background:transparent}
+.task-cb input:checked + label{background:var(--green);border-color:var(--green)}
+.task-cb input:checked + label::after{content:'';width:5px;height:9px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg);margin-top:-2px}
+.task-body{flex:1}
+.task-assunto{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:3px}
+.task-tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{padding:2px 8px;border-radius:4px;font-size:.7rem;background:var(--muted2);color:var(--muted)}
+.tag.alta{background:rgba(224,84,84,.1);color:var(--red)}
+.tag.media{background:rgba(180,175,168,.1);color:var(--gold)}
+.tag.baixa{background:rgba(15,169,104,.08);color:var(--green)}
+.task-meta-right{text-align:right;flex-shrink:0}
+.task-questoes{font-size:.78rem;color:var(--muted);white-space:nowrap}
+
+/* ── GENERATE BUTTON ── */
+.gen-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;text-align:center}
+.gen-icon{font-size:3rem;margin-bottom:16px;opacity:.4}
+.gen-title{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--gold2);margin-bottom:8px}
+.gen-desc{font-size:.88rem;color:var(--muted);margin-bottom:28px;max-width:380px;line-height:1.6}
+.btn-gen{padding:14px 32px;background:var(--gold);color:var(--bg4);border:none;border-radius:10px;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px}
+.btn-gen:hover{background:var(--gold2);transform:translateY(-1px)}
+.btn-gen:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-gen .spinner{width:16px;height:16px;border:2px solid rgba(0,0,0,.2);border-top-color:var(--bg4);border-radius:50%;animation:spin .7s linear infinite;display:none}
+.btn-gen.loading .spinner{display:block}
+.btn-gen.loading .btn-label{opacity:.6}
+
+/* ── REGEN BUTTON ── */
+.btn-regen{padding:8px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;font-family:'Outfit',sans-serif;font-size:.8rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
+.btn-regen:hover{border-color:var(--border2);color:var(--text)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;right:24px;padding:12px 18px;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;font-size:.85rem;color:var(--text);z-index:999;transform:translateY(60px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:8px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success .toast-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0}
+.toast.error .toast-dot{background:var(--red)}
+
+/* ── LOADING SKELETON ── */
+.skeleton{background:linear-gradient(90deg,var(--bg2) 25%,var(--bg3) 50%,var(--bg2) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:8px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-txt{font-size:.95rem;color:var(--muted);font-weight:300;margin-bottom:6px}
-.loading-sub{font-size:.82rem;color:var(--muted2);font-weight:300}
 
-/* ESTADO VAZIO */
-.empty-wrap{text-align:center;padding:80px 20px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius)}
-.empty-icon{font-size:44px;margin-bottom:16px;opacity:.7}
-.empty-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:8px}
-.empty-sub{font-size:.9rem;color:var(--muted);font-weight:300;max-width:400px;margin:0 auto 28px;line-height:1.7}
-
-/* PLANO GERADO */
-.plano-wrap{display:flex;flex-direction:column;gap:20px}
-
-/* RESUMO DO PLANO */
-.plano-resumo{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 28px;display:flex;align-items:center;justify-content:space-around;gap:0}
-.pr-item{text-align:center;padding:0 20px;position:relative}
-.pr-item+.pr-item::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);height:28px;width:1px;background:var(--border)}
-.pr-num{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--gold);line-height:1;margin-bottom:4px}
-.pr-label{font-size:9px;color:var(--muted2);font-weight:500;text-transform:uppercase;letter-spacing:.12em}
-
-/* SEMANAS */
-.semana-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
-.semana-header{padding:14px 20px;background:var(--bg3);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background .15s}
-.semana-header:hover{background:rgba(13,21,64,0.9)}
-.semana-left{display:flex;align-items:center;gap:12px}
-.semana-num{width:28px;height:28px;border-radius:7px;background:rgba(180,175,168,0.1);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--gold)}
-.semana-titulo{font-size:.95rem;font-weight:600;color:var(--text)}
-.semana-sub{font-size:11px;color:var(--muted2);margin-top:2px;font-weight:300}
-.semana-prog{display:flex;align-items:center;gap:10px}
-.semana-pct{font-size:12px;color:var(--muted2)}
-.semana-chevron{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;transition:transform .2s}
-.semana-chevron.open{transform:rotate(180deg)}
-.semana-body{display:none;padding:16px 20px;display:flex;flex-direction:column;gap:10px}
-
-/* DISCIPLINA ITEM */
-.disc-item{background:var(--bg3);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .2s}
-.disc-item.done-disc{opacity:.65}
-.disc-item.done-disc .disc-nome{text-decoration:line-through;color:var(--muted2)}
-.disc-header{padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer}
-.disc-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.disc-info{flex:1}
-.disc-nome{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
-.disc-meta{font-size:11px;color:var(--muted2);font-weight:300}
-.disc-right{display:flex;align-items:center;gap:8px}
-.disc-prioridade{font-size:9px;font-weight:700;padding:3px 9px;border-radius:100px}
-.prio-alta{background:rgba(224,84,84,.12);color:var(--red);border:1px solid rgba(224,84,84,.25)}
-.prio-media{background:rgba(232,201,122,.1);color:var(--gold);border:1px solid var(--border2)}
-.prio-baixa{background:rgba(15,169,104,.1);color:var(--green);border:1px solid rgba(15,169,104,.25)}
-.disc-check{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;background:transparent}
-.disc-check:hover{border-color:var(--green);background:rgba(15,169,104,0.08)}
-.disc-check.done{background:var(--green);border-color:var(--green)}
-.disc-check svg{width:11px;height:11px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;display:none}
-.disc-check.done svg{display:block}
-
-/* ASSUNTOS */
-.assuntos-lista{padding:0 16px 14px;display:flex;flex-direction:column;gap:6px}
-.assunto-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg2);border-radius:7px;border:1px solid var(--border);transition:all .18s}
-.assunto-item:hover{border-color:var(--border2)}
-.assunto-item.done-item{opacity:.55}
-.assunto-item.done-item .as-nome{text-decoration:line-through;color:var(--muted2)}
-.as-bullet{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.as-nome{flex:1;font-size:12px;color:var(--text);font-weight:300}
-.as-qtd{font-size:10px;color:var(--muted2);white-space:nowrap}
-.as-check{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;background:transparent}
-.as-check:hover{border-color:var(--green);background:rgba(15,169,104,0.08)}
-.as-check.done{background:var(--green);border-color:var(--green)}
-.as-check svg{width:10px;height:10px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;display:none}
-.as-check.done svg{display:block}
-
-/* ALERTA IA */
-.ia-tip{background:rgba(232,201,122,0.04);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:9px;padding:14px 18px;display:flex;gap:12px;align-items:flex-start}
-.ia-tip-icon{font-size:16px;flex-shrink:0;margin-top:1px}
-.ia-tip-txt{font-size:.88rem;color:var(--muted);font-weight:300;line-height:1.75}
-.ia-tip-strong{color:var(--text);font-weight:500}
-
-@media(max-width:960px){
-  .layout{grid-template-columns:1fr}
-  .sidebar{display:none}
-  .plano-resumo{grid-template-columns:1fr 1fr}
-}
-
-/* MOBILE */
-.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:60px;background:var(--bg2);border-top:1px solid var(--border);z-index:200;align-items:center;justify-content:space-around;padding:0 8px}
-.mn-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 10px;border-radius:9px;cursor:pointer;transition:all .18s;flex:1;color:var(--muted)}
-.mn-item.active{color:var(--gold)}
-.mn-icon{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-.mn-label{font-size:9px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
 @media(max-width:768px){
-  .layout{grid-template-columns:1fr !important}
-  .sidebar{display:none !important}
-  .mobile-nav{display:flex}
-  nav{padding:0 16px}
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.mobile-open{transform:translateX(0)}
+  .main{margin-left:0!important}
+  .content{padding:16px}
+  .progress-card{flex-direction:column;text-align:center}
+  .topbar{padding:14px 16px}
+  .mobile-menu-btn{display:flex!important}
 }
-@media(min-width:769px){.mobile-nav{display:none !important}}
-
-.nav-user-pill{
-  display:flex;align-items:center;gap:7px;
-  padding:5px 12px 5px 5px;
-  border:1px solid var(--border);border-radius:100px;
-  background:rgba(255,255,255,0.03);cursor:pointer;
-  transition:all .2s;text-decoration:none;
-}
-.nav-user-pill:hover{border-color:var(--border2)}
-.nup-avatar{
-  width:24px;height:24px;border-radius:50%;
-  background:rgba(180,175,168,0.18);border:1px solid var(--border2);
-  display:flex;align-items:center;justify-content:center;
-  font-size:.62rem;font-weight:700;color:var(--gold);
-  flex-shrink:0;font-family:'Playfair Display',serif;
-}
-.nup-name{font-size:.78rem;color:var(--text);font-weight:500;
-  max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
+.mobile-menu-btn{display:none;background:none;border:none;color:var(--text);cursor:pointer;padding:4px}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;display:none}
+.overlay.show{display:block}
 </style>
 </head>
 <body>
 
-<nav>
-  <a href="index.html" class="brand">
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
     <div class="brand-mark">VF</div>
-    <div class="brand-name">VOFOR</div>
-  </a>
-  <div class="nav-right">
-    <a href="painel.html" class="nav-back">← Painel</a>
+    <div class="brand-name">VOFOR<small class="brand-edu">educação</small></div>
+    <button class="sidebar-toggle" id="sidebar-toggle" title="Recolher menu">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="painel.html" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      <span class="nav-label">Início</span>
+    </a>
+    <a href="questoes.html" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+      <span class="nav-label">Questões do dia</span>
+    </a>
+    <a href="plano.html" class="nav-item active">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      <span class="nav-label">Meu plano</span>
+    </a>
+    <a href="desempenho.html" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <span class="nav-label">Desempenho</span>
+    </a>
+    <a href="anotacoes.html" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      <span class="nav-label">Anotações</span>
+    </a>
+    <a href="simulados.html" class="nav-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <span class="nav-label">Simulados</span>
+    </a>
+  </nav>
+  <div class="sidebar-footer">
     <div class="nav-user-pill" id="nav-pill">
       <div class="nup-avatar" id="nav-avatar">?</div>
       <span class="nup-name" id="nav-user">—</span>
     </div>
-    <button class="btn-sair" onclick="sair()">Sair</button>
   </div>
-</nav>
+</aside>
+<div class="overlay" id="overlay"></div>
 
-<div class="layout">
-  <aside class="sidebar">
-    <div class="sb-section">Menu principal</div>
-    <div class="sb-item" onclick="window.location.href='painel.html'">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
-      Início
-    </div>
-    <div class="sb-item" onclick="window.location.href='questoes.html'">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
-      Questões do dia
-    </div>
-    <div class="sb-item active">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
-      Meu plano
-    </div>
-    <div class="sb-item" onclick="window.location.href='desempenho.html'">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M8 21V10M12 21V3M16 21v-7M4 21v-4"/></svg></div>
-      Desempenho
-    </div>
-    <div class="sb-item" onclick="window.location.href='anotacoes.html'">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
-      Anotações
-    </div>
-    <div class="sb-item" onclick="window.location.href='simulados.html'">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
-      Simulados
-    </div>
-    <div class="sb-item" onclick="alert('Em breve!')">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-      Relatórios
-    </div>
-    <div class="sb-divider"></div>
-    <div class="sb-section">Minha jornada</div>
-    <div class="sb-item">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-      <span id="sb-concurso">—</span>
-    </div>
-    <div class="sb-spacer"></div>
-    <div class="sb-plan">
-      <div class="sb-plan-row">
-        <div class="sb-plan-label">Plano atual</div>
-        <div class="sb-plan-badge">Grátis
-      <div class="sb-plan-name">Plano Gratuito</div>
-      <div class="sb-plan-desc">20 questões por dia.</div>
-      <button class="sb-plan-btn" onclick="alert('Em breve!')">Upgrade →</button>
-    </div>
-  </aside>
-
-  <main class="main">
-    <div class="page-hd">
-      <div>
-        <h1 class="page-title">Meu plano de <em>estudos</em></h1>
-        <p class="page-sub" id="page-sub">Gerado pela IA com base no seu perfil e desempenho.</p>
-      </div>
-      <button class="btn-gerar" id="btn-gerar" onclick="gerarPlano()">
-        <svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+<!-- Main -->
+<div class="main">
+  <header class="topbar">
+    <button class="mobile-menu-btn" id="mobile-menu-btn">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <span class="topbar-title">Meu Plano de Estudos</span>
+    <div style="display:flex;align-items:center;gap:10px;margin-left:auto">
+      <span class="sync-badge syncing" id="sync-status">—</span>
+      <button class="btn-regen" id="btn-regen" style="display:none" onclick="regenerarPlano()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
         Gerar novo plano
       </button>
     </div>
+  </header>
 
-    <!-- PERFIL RESUMO -->
-    <div class="perfil-card" id="perfil-card" style="display:none">
-      <div class="pc-item">
-        <div class="pc-label">Concurso</div>
-        <div class="pc-value" id="pc-concurso">—</div>
-      </div>
-      <div class="pc-divider"></div>
-      <div class="pc-item">
-        <div class="pc-label">Nível</div>
-        <div class="pc-value" id="pc-nivel">—</div>
-      </div>
-      <div class="pc-divider"></div>
-      <div class="pc-item">
-        <div class="pc-label">Disponibilidade</div>
-        <div class="pc-value" id="pc-horas">—</div>
-      </div>
-      <div class="pc-divider"></div>
-      <div class="pc-item">
-        <div class="pc-label">Data da prova</div>
-        <div class="pc-value" id="pc-data">Não informada</div>
-      </div>
-      <div class="pc-divider"></div>
-      <div class="pc-item">
-        <div class="pc-label">Questões respondidas</div>
-        <div class="pc-value" id="pc-questoes">—</div>
-      </div>
+  <div class="content" id="content">
+    <!-- Carregando... -->
+    <div id="loading-state" style="padding:60px 0;text-align:center">
+      <div class="skeleton" style="height:24px;width:200px;margin:0 auto 12px"></div>
+      <div class="skeleton" style="height:16px;width:140px;margin:0 auto"></div>
     </div>
-
-    <!-- LOADING -->
-    <div id="loading-wrap" style="display:none">
-      <div class="loading-wrap">
-        <div class="loading-spinner"></div>
-        <div class="loading-txt">A IA está analisando seu perfil...</div>
-        <div class="loading-sub" id="loading-step">Carregando seus dados de desempenho</div>
-      </div>
-    </div>
-
-    <!-- VAZIO -->
-    <div id="empty-wrap">
-      <div class="empty-wrap">
-        <div class="empty-icon">🗓️</div>
-        <h2 class="empty-title">Seu plano personalizado</h2>
-        <p class="empty-sub">A IA vai analisar seu concurso, seu nível atual, seu desempenho por disciplina e criar um cronograma semanal sob medida para você.</p>
-        <button class="btn-gerar" onclick="gerarPlano()">
-          <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-          Gerar meu plano agora
-        </button>
-      </div>
-    </div>
-
-    <!-- PLANO GERADO -->
-    <div id="plano-wrap" style="display:none" class="plano-wrap"></div>
-
-  </main>
+    <div id="plan-container" style="display:none"></div>
+    <div id="empty-state" style="display:none"></div>
+  </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<!-- v2 -->
+<div class="toast" id="toast"><div class="toast-dot"></div><span id="toast-msg"></span></div>
+
 <script>
-const{createClient}=supabase;
-const sb=createClient('https://lklmzhunhiwqsbhnymaw.supabase.co','sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU');
+const SB_URL = 'https://lklmzhunhiwqsbhnymaw.supabase.co';
+const SB_KEY = 'sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU';
+// Chave Groq removida do frontend — agora fica em variável de ambiente no Vercel
+const sb = supabase.createClient(SB_URL, SB_KEY);
 
-const DISC_ICONS={
-  'Direito Penal':'⚖️','Direito Processual Penal':'🔍','Direito Constitucional':'📜',
-  'Direito Administrativo':'🏛️','Raciocínio Lógico':'🧠','Português':'📝',
-  'Informática':'💻','Matemática Financeira':'💰','Conhecimentos Bancários':'🏦',
-  'Conhecimentos Pedagógicos':'👨‍🏫','Didática':'📖','Direito Civil':'⚖️',
-  'Direito do Trabalho':'👷','Legislação Educacional':'📋','Conhecimentos Específicos':'🎯',
-};
-const DISC_COLORS=['#b4afa8','#0fa968','#378add','#e05454','#7B6FE8','#ccc8c2','#0F6E56'];
+let currentUser = null;
+let userPerfil = null;
+let planoData = [];  // [{semana, disciplina, assunto, meta_questoes, prioridade, concluido, id(supabase)}]
+let semanaAtiva = 1;
+let totalSemanas = 4;
 
-let userId=null, perfil=null, planoAtual=null;
+// ── INIT ──────────────────────────────────────────────────────────────────────
+async function init() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { window.location.href = 'login.html'; return; }
+  currentUser = session.user;
 
-// Mapa compacto de disciplinas por concurso
-const DISC_MAP={};
-function identificarEdital(c){
-  const u=(c||'').toUpperCase();
-  if(u.includes('PC-BA')||u.includes('INVESTIGADOR'))return 'pc_inv';
-  if(u.includes('PM-')||u.includes('SOLDADO'))return 'pm';
-  if(u.includes('INSS'))return 'inss';
-  if(u.includes('RECEITA'))return 'receita';
-  if(u.includes('BANCO DO BRASIL')||u.includes('BB —'))return 'bb';
-  if(u.includes('TJ')||u.includes('TRIBUNAL'))return 'tj';
-  if(u.includes('PF')||u.includes('POLÍCIA FEDERAL'))return 'pf';
-  if(u.includes('PRF'))return 'prf';
-  return 'generico';
+  // Avatar / nome
+  const nome = currentUser.user_metadata?.nome || currentUser.email.split('@')[0];
+  const iniciais = nome.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('nav-avatar').textContent = iniciais;
+  document.getElementById('nav-user').textContent = nome;
+
+  // Sidebar state
+  const collapsed = localStorage.getItem('vofor_sb_collapsed') === 'true';
+  if (collapsed) document.getElementById('sidebar').classList.add('collapsed');
+
+  await carregarPerfil();
+  await carregarPlano();
 }
-// Disciplinas compactas por chave
-const DISCS={
-  pc_inv:'Português(15%),Raciocínio Lógico(10%),Direito Constitucional(15%),Direito Penal(20%),Dir Processual Penal(15%),Legislação Especial(10%),Direito Administrativo(10%),Informática(5%)',
-  pm:'Português(20%),Matemática(15%),Raciocínio Lógico(10%),Direito Constitucional(15%),Direito Penal(15%),Direito Administrativo(10%),Conhecimentos Gerais(10%),Primeiros Socorros(5%)',
-  inss:'Português(15%),Raciocínio Lógico(10%),Direito Constitucional(10%),Direito Administrativo(15%),Direito Previdenciário(25%),Legislação Previdenciária(15%),Informática(10%)',
-  receita:'Direito Tributário(25%),Direito Aduaneiro(15%),Contabilidade(20%),Direito Constitucional(10%),Direito Administrativo(10%),Raciocínio Lógico(10%),TI(5%),Português(5%)',
-  bb:'Português(15%),Matemática(20%),Mercado Financeiro(15%),Conhecimentos Bancários(20%),Legislação(10%),Tecnologia(10%),Vendas(10%)',
-  tj:'Português(15%),Raciocínio Lógico(10%),Direito Constitucional(20%),Direito Administrativo(20%),Direito Civil(15%),Direito Processual Civil(15%),Informática(5%)',
-  pf:'Português(10%),Raciocínio Lógico(10%),Direito Constitucional(10%),Direito Administrativo(10%),Direito Penal(15%),Dir Processual Penal(15%),Legislação Especial(15%),Informática(5%),Inglês(5%),Inteligência(5%)',
-  prf:'Português(10%),Lógica e Matemática(15%),Direito Constitucional(10%),Direito Administrativo(10%),Legislação de Trânsito(25%),Direito Penal(15%),Legislação Especial(10%),Primeiros Socorros(5%)',
-  generico:'Português(20%),Raciocínio Lógico(15%),Direito Constitucional(20%),Direito Administrativo(25%),Informática(10%),Conhecimentos Específicos(10%)'
-};
 
+async function carregarPerfil() {
+  const { data } = await sb.from('perfis').select('*').eq('id', currentUser.id).single();
+  userPerfil = data;
+}
 
-async function init(){
-  const{data:{session}}=await sb.auth.getSession();
-  if(!session){window.location.href='login.html';return;}
-  userId=session.user.id;
-  const nome=session.user.user_metadata?.full_name||session.user.email.split('@')[0]||'';
-  const elUser=document.getElementById('nav-user');
-  if(elUser)elUser.textContent=nome;
-  const elAv=document.getElementById('nav-avatar');
-  if(elAv)elAv.textContent=nome.substring(0,2).toUpperCase();
+// ── CARREGAR PLANO ────────────────────────────────────────────────────────────
+async function carregarPlano() {
+  setSyncStatus('Carregando…', false);
 
-  const{data:p,error:pe}=await sb.from('perfis').select('*').eq('id',userId).single();
-  console.log('Perfil carregado:', p, 'Erro:', pe);
-  if(!p||!p.concurso){
-    console.warn('Perfil sem concurso — redirecionando para perfil.html');
-    window.location.href='perfil.html';
+  // 1. Tenta Supabase
+  const { data: sbData, error } = await sb
+    .from('planos_estudo')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .order('semana')
+    .order('prioridade');
+
+  if (!error && sbData && sbData.length > 0) {
+    planoData = sbData;
+    setSyncStatus('Sincronizado', true);
+    renderPlano();
     return;
   }
-  perfil=p;
-  console.log('Concurso:', p.concurso, 'Área:', p.area);
 
-  // Sidebar concurso
-  const el=document.getElementById('sb-concurso');
-  if(el){
-    const label=p.concurso.length>26?p.concurso.substring(0,26)+'...':p.concurso;
-    el.textContent=label;
-    el.title=p.concurso;
+  // 2. Fallback localStorage
+  const lsKey = `vofor_plano_${currentUser.id}`;
+  const ls = localStorage.getItem(lsKey);
+  if (ls) {
+    try {
+      const parsed = JSON.parse(ls);
+      planoData = parsed;
+      // Migra pro Supabase silenciosamente
+      await salvarPlanoSupabase(parsed, true);
+      setSyncStatus('Sincronizado', true);
+      renderPlano();
+      return;
+    } catch(e) {}
   }
 
-  // Preenche perfil card
-  document.getElementById('pc-concurso').textContent=p.concurso.length>30?p.concurso.substring(0,30)+'...':p.concurso;
-  document.getElementById('pc-nivel').textContent=({iniciante:'Iniciante',basico:'Básico',intermediario:'Intermediário',avancado:'Avançado'})[p.nivel]||p.nivel||'—';
-  document.getElementById('pc-horas').textContent=p.horas_dia||'—';
-  if(p.data_prova){
-    const d=new Date(p.data_prova+'T00:00:00');
-    document.getElementById('pc-data').textContent=d.toLocaleDateString('pt-BR');
-  }
-  document.getElementById('perfil-card').style.display='flex';
-
-  // Conta questões
-  const{count}=await sb.from('questoes_respondidas').select('*',{count:'exact',head:true}).eq('user_id',userId);
-  document.getElementById('pc-questoes').textContent=(count||0)+' questões';
-
-  // Verifica plano salvo
-  const saved=localStorage.getItem('vofor_plano_'+userId);
-  if(saved){
-    try{planoAtual=JSON.parse(saved);renderPlano(planoAtual);}catch(e){}
-  }
+  // 3. Sem plano
+  document.getElementById('loading-state').style.display = 'none';
+  document.getElementById('empty-state').style.display = 'block';
+  renderEmpty();
 }
 
-async function gerarPlano(){
-  const btn=document.getElementById('btn-gerar');
-  btn.disabled=true;
-  document.getElementById('empty-wrap').style.display='none';
-  document.getElementById('plano-wrap').style.display='none';
-  document.getElementById('loading-wrap').style.display='block';
+// ── RENDER PLANO ──────────────────────────────────────────────────────────────
+function renderPlano() {
+  document.getElementById('loading-state').style.display = 'none';
+  document.getElementById('empty-state').style.display = 'none';
+  const container = document.getElementById('plan-container');
+  container.style.display = 'block';
+  document.getElementById('btn-regen').style.display = 'flex';
 
-  const steps=['Carregando seus dados de desempenho','Analisando disciplinas mais cobradas','Calculando prioridades por assunto','Gerando cronograma semanal personalizado','Finalizando seu plano...'];
-  let si=0;
-  const stepTimer=setInterval(()=>{
-    if(si<steps.length){document.getElementById('loading-step').textContent=steps[si++];}
-  },1200);
+  totalSemanas = Math.max(...planoData.map(i => i.semana), 1);
 
-  try{
-    console.log('Gerando plano para:', perfil?.concurso, '| área:', perfil?.area);
-    // Busca desempenho real
-    const{data:qs}=await sb.from('questoes_respondidas').select('disciplina,acertou').eq('user_id',userId);
-    const desempenho={};
-    if(qs&&qs.length){
-      qs.forEach(q=>{
-        if(!desempenho[q.disciplina])desempenho[q.disciplina]={acertos:0,total:0};
-        desempenho[q.disciplina].total++;
-        if(q.acertou)desempenho[q.disciplina].acertos++;
-      });
-    }
+  // Stats
+  const total = planoData.length;
+  const done  = planoData.filter(i => i.concluido).length;
+  const pct   = total > 0 ? Math.round((done/total)*100) : 0;
+  const concurso = planoData[0]?.concurso || (userPerfil?.concurso || 'Seu Concurso');
+  const nivel = userPerfil?.nivel || 'intermediario';
 
-    // Calcula semanas
-    let numSemanas=4;
-    if(perfil.data_prova){
-      const dias=Math.ceil((new Date(perfil.data_prova+'T00:00:00')-new Date())/(864e5));
-      if(dias>0)numSemanas=Math.min(Math.max(Math.ceil(dias/7),4),6);
-    }
+  const circumference = 2 * Math.PI * 28;
+  const dash = circumference - (pct/100) * circumference;
 
-    const discList=(DISCS[identificarEdital(perfil.concurso)]||'Português(15%),Raciocínio Lógico(10%),Direito Constitucional(15%),Direito Administrativo(20%),Conhecimentos Específicos(40%)');
+  container.innerHTML = `
+    <div class="plan-header">
+      <div class="plan-concurso">${concurso}</div>
+      <div class="plan-meta">
+        <span class="badge-nivel ${nivel}">${nivel}</span>
+        <span>
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          ${totalSemanas} semanas
+        </span>
+        <span>
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          ${total} tópicos
+        </span>
+      </div>
+    </div>
 
-    const prompt='Crie plano de estudos JSON para: concurso="'+perfil.concurso+'", nivel='+
-      (perfil.nivel||'intermediario')+', '+(perfil.horas_dia||'2h')+'/dia, '+numSemanas+' semanas.'+
-      ' Disciplinas: '+discList+'.'+
-      ' REGRAS: 2 disciplinas por semana maximo, 2 assuntos por disciplina maximo, ultima semana e revisao.'+
-      ' RESPONDA APENAS JSON: {"semanas":[{"numero":1,"titulo":"string","foco":"string","tipo":"introducao","disciplinas":[{"nome":"string","peso":15,"prioridade":"alta","meta_questoes":20,"horas_semana":4,"assuntos":["assunto1","assunto2"]}]}],"dica_ia":"string","resumo":"string","total_semanas":'+numSemanas+',"total_horas":0,"disciplinas_criticas":[],"disciplinas_ok":[]}';
-
-    const groqR=await fetch('https://api.groq.com/openai/v1/chat/completions',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer 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'},
-      body:JSON.stringify({
-        model:'llama-3.3-70b-versatile',
-        messages:[
-          {role:'system',content:'Responda APENAS JSON puro válido sem markdown.'},
-          {role:'user',content:prompt}
-        ],
-        temperature:0.2,max_tokens:1500
-      })
-    });
-    const groqData=await groqR.json();
-    if(groqData.error)throw new Error(groqData.error.message||JSON.stringify(groqData.error));
-    let txt=groqData.choices[0].message.content.replace(/```json|```/g,'').trim();
-    const ji=txt.indexOf('{'),je=txt.lastIndexOf('}');
-    if(ji>=0&&je>ji)txt=txt.substring(ji,je+1);
-    planoAtual=JSON.parse(txt);
-
-    // Salva localmente e no Supabase
-    localStorage.setItem('vofor_plano_'+userId,JSON.stringify(planoAtual));
-    // Salva data de criação para calcular semana atual
-    if(!localStorage.getItem('vofor_plano_data_'+userId)){
-      localStorage.setItem('vofor_plano_data_'+userId, new Date().toISOString());
-    }
-    await salvarPlanoSupabase(planoAtual);
-
-    clearInterval(stepTimer);
-    document.getElementById('loading-wrap').style.display='none';
-    renderPlano(planoAtual);
-
-  }catch(err){
-    clearInterval(stepTimer);
-    document.getElementById('loading-wrap').style.display='none';
-    document.getElementById('empty-wrap').style.display='block';
-    document.getElementById('empty-wrap').querySelector('.empty-sub').innerHTML=
-      '<strong style="color:var(--red)">Erro: '+err.message+'</strong><br><br>Verifique se o arquivo api/plano.js foi enviado ao GitHub e tente novamente.';
-    console.error('Erro completo:', err);
-  }
-  btn.disabled=false;
-}
-
-async function salvarPlanoSupabase(plano){
-  if(!plano.semanas)return;
-  // Deleta plano anterior
-  await sb.from('planos_estudo').delete().eq('user_id',userId);
-  // Insere novo
-  const rows=[];
-  plano.semanas.forEach(s=>{
-    s.disciplinas?.forEach(d=>{
-      d.assuntos?.forEach(a=>{
-        rows.push({user_id:userId,concurso:perfil.concurso,semana:s.numero,disciplina:d.nome,assunto:a,meta_questoes:d.meta_questoes||20,prioridade:d.prioridade||'media',concluido:false});
-      });
-    });
-  });
-  if(rows.length)await sb.from('planos_estudo').insert(rows);
-}
-
-function renderPlano(plano){
-  document.getElementById('empty-wrap').style.display='none';
-  document.getElementById('loading-wrap').style.display='none';
-  const wrap=document.getElementById('plano-wrap');
-  wrap.style.display='flex';
-
-  const initChecks=JSON.parse(localStorage.getItem('vofor_checks_'+userId)||'{}');
-  let html='';
-
-  const totalDisc=new Set(plano.semanas?.flatMap(s=>s.disciplinas?.map(d=>d.nome)||[])||[]).size;
-  const totalAssuntos=plano.semanas?.reduce((a,s)=>(s.disciplinas?.reduce((b,d)=>b+(d.assuntos?.length||0),0)||0)+a,0)||0;
-  const totalHoras=plano.semanas?.reduce((a,s)=>(s.disciplinas?.reduce((b,d)=>b+(d.horas_semana||0),0)||0)+a,0)||plano.total_horas||0;
-
-  html+=`<div class="plano-resumo">
-    <div class="pr-item"><div class="pr-num">${plano.total_semanas||4}</div><div class="pr-label">Semanas</div></div>
-    <div class="pr-item"><div class="pr-num">${totalDisc}</div><div class="pr-label">Disciplinas</div></div>
-    <div class="pr-item"><div class="pr-num">${totalAssuntos}</div><div class="pr-label">Assuntos</div></div>
-    <div class="pr-item"><div class="pr-num">${totalHoras}h</div><div class="pr-label">Horas totais</div></div>
-  </div>`;
-
-  if(plano.resumo){
-    html+=`<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;font-size:.9rem;color:var(--muted);font-weight:300;line-height:1.7"><span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted2);display:block;margin-bottom:6px">Resumo do plano</span>${plano.resumo}</div>`;
-  }
-
-  if(plano.disciplinas_criticas?.length||plano.disciplinas_ok?.length){
-    let tags='';
-    plano.disciplinas_criticas?.forEach(d=>{tags+=`<span style="font-size:11px;padding:4px 12px;border-radius:100px;background:rgba(224,84,84,.1);color:var(--red);border:1px solid rgba(224,84,84,.25)">⚠️ ${d}</span>`;});
-    plano.disciplinas_ok?.forEach(d=>{tags+=`<span style="font-size:11px;padding:4px 12px;border-radius:100px;background:rgba(15,169,104,.08);color:var(--green);border:1px solid rgba(15,169,104,.2)">✓ ${d}</span>`;});
-    html+=`<div style="display:flex;gap:8px;flex-wrap:wrap">${tags}</div>`;
-  }
-
-  if(plano.dica_ia){
-    html+=`<div class="ia-tip"><div class="ia-tip-icon">💡</div><div class="ia-tip-txt"><span class="ia-tip-strong">Dica estratégica: </span>${plano.dica_ia}</div></div>`;
-  }
-
-  plano.semanas?.forEach((sem,si)=>{
-    const semId='sem-'+sem.numero;
-    const tipoBadge=sem.tipo==='revisao'
-      ?`<span style="font-size:9px;padding:2px 8px;border-radius:100px;background:rgba(15,169,104,.1);color:var(--green);border:1px solid rgba(15,169,104,.2);font-weight:700">REVISÃO</span>`
-      :sem.tipo==='introducao'
-      ?`<span style="font-size:9px;padding:2px 8px;border-radius:100px;background:rgba(55,138,221,.1);color:var(--blue);border:1px solid rgba(55,138,221,.2);font-weight:700">INTRO</span>`
-      :'';
-
-    html+=`<div class="semana-card">
-      <div class="semana-header" onclick="toggleSemana('${semId}')">
-        <div class="semana-left">
-          <div class="semana-num">${sem.numero}</div>
-          <div>
-            <div style="display:flex;align-items:center;gap:8px">
-              <div class="semana-titulo">${sem.titulo||'Semana '+sem.numero}</div>
-              ${tipoBadge}
-            </div>
-            <div class="semana-sub">📌 ${sem.foco||'—'}</div>
-          </div>
-        </div>
-        <div class="semana-prog">
-          <span class="semana-pct">${sem.disciplinas?.length||0} disciplinas</span>
-          <svg class="semana-chevron${si===0?' open':''}" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    <div class="progress-card">
+      <div class="progress-ring-wrap">
+        <svg width="70" height="70" viewBox="0 0 70 70">
+          <circle class="progress-ring-bg" cx="35" cy="35" r="28"/>
+          <circle class="progress-ring-fill" cx="35" cy="35" r="28"
+            stroke-dasharray="${circumference}"
+            stroke-dashoffset="${dash}"/>
+        </svg>
+        <div class="progress-pct">${pct}%</div>
+      </div>
+      <div class="progress-info">
+        <div class="progress-title">Progresso geral do plano</div>
+        <div class="progress-desc">Marque os tópicos conforme você estuda — o progresso é salvo automaticamente.</div>
+        <div class="progress-counts">
+          <span><strong>${done}</strong> concluídos</span>
+          <span><strong>${total - done}</strong> pendentes</span>
+          <span><strong>${total}</strong> total</span>
         </div>
       </div>
-      <div class="semana-body" id="${semId}" style="${si===0?'display:flex':'display:none'}">`;
+    </div>
 
-    sem.disciplinas?.forEach((disc,di)=>{
-      const cor=DISC_COLORS[di%DISC_COLORS.length];
-      const icon=DISC_ICONS[disc.nome]||'📚';
-      const discId=`d_${sem.numero}_${di}`;
-      const isDone=initChecks[discId]||false;
-      html+=`<div class="disc-item">
-        <div class="disc-header" onclick="toggleDisc('assuntos_${discId}')">
-          <div class="disc-icon" style="background:${cor}18;border:1px solid ${cor}30">${icon}</div>
-          <div class="disc-info">
-            <div class="disc-nome">${disc.nome}</div>
-            <div class="disc-meta">${disc.assuntos?.length||0} assuntos · ${disc.meta_questoes||20} questões${disc.horas_semana?' · '+disc.horas_semana+'h/semana':''}</div>
-          </div>
-          <div class="disc-right">
-            <span class="disc-prioridade prio-${disc.prioridade||'media'}">${disc.prioridade==='alta'?'Alta prioridade':disc.prioridade==='baixa'?'Baixa prioridade':'Média prioridade'}</span>
-            <div class="disc-check${isDone?' done':''}" id="check_${discId}" onclick="event.stopPropagation();toggleCheck('${discId}')">
-              <svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg>
-            </div>
-          </div>
+    <div class="week-tabs" id="week-tabs"></div>
+    <div id="week-content"></div>
+  `;
+
+  renderWeekTabs();
+  renderWeekContent();
+}
+
+function renderWeekTabs() {
+  const tabs = document.getElementById('week-tabs');
+  tabs.innerHTML = '';
+  for (let s = 1; s <= totalSemanas; s++) {
+    const items = planoData.filter(i => i.semana === s);
+    const done  = items.filter(i => i.concluido).length;
+    const btn = document.createElement('button');
+    btn.className = 'week-tab' + (s === semanaAtiva ? ' active' : '');
+    btn.textContent = `Semana ${s}${items.length > 0 ? ` (${done}/${items.length})` : ''}`;
+    btn.onclick = () => { semanaAtiva = s; renderWeekTabs(); renderWeekContent(); };
+    tabs.appendChild(btn);
+  }
+}
+
+function renderWeekContent() {
+  const wc = document.getElementById('week-content');
+  const items = planoData.filter(i => i.semana === semanaAtiva);
+
+  if (!items.length) { wc.innerHTML = '<p style="color:var(--muted);font-size:.85rem;padding:20px 0">Sem itens nesta semana.</p>'; return; }
+
+  // Agrupar por disciplina
+  const byDisc = {};
+  items.forEach(it => {
+    if (!byDisc[it.disciplina]) byDisc[it.disciplina] = [];
+    byDisc[it.disciplina].push(it);
+  });
+
+  wc.innerHTML = Object.entries(byDisc).map(([disc, tasks]) => {
+    const discDone = tasks.filter(t => t.concluido).length;
+    return `
+      <div class="disc-section">
+        <div class="disc-header" onclick="toggleDisc(this)">
+          <div class="disc-icon"></div>
+          <div class="disc-name">${disc}</div>
+          <div class="disc-progress-mini">${discDone}/${tasks.length}</div>
+          <svg class="disc-chevron open" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
-        <div class="assuntos-lista" id="assuntos_${discId}" style="display:none">`;
+        <div class="disc-body open">
+          ${tasks.map(t => renderTask(t)).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
 
-      disc.assuntos?.forEach((a,ai)=>{
-        const asId=`a_${sem.numero}_${di}_${ai}`;
-        const asDone=initChecks[asId]||false;
-        html+=`<div class="assunto-item">
-          <div class="as-bullet" style="background:${cor}"></div>
-          <div class="as-nome">${a}</div>
-          <div class="as-qtd">${disc.assuntos.length>0?Math.round((disc.meta_questoes||20)/disc.assuntos.length):0} questões</div>
-          <div class="as-check${asDone?' done':''}" id="check_${asId}" onclick="toggleCheck('${asId}')">
-            <svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg>
-          </div>
-        </div>`;
-      });
+function renderTask(t) {
+  const priorClasse = (t.prioridade === 'alta' || t.prioridade === 1) ? 'alta' : (t.prioridade === 'media' || t.prioridade === 2) ? 'media' : 'baixa';
+  const priorLabel  = (t.prioridade === 'alta' || t.prioridade === 1) ? 'Alta prioridade' : (t.prioridade === 'media' || t.prioridade === 2) ? 'Média' : 'Baixa';
+  const cbId = `cb_${t.id || t.assunto.replace(/\s/g,'_')}`;
+  return `
+    <div class="task-item${t.concluido ? ' done' : ''}" id="task_${t.id || t.assunto.replace(/\s/g,'_')}">
+      <div class="task-cb">
+        <input type="checkbox" id="${cbId}" ${t.concluido ? 'checked' : ''} onchange="toggleTask('${t.id}', this.checked)">
+        <label for="${cbId}"></label>
+      </div>
+      <div class="task-body">
+        <div class="task-assunto">${t.assunto}</div>
+        <div class="task-tags">
+          <span class="tag ${priorClasse}">${priorLabel}</span>
+          ${t.banca ? `<span class="tag">${t.banca}</span>` : ''}
+        </div>
+      </div>
+      <div class="task-meta-right">
+        <div class="task-questoes">${t.meta_questoes || 10} questões</div>
+      </div>
+    </div>
+  `;
+}
 
-      html+=`</div></div>`;
+// ── TOGGLE TASK ───────────────────────────────────────────────────────────────
+async function toggleTask(id, checked) {
+  // Atualiza local
+  const item = planoData.find(i => i.id == id);
+  if (item) item.concluido = checked;
+
+  // Sync Supabase
+  setSyncStatus('Salvando…', false);
+  const { error } = await sb
+    .from('planos_estudo')
+    .update({ concluido: checked })
+    .eq('id', id)
+    .eq('user_id', currentUser.id);
+
+  if (error) {
+    showToast('Erro ao salvar — tente novamente', 'error');
+    setSyncStatus('Erro de sync', false);
+    return;
+  }
+
+  setSyncStatus('Sincronizado', true);
+  // Atualiza visual sem re-render completo
+  renderWeekTabs();
+  atualizarProgressCard();
+}
+
+function atualizarProgressCard() {
+  const total = planoData.length;
+  const done  = planoData.filter(i => i.concluido).length;
+  const pct   = total > 0 ? Math.round((done/total)*100) : 0;
+  const circumference = 2 * Math.PI * 28;
+  const dash = circumference - (pct/100) * circumference;
+
+  const fillEl = document.querySelector('.progress-ring-fill');
+  const pctEl  = document.querySelector('.progress-pct');
+  const c1 = document.querySelectorAll('.progress-counts strong');
+  if (fillEl) fillEl.style.strokeDashoffset = dash;
+  if (pctEl)  pctEl.textContent = pct + '%';
+  if (c1[0]) c1[0].textContent = done;
+  if (c1[1]) c1[1].textContent = total - done;
+}
+
+// ── TOGGLE DISC ───────────────────────────────────────────────────────────────
+function toggleDisc(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.disc-chevron');
+  body.classList.toggle('open');
+  chevron.classList.toggle('open');
+}
+
+// ── EMPTY STATE ───────────────────────────────────────────────────────────────
+function renderEmpty() {
+  document.getElementById('empty-state').innerHTML = `
+    <div class="gen-wrap">
+      <div class="gen-icon">📋</div>
+      <div class="gen-title">Nenhum plano encontrado</div>
+      <div class="gen-desc">Gere um plano de estudos personalizado com IA, baseado no seu perfil, nível e tempo disponível.</div>
+      <button class="btn-gen" id="btn-gen-main" onclick="gerarPlano()">
+        <div class="spinner"></div>
+        <span class="btn-label">✦ Gerar meu plano com IA</span>
+      </button>
+    </div>
+  `;
+}
+
+// ── GERAR PLANO ───────────────────────────────────────────────────────────────
+async function gerarPlano() {
+  const btn = document.getElementById('btn-gen-main');
+  if (btn) { btn.classList.add('loading'); btn.disabled = true; }
+  setSyncStatus('Gerando plano…', false);
+
+  try {
+    const perfil = userPerfil || {};
+    const prompt = `Você é um especialista em concursos públicos brasileiros.
+Crie um plano de estudos estruturado para um candidato com o seguinte perfil:
+- Concurso/cargo: ${perfil.concurso || 'Concurso Público Geral'}
+- Área: ${perfil.area || 'Administrativa'}
+- Nível: ${perfil.nivel || 'intermediario'}
+- Horas por dia disponíveis: ${perfil.horas_dia || 2}h
+- Estado: ${perfil.estado || 'SP'}
+
+Retorne SOMENTE um JSON válido (sem markdown, sem texto extra) com este formato exato:
+{
+  "concurso": "Nome do concurso",
+  "semanas": 4,
+  "itens": [
+    {
+      "semana": 1,
+      "disciplina": "Português",
+      "assunto": "Interpretação de Texto",
+      "meta_questoes": 15,
+      "prioridade": "alta",
+      "banca": "CESPE"
+    }
+  ]
+}
+
+Gere no mínimo 20 itens distribuídos nas semanas. Prioridade deve ser "alta", "media" ou "baixa".`;
+
+    const resp = await fetch('/api/groq', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 1500,
+        temperature: 0.4
+      })
     });
 
-    html+=`</div></div>`;
-  });
+    const json = await resp.json();
+    let texto = json.choices?.[0]?.message?.content || '';
+    // Strip markdown fences
+    texto = texto.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(texto);
 
-  wrap.innerHTML=html;
+    if (!parsed.itens || !Array.isArray(parsed.itens)) throw new Error('JSON inválido');
 
-  // Restaura estados de done
-  const savedChecks=JSON.parse(localStorage.getItem('vofor_checks_'+userId)||'{}');
-  Object.entries(savedChecks).forEach(([id,done])=>{
-    if(!done)return;
-    const el=document.getElementById('check_'+id);
-    if(el){
-      el.classList.add('done');
-      if(id.startsWith('a_')){
-        el.closest('.assunto-item')?.classList.add('done-item');
-      }
-      if(id.startsWith('d_')){
-        el.closest('.disc-item')?.classList.add('done-disc');
-      }
-    }
-  });
-  atualizarProgresso();
-}
+    // Salva no Supabase
+    await salvarPlanoSupabase(parsed.itens.map(i => ({...i, concurso: parsed.concurso || perfil.concurso})));
 
+    showToast('Plano gerado e salvo!', 'success');
 
-function toggleSemana(id){
-  const el=document.getElementById(id);
-  const chevron=el.previousElementSibling.querySelector('.semana-chevron');
-  const isOpen=el.style.display!=='none';
-  el.style.display=isOpen?'none':'flex';
-  if(chevron)chevron.classList.toggle('open',!isOpen);
-}
-
-function toggleDisc(id){
-  const el=document.getElementById(id);
-  if(el)el.style.display=el.style.display==='none'?'flex':'none';
-}
-
-function toggleCheck(id){
-  const tChecks=JSON.parse(localStorage.getItem('vofor_checks_'+userId)||'{}');
-  tChecks[id]=!tChecks[id];
-  localStorage.setItem('vofor_checks_'+userId,JSON.stringify(tChecks));
-
-  const el=document.getElementById('check_'+id);
-  if(el)el.classList.toggle('done',tChecks[id]);
-
-  // Se é assunto (começa com 'a_'), atualiza visual do item pai
-  if(id.startsWith('a_')){
-    const assuntoEl=el?.closest('.assunto-item');
-    if(assuntoEl)assuntoEl.classList.toggle('done-item',tChecks[id]);
-    // Verifica se todos assuntos da disciplina foram marcados
-    const listaEl=el?.closest('.assuntos-lista');
-    if(listaEl){
-      const todos=listaEl.querySelectorAll('.as-check');
-      const feitos=listaEl.querySelectorAll('.as-check.done');
-      const discCheck=listaEl.closest('.disc-item')?.querySelector('.disc-check');
-      if(discCheck&&todos.length>0){
-        const allDone=todos.length===feitos.length;
-        discCheck.classList.toggle('done',allDone);
-        discCheck.closest('.disc-item')?.classList.toggle('done-disc',allDone);
-        // Salva check da disciplina
-        const discId=discCheck.id.replace('check_','');
-        tChecks[discId]=allDone;
-        localStorage.setItem('vofor_checks_'+userId,JSON.stringify(tChecks));
-      }
-    }
-  }
-  // Se é disciplina (começa com 'd_'), marca/desmarca todos assuntos
-  if(id.startsWith('d_')){
-    const discItem=el?.closest('.disc-item');
-    if(discItem){
-      discItem.classList.toggle('done-disc',tChecks[id]);
-      const assuntoEls=discItem.querySelectorAll('.assunto-item');
-      const asChecks=discItem.querySelectorAll('.as-check');
-      asChecks.forEach((ac,i)=>{
-        const asId=ac.id.replace('check_','');
-        tChecks[asId]=tChecks[id];
-        ac.classList.toggle('done',tChecks[id]);
-        if(assuntoEls[i])assuntoEls[i].classList.toggle('done-item',tChecks[id]);
-      });
-      localStorage.setItem('vofor_checks_'+userId,JSON.stringify(tChecks));
-    }
-  }
-
-  // Atualiza contador de progresso geral
-  atualizarProgresso();
-}
-
-function atualizarProgresso(){
-  const pChecks=JSON.parse(localStorage.getItem('vofor_checks_'+userId)||'{}');
-  const totalAs=document.querySelectorAll('.as-check').length;
-  const feitosAs=document.querySelectorAll('.as-check.done').length;
-  if(totalAs>0){
-    const pct=Math.round(feitosAs/totalAs*100);
-    document.getElementById('page-sub').textContent=
-      `${feitosAs} de ${totalAs} assuntos concluídos — ${pct}% do plano`;
+  } catch(e) {
+    console.error(e);
+    showToast('Erro ao gerar plano — tente novamente', 'error');
+    setSyncStatus('Erro', false);
+    if (btn) { btn.classList.remove('loading'); btn.disabled = false; }
   }
 }
 
-async function sair(){await sb.auth.signOut();window.location.href='index.html';}
+async function regenerarPlano() {
+  // Deleta plano atual do Supabase
+  await sb.from('planos_estudo').delete().eq('user_id', currentUser.id);
+  planoData = [];
+  document.getElementById('plan-container').style.display = 'none';
+  document.getElementById('btn-regen').style.display = 'none';
+  document.getElementById('empty-state').style.display = 'block';
+  renderEmpty();
+  // Auto-inicia geração
+  await gerarPlano();
+}
+
+// ── SALVAR SUPABASE ───────────────────────────────────────────────────────────
+async function salvarPlanoSupabase(itens, isMigration = false) {
+  if (!isMigration) {
+    // Limpa plano anterior
+    await sb.from('planos_estudo').delete().eq('user_id', currentUser.id);
+  }
+
+  const rows = itens.map(it => ({
+    user_id: currentUser.id,
+    concurso: it.concurso || userPerfil?.concurso || '',
+    semana: it.semana,
+    disciplina: it.disciplina,
+    assunto: it.assunto,
+    meta_questoes: it.meta_questoes || 10,
+    prioridade: it.prioridade || 'media',
+    concluido: it.concluido || false,
+    created_at: new Date().toISOString()
+  }));
+
+  const { data, error } = await sb.from('planos_estudo').insert(rows).select();
+  if (error) { console.error('Erro ao salvar plano:', error); return; }
+
+  planoData = data;
+  // Limpa localStorage (migração concluída)
+  localStorage.removeItem(`vofor_plano_${currentUser.id}`);
+  renderPlano();
+}
+
+// ── UI HELPERS ────────────────────────────────────────────────────────────────
+function setSyncStatus(msg, ok) {
+  const el = document.getElementById('sync-status');
+  el.textContent = msg;
+  el.className = 'sync-badge' + (ok ? '' : ' syncing');
+}
+
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── SIDEBAR ───────────────────────────────────────────────────────────────────
+document.getElementById('sidebar-toggle').addEventListener('click', () => {
+  const sb_ = document.getElementById('sidebar');
+  sb_.classList.toggle('collapsed');
+  localStorage.setItem('vofor_sb_collapsed', sb_.classList.contains('collapsed'));
+});
+document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+  document.getElementById('sidebar').classList.add('mobile-open');
+  document.getElementById('overlay').classList.add('show');
+});
+document.getElementById('overlay').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('overlay').classList.remove('show');
+});
+
 init();
 </script>
-
-<div class="mobile-nav">
-  <div class="mn-item" onclick="window.location.href='painel.html'">
-    <svg class="mn-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-    <span class="mn-label">Início</span>
-  </div>
-  <div class="mn-item" onclick="window.location.href='questoes.html'">
-    <svg class="mn-icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-    <span class="mn-label">Questões</span>
-  </div>
-  <div class="mn-item active" onclick="window.location.href='plano.html'">
-    <svg class="mn-icon" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-    <span class="mn-label">Plano</span>
-  </div>
-  <div class="mn-item" onclick="window.location.href='anotacoes.html'">
-    <svg class="mn-icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-    <span class="mn-label">Notas</span>
-  </div>
-  <div class="mn-item" onclick="sair()">
-    <svg class="mn-icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-    <span class="mn-label">Sair</span>
-  </div>
-</div>
-
 </body>
 </html>
