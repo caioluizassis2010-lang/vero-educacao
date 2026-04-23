@@ -475,7 +475,7 @@ function renderEvolucao(qs){
   [0,25,50,75,100].forEach(v=>{
     const y=pad.t+ch-(v/100*ch);
     ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();
-    ctx.fillStyle='rgba(180,200,255,0.3)';ctx.font='10px Outfit';ctx.textAlign='right';
+    ctx.fillStyle='rgba(200,188,175,0.28)';ctx.font='10px Outfit';ctx.textAlign='right';
     ctx.fillText(v+'%',pad.l-4,y+3);
   });
 
@@ -505,7 +505,7 @@ function renderEvolucao(qs){
   });
 
   // Labels
-  ctx.fillStyle='rgba(180,200,255,0.4)';ctx.font='9px Outfit';ctx.textAlign='center';
+  ctx.fillStyle='rgba(200,188,175,0.35)';ctx.font='9px Outfit';ctx.textAlign='center';
   pts.forEach((p,i)=>{if(i%2===0||pts.length<=5)ctx.fillText(labels[i],p.x,H-pad.b+12);});
 }
 
