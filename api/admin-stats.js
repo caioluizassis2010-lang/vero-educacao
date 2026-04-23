@@ -1,4 +1,4 @@
-// api/admin-users.js — Lista usuários com email real (service role)
+// api/admin-stats.js — Métricas agregadas do sistema
 const { createClient } = require('@supabase/supabase-js');
 
 module.exports = async function handler(req, res) {
@@ -9,56 +9,70 @@ module.exports = async function handler(req, res) {
 
   const sb = createClient('https://lklmzhunhiwqsbhnymaw.supabase.co', serviceKey);
 
-  // Verifica se quem chama é admin
   const { user_id } = req.body;
   if (!user_id) return res.status(401).json({ error: 'user_id obrigatório' });
   const { data: perfil } = await sb.from('perfis').select('is_admin').eq('id', user_id).single();
   if (!perfil?.is_admin) return res.status(403).json({ error: 'Acesso negado' });
 
-  const { page = 1, limit = 50, search = '' } = req.body;
-  const from = (page - 1) * limit;
-  const to = from + limit - 1;
-
   try {
-    // Busca perfis
-    let query = sb.from('perfis')
-      .select('id, area, concurso, nivel, is_admin, plano, diagnostico_completo, created_at', { count: 'exact' })
-      .order('created_at', { ascending: false })
-      .range(from, to);
-
-    if (search) {
-      query = query.or(`concurso.ilike.%${search}%,nivel.ilike.%${search}%`);
-    }
-
-    const { data: perfis, count, error } = await query;
-    if (error) throw error;
-
-    // Busca emails via auth admin API
-    const { data: authData } = await sb.auth.admin.listUsers({ page, perPage: limit });
-    const emailMap = {};
-    authData?.users?.forEach(u => { emailMap[u.id] = { email: u.email, nome: u.user_metadata?.full_name || u.user_metadata?.nome || '', last_sign_in: u.last_sign_in_at }; });
-
-    // Busca contagem de questões por usuário
-    const ids = perfis.map(p => p.id);
-    const { data: questoes } = await sb.from('questoes_respondidas').select('user_id').in('user_id', ids);
-    const qtdQuestoes = {};
-    questoes?.forEach(q => { qtdQuestoes[q.user_id] = (qtdQuestoes[q.user_id] || 0) + 1; });
-
-    // Busca questões de hoje
     const hoje = new Date().toISOString().split('T')[0];
-    const { data: questoesHoje } = await sb.from('questoes_respondidas').select('user_id').in('user_id', ids).gte('created_at', hoje);
-    const ativoHoje = new Set(questoesHoje?.map(q => q.user_id) || []);
+    const set7 = new Date(Date.now() - 7 * 86400000).toISOString();
 
-    const usuarios = perfis.map(p => ({
-      ...p,
-      email: emailMap[p.id]?.email || '—',
-      nome: emailMap[p.id]?.nome || '—',
-      last_sign_in: emailMap[p.id]?.last_sign_in || null,
-      qtd_questoes: qtdQuestoes[p.id] || 0,
-      ativo_hoje: ativoHoje.has(p.id),
-    }));
+    const [
+      { count: totalUsuarios },
+      { count: totalQuestoes },
+      { count: totalPlanos },
+      { count: ativosHoje },
+      { count: ativosSemana },
+      { data: acertos },
+      { data: disciplinas },
+      { data: concursos },
+    ] = await Promise.all([
+      sb.from('perfis').select('*', { count: 'exact', head: true }),
+      sb.from('questoes_respondidas').select('*', { count: 'exact', head: true }),
+      sb.from('planos_estudo').select('*', { count: 'exact', head: true }),
+      sb.from('questoes_respondidas').select('user_id', { count: 'exact', head: true }).gte('created_at', hoje),
+      sb.from('questoes_respondidas').select('user_id', { count: 'exact', head: true }).gte('created_at', set7),
+      sb.from('questoes_respondidas').select('acertou'),
+      sb.from('questoes_respondidas').select('disciplina, acertou'),
+      sb.from('perfis').select('concurso'),
+    ]);
 
-    return res.status(200).json({ usuarios, total: count, page, limit });
+    // Taxa média
+    const taxaMedia = acertos?.length
+      ? Math.round(acertos.filter(q => q.acertou).length / acertos.length * 100)
+      : 0;
+
+    // Por disciplina
+    const discMap = {};
+    disciplinas?.forEach(q => {
+      if (!discMap[q.disciplina]) discMap[q.disciplina] = { total: 0, acertos: 0 };
+      discMap[q.disciplina].total++;
+      if (q.acertou) discMap[q.disciplina].acertos++;
+    });
+    const discSorted = Object.entries(discMap)
+      .map(([d, v]) => ({ disciplina: d, total: v.total, taxa: Math.round(v.acertos / v.total * 100) }))
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 10);
+
+    // Por concurso
+    const concMap = {};
+    concursos?.forEach(p => { if (p.concurso) concMap[p.concurso] = (concMap[p.concurso] || 0) + 1; });
+    const concSorted = Object.entries(concMap)
+      .map(([c, n]) => ({ concurso: c, usuarios: n }))
+      .sort((a, b) => b.usuarios - a.usuarios)
+      .slice(0, 10);
+
+    return res.status(200).json({
+      totalUsuarios,
+      totalQuestoes,
+      totalPlanos,
+      ativosHoje,
+      ativosSemana,
+      taxaMedia,
+      disciplinas: discSorted,
+      concursos: concSorted,
+    });
   } catch (e) {
     console.error(e);
     return res.status(500).json({ error: e.message });
