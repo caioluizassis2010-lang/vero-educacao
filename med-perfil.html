@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vofor Medicina — Perfil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060912;--bg2:#0d1425;--bg3:#131d35;--bg4:#1a2540;--blue:#2563eb;--blue2:#3b82f6;--blue3:#1d4ed8;--cyan:#06b6d4;--text:#f0f4ff;--muted:#8896b3;--muted2:rgba(136,150,179,0.22);--border:rgba(59,130,246,0.15);--border2:rgba(59,130,246,0.3);--green:#10b981;--red:#ef4444;--radius:12px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 80% 60% at 20% 20%,rgba(37,99,235,0.08) 0%,transparent 60%)}
+a{text-decoration:none;color:inherit}
+nav{padding:18px 40px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(6,9,18,0.8);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100}
+.brand{display:inline-flex;align-items:center;gap:12px}
+.brand-icon{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--blue3),var(--blue));display:flex;align-items:center;justify-content:center;font-size:16px}
+.brand-name{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;letter-spacing:.08em}
+.brand-name span{display:block;font-size:.42rem;letter-spacing:.22em;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:400;text-transform:uppercase;margin-top:2px}
+.nav-step{font-size:.78rem;color:var(--muted)}
+.main{padding:48px 24px;max-width:760px;margin:0 auto}
+.eyebrow{font-size:.7rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.eyebrow::before{content:'';width:20px;height:1px;background:var(--cyan);opacity:.5}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:700;line-height:1.1;margin-bottom:8px}
+.page-title em{font-style:italic;color:var(--blue2)}
+.page-sub{font-size:.9rem;color:var(--muted);margin-bottom:40px;font-weight:300;line-height:1.7}
+
+.section{margin-bottom:32px}
+.section-label{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+.vest-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}
+.vest-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:11px;padding:16px;cursor:pointer;transition:all .2s;text-align:center}
+.vest-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.vest-card.selected{border-color:var(--blue);background:rgba(37,99,235,0.1)}
+.vest-icon{font-size:1.5rem;margin-bottom:8px}
+.vest-name{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:3px}
+.vest-desc{font-size:.72rem;color:var(--muted)}
+
+.form-group{margin-bottom:18px}
+.form-label{font-size:.72rem;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px;display:block}
+.form-select,.form-input{width:100%;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:12px 15px;font-size:.9rem;font-family:'DM Sans',sans-serif;outline:none;transition:all .2s;appearance:none;color-scheme:dark}
+.form-select:focus,.form-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,0.12)}
+
+.nivel-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.nivel-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;cursor:pointer;transition:all .2s;display:flex;gap:12px;align-items:flex-start}
+.nivel-card:hover{border-color:var(--border2)}
+.nivel-card.selected{border-color:var(--blue);background:rgba(37,99,235,0.1)}
+.nivel-icon{font-size:1.2rem;flex-shrink:0;margin-top:2px}
+.nivel-name{font-size:.88rem;font-weight:600;margin-bottom:2px}
+.nivel-desc{font-size:.75rem;color:var(--muted)}
+
+.horas-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.hora-btn{padding:10px;background:var(--bg2);border:1.5px solid var(--border);border-radius:9px;text-align:center;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.hora-btn:hover{border-color:var(--border2)}
+.hora-btn.selected{border-color:var(--blue);background:rgba(37,99,235,0.1)}
+.hora-num{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;color:var(--blue2);line-height:1}
+.hora-label{font-size:.68rem;color:var(--muted);margin-top:2px}
+
+.btn-salvar{width:100%;padding:14px;background:linear-gradient(135deg,var(--blue3),var(--blue));color:#fff;border:none;border-radius:10px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;box-shadow:0 4px 20px rgba(37,99,235,0.3);margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-salvar:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(37,99,235,0.4)}
+.btn-salvar:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.msg-error{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:8px;padding:10px 14px;font-size:.82rem;color:#ef4444;margin-top:12px;display:none}
+</style>
+</head>
+<body>
+<nav>
+  <div class="brand">
+    <span style="font-family:'Jost',sans-serif;font-size:1.05rem;font-weight:300;letter-spacing:.45em;color:#f0f4ff;text-transform:uppercase;padding-right:.45em">VOFOR</span><span style="display:block;font-size:.48rem;letter-spacing:.22em;color:rgba(240,244,255,0.45);font-family:'DM Sans',sans-serif;font-weight:400;text-transform:uppercase;margin-top:3px">medicina</span>
+  </div>
+  <span class="nav-step" id="nav-user"></span>
+</nav>
+
+<div class="main">
+  <div class="eyebrow">Configurar perfil</div>
+  <h1 class="page-title">Qual é sua <em>meta?</em></h1>
+  <p class="page-sub">Configure seu vestibular alvo e disponibilidade. A IA vai personalizar cada questão, plano e análise para você chegar lá.</p>
+
+  <!-- Vestibular alvo -->
+  <div class="section">
+    <div class="section-label">Vestibular alvo</div>
+    <div class="vest-grid">
+      <div class="vest-card" onclick="selVest(this,'FUVEST')"><div class="vest-icon">🏛️</div><div class="vest-name">FUVEST</div><div class="vest-desc">USP</div></div>
+      <div class="vest-card" onclick="selVest(this,'UNICAMP')"><div class="vest-icon">🔬</div><div class="vest-name">UNICAMP</div><div class="vest-desc">Comvest</div></div>
+      <div class="vest-card" onclick="selVest(this,'EINSTEIN')"><div class="vest-icon">⭐</div><div class="vest-name">Einstein</div><div class="vest-desc">Albert Einstein</div></div>
+      <div class="vest-card" onclick="selVest(this,'FAMERP')"><div class="vest-icon">🏥</div><div class="vest-name">FAMERP</div><div class="vest-desc">São José do Rio Preto</div></div>
+      <div class="vest-card" onclick="selVest(this,'SANTA CASA')"><div class="vest-icon">❤️</div><div class="vest-name">Santa Casa</div><div class="vest-desc">FCMSCSP</div></div>
+      <div class="vest-card" onclick="selVest(this,'UNIFESP')"><div class="vest-icon">🎓</div><div class="vest-name">UNIFESP</div><div class="vest-desc">Federal de SP</div></div>
+      <div class="vest-card" onclick="selVest(this,'ENEM')"><div class="vest-icon">📝</div><div class="vest-name">ENEM/SISU</div><div class="vest-desc">FIES · ProUni</div></div>
+      <div class="vest-card" onclick="selVest(this,'UFMG')"><div class="vest-icon">🌿</div><div class="vest-name">UFMG</div><div class="vest-desc">Federal MG</div></div>
+      <div class="vest-card" onclick="selVest(this,'UFRJ')"><div class="vest-icon">🌊</div><div class="vest-name">UFRJ</div><div class="vest-desc">Federal RJ</div></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Outro vestibular</label>
+      <input class="form-input" id="outro-vest" type="text" placeholder="Ex: UFBA, PUC-RS, UNESP...">
+    </div>
+  </div>
+
+  <!-- Nível -->
+  <div class="section">
+    <div class="section-label">Nível atual</div>
+    <div class="nivel-grid">
+      <div class="nivel-card" onclick="selNivel(this,'iniciante')"><div class="nivel-icon">🌱</div><div><div class="nivel-name">Iniciante</div><div class="nivel-desc">Começando agora</div></div></div>
+      <div class="nivel-card" onclick="selNivel(this,'basico')"><div class="nivel-icon">📖</div><div><div class="nivel-name">Básico</div><div class="nivel-desc">Tenho alguma base</div></div></div>
+      <div class="nivel-card selected" onclick="selNivel(this,'intermediario')"><div class="nivel-icon">🎯</div><div><div class="nivel-name">Intermediário</div><div class="nivel-desc">Boa base, evoluindo</div></div></div>
+      <div class="nivel-card" onclick="selNivel(this,'avancado')"><div class="nivel-icon">🏆</div><div><div class="nivel-name">Avançado</div><div class="nivel-desc">Afinar pontos finais</div></div></div>
+    </div>
+  </div>
+
+  <!-- Horas por dia -->
+  <div class="section">
+    <div class="section-label">Horas de estudo por dia</div>
+    <div class="horas-grid">
+      <div class="hora-btn" onclick="selHoras(this,'1h')"><div class="hora-num">1h</div><div class="hora-label">por dia</div></div>
+      <div class="hora-btn" onclick="selHoras(this,'2h')"><div class="hora-num">2h</div><div class="hora-label">por dia</div></div>
+      <div class="hora-btn selected" onclick="selHoras(this,'4h')"><div class="hora-num">4h</div><div class="hora-label">por dia</div></div>
+      <div class="hora-btn" onclick="selHoras(this,'6h+')"><div class="hora-num">6h+</div><div class="hora-label">dedicação total</div></div>
+    </div>
+  </div>
+
+  <!-- Ano da prova -->
+  <div class="section">
+    <div class="section-label">Ano da prova</div>
+    <select class="form-select" id="ano-prova">
+      <option value="2025">2025</option>
+      <option value="2026" selected>2026</option>
+      <option value="2027">2027</option>
+      <option value="2028">2028</option>
+    </select>
+  </div>
+
+  <button class="btn-salvar" id="btn-salvar" onclick="salvar()">
+    <span id="btn-txt">Salvar e continuar →</span>
+    <div class="spinner" id="spinner"></div>
+  </button>
+  <div class="msg-error" id="msg-error"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const sb=supabase.createClient('https://lklmzhunhiwqsbhnymaw.supabase.co','sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU');
+let vestSel=null, nivelSel='intermediario', horasSel='4h';
+let userId=null;
+
+async function init(){
+  const{data:{session}}=await sb.auth.getSession();
+  if(!session){window.location.href='med-login.html';return;}
+  userId=session.user.id;
+  const nome=session.user.user_metadata?.full_name||session.user.email.split('@')[0];
+  document.getElementById('nav-user').textContent=nome;
+  // Carrega perfil existente
+  const{data:p}=await sb.from('medicina_perfis').select('*').eq('id',userId).single();
+  if(p){
+    vestSel=p.vestibular_alvo;nivelSel=p.nivel||'intermediario';horasSel=p.horas_dia||'4h';
+    if(p.ano_prova)document.getElementById('ano-prova').value=p.ano_prova;
+    // Marca seleções
+    document.querySelectorAll('.vest-card').forEach(c=>{if(c.dataset.vest===vestSel)c.classList.add('selected')});
+    document.querySelectorAll('.nivel-card').forEach(c=>c.classList.remove('selected'));
+    document.querySelectorAll('.nivel-card').forEach(c=>{if(c.dataset.nivel===nivelSel)c.classList.add('selected')});
+    document.querySelectorAll('.hora-btn').forEach(c=>c.classList.remove('selected'));
+    document.querySelectorAll('.hora-btn').forEach(c=>{if(c.dataset.hora===horasSel)c.classList.add('selected')});
+  }
+}
+
+function selVest(el,vest){
+  document.querySelectorAll('.vest-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');el.dataset.vest=vest;vestSel=vest;
+  document.getElementById('outro-vest').value='';
+}
+function selNivel(el,nivel){
+  document.querySelectorAll('.nivel-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');nivelSel=nivel;
+}
+function selHoras(el,h){
+  document.querySelectorAll('.hora-btn').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');horasSel=h;
+}
+
+async function salvar(){
+  const outro=document.getElementById('outro-vest').value.trim();
+  const vest=outro||vestSel;
+  if(!vest){document.getElementById('msg-error').textContent='Selecione seu vestibular alvo.';document.getElementById('msg-error').style.display='block';return;}
+  const btn=document.getElementById('btn-salvar');
+  btn.disabled=true;document.getElementById('btn-txt').textContent='Salvando...';document.getElementById('spinner').style.display='block';
+  const{error}=await sb.from('medicina_perfis').upsert({
+    id:userId,vestibular_alvo:vest,nivel:nivelSel,horas_dia:horasSel,
+    ano_prova:parseInt(document.getElementById('ano-prova').value),
+    diagnostico_completo:false
+  });
+  btn.disabled=false;document.getElementById('btn-txt').textContent='Salvar e continuar →';document.getElementById('spinner').style.display='none';
+  if(error){document.getElementById('msg-error').textContent='Erro ao salvar.';document.getElementById('msg-error').style.display='block';return;}
+  window.location.href='med-diagnostico.html';
+}
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vofor Medicina — Diagnóstico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#060912;--bg2:#0d1425;--bg3:#131d35;--blue:#2563eb;--blue2:#3b82f6;--blue3:#1d4ed8;--cyan:#06b6d4;--text:#f0f4ff;--muted:#8896b3;--muted2:rgba(136,150,179,0.22);--border:rgba(59,130,246,0.15);--border2:rgba(59,130,246,0.3);--green:#10b981;--red:#ef4444;--radius:12px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 80% 60% at 20% 20%,rgba(37,99,235,0.08) 0%,transparent 60%)}
+nav{padding:18px 40px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(6,9,18,0.8);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100}
+.brand{display:inline-flex;align-items:center;gap:12px}
+.brand-icon{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--blue3),var(--blue));display:flex;align-items:center;justify-content:center;font-size:16px}
+.brand-name{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;letter-spacing:.08em}
+.brand-name span{display:block;font-size:.42rem;letter-spacing:.22em;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:400;text-transform:uppercase;margin-top:2px}
+.prog-wrap{display:flex;align-items:center;gap:12px;font-size:.8rem;color:var(--muted)}
+.prog-bg{width:120px;height:4px;background:var(--border);border-radius:2px}
+.prog-fill{height:4px;border-radius:2px;background:linear-gradient(90deg,var(--blue3),var(--cyan));transition:width .3s}
+
+.main{max-width:680px;margin:0 auto;padding:48px 24px}
+
+/* INTRO */
+.intro{text-align:center;padding:40px 0 60px}
+.intro-icon{font-size:3rem;margin-bottom:20px}
+.intro-title{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:700;line-height:1.1;margin-bottom:12px}
+.intro-title em{font-style:italic;color:var(--blue2)}
+.intro-sub{font-size:.95rem;color:var(--muted);font-weight:300;line-height:1.75;max-width:480px;margin:0 auto 32px}
+.intro-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:36px}
+.chip{padding:5px 14px;border-radius:100px;background:rgba(37,99,235,0.1);border:1px solid rgba(59,130,246,0.2);font-size:.78rem;color:var(--blue2);font-weight:500}
+.btn-start{padding:14px 36px;background:linear-gradient(135deg,var(--blue3),var(--blue));color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(37,99,235,0.3);transition:all .2s}
+.btn-start:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(37,99,235,0.4)}
+
+/* QUESTÃO */
+.q-wrap{display:none}
+.q-disc{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.q-disc::before{content:'';width:16px;height:1px;background:var(--cyan);opacity:.5}
+.q-num{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--muted);margin-bottom:6px}
+.q-text{font-size:1.05rem;font-weight:400;line-height:1.75;margin-bottom:26px;color:var(--text)}
+.q-opts{display:flex;flex-direction:column;gap:9px;margin-bottom:24px}
+.q-opt{
+  padding:13px 18px;background:var(--bg2);border:1.5px solid var(--border);
+  border-radius:10px;cursor:pointer;transition:all .2s;
+  display:flex;align-items:flex-start;gap:13px;text-align:left;
+  font-family:'DM Sans',sans-serif;color:var(--text);font-size:.9rem;line-height:1.5;
+}
+.q-opt:hover:not(:disabled){border-color:var(--border2);background:rgba(59,130,246,0.05)}
+.q-opt.correct{border-color:var(--green);background:rgba(16,185,129,0.08);color:var(--green)}
+.q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,0.08);color:var(--red)}
+.q-opt:disabled{cursor:not-allowed}
+.opt-letter{width:26px;height:26px;border-radius:7px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0;transition:all .2s;color:var(--muted)}
+.q-opt.correct .opt-letter{border-color:var(--green);background:rgba(16,185,129,0.15);color:var(--green)}
+.q-opt.wrong .opt-letter{border-color:var(--red);background:rgba(239,68,68,0.15);color:var(--red)}
+
+.q-feedback{padding:14px 18px;border-radius:10px;font-size:.88rem;line-height:1.65;margin-bottom:20px;display:none}
+.q-feedback.acerto{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);color:var(--green)}
+.q-feedback.erro{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);color:var(--red)}
+
+.btn-prox{width:100%;padding:13px;background:linear-gradient(135deg,var(--blue3),var(--blue));color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.92rem;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(37,99,235,0.25);display:none}
+.btn-prox:hover{transform:translateY(-1px)}
+
+/* LOADING */
+.loading{text-align:center;padding:60px 0;display:none}
+.loading-icon{font-size:2.5rem;animation:pulse 1.5s infinite;margin-bottom:16px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.loading-txt{font-size:.95rem;color:var(--muted)}
+
+/* RESULTADO */
+.resultado{display:none;text-align:center;padding:40px 0}
+.res-icon{font-size:3.5rem;margin-bottom:20px}
+.res-title{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:700;margin-bottom:10px}
+.res-title em{font-style:italic;color:var(--blue2)}
+.res-sub{font-size:.92rem;color:var(--muted);margin-bottom:32px;line-height:1.7}
+.res-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px}
+.res-stat{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.res-stat-n{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--blue2);line-height:1}
+.res-stat-l{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:5px}
+.btn-painel{padding:14px 36px;background:linear-gradient(135deg,var(--blue3),var(--blue));color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(37,99,235,0.3);transition:all .2s}
+.btn-painel:hover{transform:translateY(-1px)}
+.spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">
+    <span style="font-family:'Jost',sans-serif;font-size:1.05rem;font-weight:300;letter-spacing:.45em;color:#f0f4ff;text-transform:uppercase;padding-right:.45em">VOFOR</span><span style="display:block;font-size:.48rem;letter-spacing:.22em;color:rgba(240,244,255,0.45);font-family:'DM Sans',sans-serif;font-weight:400;text-transform:uppercase;margin-top:3px">medicina</span>
+  </div>
+  <div class="prog-wrap">
+    <span id="prog-txt">0 / 20</span>
+    <div class="prog-bg"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- INTRO -->
+  <div class="intro" id="intro">
+    <div class="intro-icon">🔬</div>
+    <h1 class="intro-title">Diagnóstico<br><em>inicial</em></h1>
+    <p class="intro-sub">Vamos identificar seu nível real em cada disciplina com 20 questões calibradas. Leva cerca de 15 minutos.</p>
+    <div class="intro-chips">
+      <span class="chip">Biologia</span><span class="chip">Química</span><span class="chip">Física</span>
+      <span class="chip">Matemática</span><span class="chip">Português</span><span class="chip">Redação</span>
+      <span class="chip">História</span><span class="chip">Geografia</span>
+    </div>
+    <button class="btn-start" onclick="iniciar()">Iniciar diagnóstico →</button>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading" id="loading">
+    <div class="loading-icon">🧬</div>
+    <div class="loading-txt" id="loading-txt">Gerando questões calibradas...</div>
+  </div>
+
+  <!-- QUESTÃO -->
+  <div class="q-wrap" id="q-wrap">
+    <div class="q-disc" id="q-disc">Biologia</div>
+    <div class="q-num" id="q-num">Questão 1 de 20</div>
+    <div class="q-text" id="q-text"></div>
+    <div class="q-opts" id="q-opts"></div>
+    <div class="q-feedback" id="q-feedback"></div>
+    <button class="btn-prox" id="btn-prox" onclick="proxima()">Próxima questão →</button>
+  </div>
+
+  <!-- RESULTADO -->
+  <div class="resultado" id="resultado">
+    <div class="res-icon">🎯</div>
+    <h2 class="res-title">Diagnóstico<br><em>concluído!</em></h2>
+    <p class="res-sub">Seu perfil foi analisado. Agora a IA vai personalizar seu plano e questões.</p>
+    <div class="res-stats">
+      <div class="res-stat"><div class="res-stat-n" id="res-total">0</div><div class="res-stat-l">Questões</div></div>
+      <div class="res-stat"><div class="res-stat-n" id="res-acertos" style="color:var(--green)">0</div><div class="res-stat-l">Acertos</div></div>
+      <div class="res-stat"><div class="res-stat-n" id="res-taxa" style="color:var(--blue2)">0%</div><div class="res-stat-l">Taxa</div></div>
+    </div>
+    <button class="btn-painel" onclick="window.location.href='med-painel.html'">Ir para meu painel →</button>
+  </div>
+
+</div>
+
+<script>
+const sb=supabase.createClient('https://lklmzhunhiwqsbhnymaw.supabase.co','sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU');
+let userId=null, perfil=null;
+let questoes=[], qAtual=0, respostas=[];
+
+const DISCIPLINAS=[
+  {nome:'Biologia',peso:3},{nome:'Química',peso:3},{nome:'Física',peso:2},
+  {nome:'Matemática',peso:2},{nome:'Português',peso:2},{nome:'História',peso:2},
+  {nome:'Geografia',peso:2},{nome:'Literatura',peso:1},{nome:'Filosofia',peso:1},
+  {nome:'Inglês',peso:1},{nome:'Sociologia',peso:1}
+];
+
+async function init(){
+  const{data:{session}}=await sb.auth.getSession();
+  if(!session){window.location.href='med-login.html';return;}
+  userId=session.user.id;
+  const{data:p}=await sb.from('medicina_perfis').select('*').eq('id',userId).single();
+  if(!p){window.location.href='med-perfil.html';return;}
+  if(p.diagnostico_completo){window.location.href='med-painel.html';return;}
+  perfil=p;
+}
+
+async function iniciar(){
+  document.getElementById('intro').style.display='none';
+  document.getElementById('loading').style.display='block';
+  // Gera 20 questões via Groq
+  const distr=[];
+  DISCIPLINAS.forEach(d=>{for(let i=0;i<d.peso;i++)distr.push(d.nome);});
+  const selecionadas=distr.sort(()=>Math.random()-.5).slice(0,20);
+  const prompt=`Você é especialista em vestibulares de medicina brasileiros (${perfil.vestibular_alvo||'FUVEST'}).
+Crie 20 questões de diagnóstico para um aluno nível ${perfil.nivel||'intermediario'}.
+Disciplinas: ${selecionadas.join(', ')}.
+Retorne SOMENTE JSON válido sem markdown:
+{"questoes":[{"disciplina":"Biologia","assunto":"Mitose","enunciado":"Texto da questão","opcoes":["A) texto","B) texto","C) texto","D) texto","E) texto"],"gabarito":"A","explicacao":"Explicação breve"}]}
+Crie exatamente 20 questões, uma por disciplina da lista. Gabarito deve ser A, B, C, D ou E.`;
+  try{
+    document.getElementById('loading-txt').textContent='Calibrando questões para '+perfil.vestibular_alvo+'...';
+    const r=await fetch('/api/groq',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:prompt}],max_tokens:3000,temperature:0.5})});
+    const json=await r.json();
+    let txt=json.choices?.[0]?.message?.content||'';
+    txt=txt.replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(txt);
+    questoes=parsed.questoes||[];
+    if(!questoes.length)throw new Error('Sem questões');
+  }catch(e){
+    // Fallback com questões básicas
+    questoes=selecionadas.map((disc,i)=>({
+      disciplina:disc,assunto:'Geral',
+      enunciado:`Questão de ${disc} para diagnóstico. (Questão ${i+1} — recarregue para tentar gerar novamente)`,
+      opcoes:['A) Opção A','B) Opção B','C) Opção C','D) Opção D','E) Opção E'],
+      gabarito:'A',explicacao:'Questão de fallback.'
+    }));
+  }
+  document.getElementById('loading').style.display='none';
+  mostrarQuestao(0);
+}
+
+function mostrarQuestao(idx){
+  qAtual=idx;
+  const q=questoes[idx];
+  if(!q)return;
+  document.getElementById('q-wrap').style.display='block';
+  document.getElementById('q-disc').textContent=q.disciplina;
+  document.getElementById('q-num').textContent=`Questão ${idx+1} de ${questoes.length}`;
+  document.getElementById('q-text').textContent=q.enunciado;
+  document.getElementById('prog-txt').textContent=`${idx+1} / ${questoes.length}`;
+  document.getElementById('prog-fill').style.width=((idx+1)/questoes.length*100)+'%';
+  document.getElementById('q-feedback').style.display='none';
+  document.getElementById('btn-prox').style.display='none';
+  const opts=document.getElementById('q-opts');
+  const letras=['A','B','C','D','E'];
+  opts.innerHTML=q.opcoes.map((op,i)=>`
+    <button class="q-opt" onclick="responder(this,'${letras[i]}')">
+      <div class="opt-letter">${letras[i]}</div>
+      <span>${op.replace(/^[A-E]\)\s*/,'')}</span>
+    </button>`).join('');
+}
+
+async function responder(el,letra){
+  document.querySelectorAll('.q-opt').forEach(b=>b.disabled=true);
+  const q=questoes[qAtual];
+  const acertou=letra===q.gabarito;
+  document.querySelectorAll('.q-opt').forEach(b=>{
+    const l=b.querySelector('.opt-letter').textContent;
+    if(l===q.gabarito)b.classList.add('correct');
+    else if(l===letra&&!acertou)b.classList.add('wrong');
+  });
+  const fb=document.getElementById('q-feedback');
+  fb.className='q-feedback '+(acertou?'acerto':'erro');
+  fb.textContent=(acertou?'✓ Correto! ':'✗ Incorreto. ')+q.explicacao;
+  fb.style.display='block';
+  document.getElementById('btn-prox').style.display='block';
+  document.getElementById('btn-prox').textContent=qAtual<questoes.length-1?'Próxima questão →':'Ver resultado →';
+  respostas.push({disciplina:q.disciplina,assunto:q.assunto,enunciado:q.enunciado,gabarito:q.gabarito,acertou,letra});
+  // Salva no banco
+  await sb.from('medicina_questoes').insert({user_id:userId,disciplina:q.disciplina,assunto:q.assunto,enunciado:q.enunciado,gabarito:q.gabarito,acertou,vestibular:perfil.vestibular_alvo});
+}
+
+async function proxima(){
+  if(qAtual<questoes.length-1){
+    mostrarQuestao(qAtual+1);
+  }else{
+    document.getElementById('q-wrap').style.display='none';
+    const total=respostas.length;
+    const acertos=respostas.filter(r=>r.acertou).length;
+    const taxa=Math.round(acertos/total*100);
+    document.getElementById('res-total').textContent=total;
+    document.getElementById('res-acertos').textContent=acertos;
+    document.getElementById('res-taxa').textContent=taxa+'%';
+    await sb.from('medicina_perfis').update({diagnostico_completo:true}).eq('id',userId);
+    document.getElementById('resultado').style.display='block';
+  }
+}
+init();
+</script>
+</body>
+</html>
