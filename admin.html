@@ -20,7 +20,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 a{text-decoration:none;color:inherit}
 
 /* ── SIDEBAR ── */
-.sidebar{width:230px;min-height:100vh;background:#1a1828;border-right:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:100}
+.sidebar{width:230px;min-height:100vh;background:#1a1828;border-right:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:160}
 .sb-head{padding:20px 16px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between}
 .sb-logo{font-family:'Jost',sans-serif;font-size:.95rem;font-weight:300;letter-spacing:.4em;color:#fff;text-transform:uppercase}
 .sb-badge{font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.25);letter-spacing:.06em;text-transform:uppercase}
@@ -39,7 +39,7 @@ a{text-decoration:none;color:inherit}
 .nup-sub{font-size:.65rem;color:rgba(255,255,255,0.4)}
 
 /* ── MAIN ── */
-.main{flex:1;margin-left:230px;display:flex;flex-direction:column;min-height:100vh;transition:margin .25s}
+.main{flex:1;margin-left:230px;display:flex;flex-direction:column;min-height:100vh}
 .topbar{height:58px;padding:0 26px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;background:rgba(244,243,248,0.95);backdrop-filter:blur(20px);position:sticky;top:0;z-index:50}
 .topbar-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600}
 .topbar-title em{font-style:italic;color:var(--purple2)}
@@ -186,7 +186,7 @@ tbody td{padding:11px 14px;font-size:.8rem;vertical-align:middle}
 .overlay.show{display:block}
 
 @media(max-width:900px){
-  .sidebar{transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
+  .sidebar{transform:translateX(-100%);transition:transform .28s ease}
   .sidebar.open{transform:translateX(0)}
   .main{margin-left:0!important}
   .mobile-header{display:flex!important}
@@ -200,12 +200,13 @@ tbody td{padding:11px 14px;font-size:.8rem;vertical-align:middle}
   .tbl-search,.tbl-filter{width:100%}
   table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
   .metricas-tabs{overflow-x:auto;white-space:nowrap;padding-bottom:4px}
-  .stat{padding:14px 16px}
-  .stat-val{font-size:1.5rem}
-  .sis-stat-n{font-size:1.2rem}
-  .modal-bg{padding:12px}
+  .stat{padding:12px 14px}
+  .stat-val{font-size:1.4rem}
+  .sis-stat-n{font-size:1.1rem}
+  .modal-bg{padding:10px}
   .modal{max-width:100%}
 }
+
 @media(max-width:480px){
   .stats-geral{grid-template-columns:1fr}
   .sis-stats{grid-template-columns:1fr 1fr}
@@ -233,7 +234,7 @@ tbody td{padding:11px 14px;font-size:.8rem;vertical-align:middle}
 </div>
 <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
-<aside class="sidebar">
+<aside class="sidebar" id="sidebar">
   <div class="sb-head">
     <span class="sb-logo">VOFOR</span>
     <span class="sb-badge">Admin</span>
