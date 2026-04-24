@@ -39,7 +39,7 @@ a{text-decoration:none;color:inherit}
 .nup-sub{font-size:.65rem;color:rgba(255,255,255,0.4)}
 
 /* ── MAIN ── */
-.main{flex:1;margin-left:230px;display:flex;flex-direction:column;min-height:100vh}
+.main{flex:1;margin-left:230px;display:flex;flex-direction:column;min-height:100vh;transition:margin .25s}
 .topbar{height:58px;padding:0 26px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;background:rgba(244,243,248,0.95);backdrop-filter:blur(20px);position:sticky;top:0;z-index:50}
 .topbar-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600}
 .topbar-title em{font-style:italic;color:var(--purple2)}
@@ -166,8 +166,7 @@ tbody td{padding:11px 14px;font-size:.8rem;vertical-align:middle}
 .loading-cell{text-align:center;padding:28px;color:var(--muted);font-size:.82rem}
 .empty-cell{text-align:center;padding:28px;color:var(--muted2);font-size:.82rem}
 
-@media(max-width:960px){
-  .stats-geral{grid-template-columns:1fr 1fr}
+
   .sistemas-row{grid-template-columns:1fr}
   .met-grid{grid-template-columns:1fr}
 }
@@ -187,39 +186,29 @@ tbody td{padding:11px 14px;font-size:.8rem;vertical-align:middle}
 .overlay.show{display:block}
 
 @media(max-width:900px){
-  /* Sidebar vira drawer deslizante */
-  .sidebar{
-    transform:translateX(-100%);
-    transition:transform .28s cubic-bezier(.4,0,.2,1);
-    z-index:160;
-    position:fixed;
-  }
+  .sidebar{transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
   .sidebar.open{transform:translateX(0)}
   .main{margin-left:0!important}
   .mobile-header{display:flex!important}
   .topbar{display:none!important}
   .content{padding:14px 14px 80px}
-
-  /* Grids compactos */
-  .stats-geral{grid-template-columns:1fr 1fr}
+  .stats-geral{grid-template-columns:1fr 1fr;gap:8px}
   .sistemas-row{grid-template-columns:1fr}
   .met-grid{grid-template-columns:1fr}
   .config-row{grid-template-columns:1fr}
-
-  /* Tabela responsiva */
   .tbl-head{flex-direction:column;align-items:flex-start;gap:8px}
   .tbl-search,.tbl-filter{width:100%}
-  table{display:block;overflow-x:auto;white-space:nowrap}
-
-  /* Stats menores no mobile */
+  table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .metricas-tabs{overflow-x:auto;white-space:nowrap;padding-bottom:4px}
+  .stat{padding:14px 16px}
   .stat-val{font-size:1.5rem}
   .sis-stat-n{font-size:1.2rem}
-
-  /* Modal full width no mobile */
-  .modal{max-width:100%;margin:0 10px}
-
-  /* Metricas tabs scroll horizontal */
-  .metricas-tabs,.met-tabs{overflow-x:auto;white-space:nowrap;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+  .modal-bg{padding:12px}
+  .modal{max-width:100%}
+}
+@media(max-width:480px){
+  .stats-geral{grid-template-columns:1fr}
+  .sis-stats{grid-template-columns:1fr 1fr}
 }
 
 @media(max-width:480px){
@@ -661,9 +650,39 @@ async function carregarTudo(){
 
 async function carregarStats(){
   try{
-    const r=await fetch('/api/admin-stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:currentUserId})});
-    statsData=await r.json();
-    if(statsData.error){console.error(statsData.error);return;}
+    let statsData2=null;
+    try{
+      const r=await fetch('/api/admin-stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:currentUserId})});
+      const d=await r.json();
+      if(!d.error)statsData2=d;
+    }catch(e){}
+
+    // Fallback direto no Supabase se API falhar
+    if(!statsData2){
+      const hoje=new Date().toISOString().split('T')[0];
+      const[{count:uC},{count:qC},{count:uM},{count:qM},{count:uE},{count:qE},{count:rE},{count:ahC},{count:ahM},{count:ahE}]=await Promise.all([
+        sb.from('perfis').select('*',{count:'exact',head:true}),
+        sb.from('questoes_respondidas').select('*',{count:'exact',head:true}),
+        sb.from('medicina_perfis').select('*',{count:'exact',head:true}),
+        sb.from('medicina_questoes').select('*',{count:'exact',head:true}),
+        sb.from('enem_perfis').select('*',{count:'exact',head:true}),
+        sb.from('enem_questoes').select('*',{count:'exact',head:true}),
+        sb.from('enem_redacoes').select('*',{count:'exact',head:true}),
+        sb.from('questoes_respondidas').select('*',{count:'exact',head:true}).gte('created_at',hoje),
+        sb.from('medicina_questoes').select('*',{count:'exact',head:true}).gte('created_at',hoje),
+        sb.from('enem_questoes').select('*',{count:'exact',head:true}).gte('created_at',hoje),
+      ]);
+      statsData2={
+        totalUsuarios:(uC||0)+(uM||0)+(uE||0),
+        totalQuestoes:(qC||0)+(qM||0)+(qE||0),
+        ativosHoje:(ahC||0)+(ahM||0)+(ahE||0),
+        taxaMediaGeral:0,
+        concursos:{usuarios:uC||0,questoes:qC||0,taxaMedia:0,ativosHoje:ahC||0,planos:0,disciplinas:[],concursosMaisEstudados:[]},
+        medicina:{usuarios:uM||0,questoes:qM||0,taxaMedia:0,ativosHoje:ahM||0,disciplinas:[],vestibulares:[]},
+        enem:{usuarios:uE||0,questoes:qE||0,redacoes:rE||0,taxaMedia:0,ativosHoje:ahE||0,notaMediaRedacao:0,areas:[]},
+      };
+    }
+    statsData=statsData2;
     // Geral
     document.getElementById('st-total').textContent=statsData.totalUsuarios||0;
     document.getElementById('st-hoje').textContent=statsData.ativosHoje||0;
