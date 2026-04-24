@@ -294,15 +294,18 @@ async function csSubmit(page){
   const btn=input.nextElementSibling;
   if(btn){btn.textContent='...';btn.disabled=true;}
   try{
-    await fetch('/api/captura-email',{
+    const r=await fetch('/api/captura-email',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({email:input.value.trim(),origem:page})
     });
-  }catch(e){}
-  input.parentElement.style.display='none';
+    console.log('captura status:',r.status);
+  }catch(e){console.error('captura erro:',e);}
+  // Esconde o form e mostra sucesso
+  const form=input.closest('.cs-form')||input.parentElement;
+  if(form)form.style.display='none';
   const ok=document.getElementById('cs-ok-'+page);
-  if(ok){ok.style.display='inline-flex';}
+  if(ok){ok.style.display='block';}
 }
 </script>
 

@@ -808,6 +808,23 @@ async function fazerLogout(){
 
 
 
+
+async function csSubmit(page){
+  const input=document.getElementById('cs-email-'+page);
+  if(!input||!input.value.includes('@'))return;
+  const btn=input.nextElementSibling;
+  if(btn){btn.textContent='...';btn.disabled=true;}
+  try{
+    await fetch('/api/captura-email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email:input.value.trim(),origem:page})
+    });
+  }catch(e){}
+  input.parentElement.style.display='none';
+  const ok=document.getElementById('cs-ok-'+page);
+  if(ok){ok.style.display='inline-flex';}
+}
 </script>
 </body>
 </html>
