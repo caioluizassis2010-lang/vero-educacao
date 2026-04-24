@@ -194,8 +194,8 @@ nav.solid{background:rgba(8,6,4,0.95);backdrop-filter:blur(20px);border-bottom:1
 .pcard.md .pcard-glow{background:radial-gradient(ellipse at 50% 0%,rgba(55,138,221,0.1),transparent 65%)}
 .pcard.md:hover{border-color:rgba(55,138,221,0.3);box-shadow:0 28px 70px rgba(0,0,0,.45),0 0 50px rgba(55,138,221,.06)}
 /* ENEM */
-.pcard.en .pcard-glow{background:radial-gradient(ellipse at 50% 0%,rgba(124,58,237,0.1),transparent 65%)}
-.pcard.en:hover{border-color:rgba(124,58,237,0.3);box-shadow:0 28px 70px rgba(0,0,0,.45),0 0 50px rgba(124,58,237,.06)}
+.pcard.en .pcard-glow{background:radial-gradient(ellipse at 50% 0%,rgba(15,169,104,0.1),transparent 65%)}
+.pcard.en:hover{border-color:rgba(15,169,104,0.3);box-shadow:0 28px 70px rgba(0,0,0,.45),0 0 50px rgba(15,169,104,.06)}
 
 .pcard-num{
   font-family:'Playfair Display',serif;
@@ -227,7 +227,7 @@ nav.solid{background:rgba(8,6,4,0.95);backdrop-filter:blur(20px);border-bottom:1
 .pcard:hover .pcard-arrow{transform:translate(3px,-3px)}
 .pcard.co .pcard-arrow{border-color:rgba(180,175,168,0.22)}
 .pcard.md .pcard-arrow{border-color:rgba(55,138,221,0.2)}
-.pcard.en .pcard-arrow{border-color:rgba(124,58,237,0.2)}
+.pcard.en .pcard-arrow{border-color:rgba(15,169,104,0.2)}
 .pcard-soon{
   position:absolute;top:20px;right:20px;
   font-size:.64rem;font-weight:700;letter-spacing:.1em;
@@ -458,6 +458,8 @@ footer{
   .ft{grid-template-columns:1fr}
   .intro-title{font-size:2rem}
 }
+
+@media(max-width:768px){.btn-cta,.nav-cta{display:none!important}}
 </style>
 </head>
 <body>
@@ -566,7 +568,7 @@ document.addEventListener('DOMContentLoaded',function(){
     </div>
 
     <!-- MEDICINA -->
-    <div class="pcard md appear" style="transition-delay:.12s;cursor:pointer" onclick="window.location.href='medicina.html'">
+    <div class="pcard md appear" style="transition-delay:.12s;cursor:pointer" onclick="window.location.href='med-cadastro.html'">
       <div class="pcard-glow"></div>
       <div class="pcard-num">02 / 03</div>
       <span class="pcard-icon">🩺</span>
@@ -574,7 +576,7 @@ document.addEventListener('DOMContentLoaded',function(){
       <p class="pcard-sub">Para quem mira as provas mais disputadas do país. Conteúdo profundo em Ciências da Natureza, redação e simulados no padrão real.</p>
       <div class="pcard-footer">
         <span class="pcard-status live">● Disponível agora</span>
-        <div class="pcard-arrow" onclick="window.location.href='medicina.html'" style="cursor:pointer">
+        <div class="pcard-arrow" onclick="window.location.href='med-cadastro.html'" style="cursor:pointer">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </div>
       </div>
@@ -590,7 +592,7 @@ document.addEventListener('DOMContentLoaded',function(){
       <div class="pcard-footer">
         <span class="pcard-status live">● Disponível agora</span>
         <div class="pcard-arrow" onclick="window.location.href='enem.html'" style="cursor:pointer">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </div>
       </div>
     </div>
@@ -697,7 +699,7 @@ document.addEventListener('DOMContentLoaded',function(){
     <div class="fc">
       <div class="fc-t">Vertentes</div>
       <a href="concursos.html">Concursos Públicos</a>
-      <a href="medicina.html">Vestibular Medicina</a>
+      <a href="med-cadastro.html">Vestibular Medicina</a>
       <a href="enem.html">ENEM & Vestibulares</a>
     </div>
     <div class="fc">
