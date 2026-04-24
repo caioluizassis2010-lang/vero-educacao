@@ -3,322 +3,523 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin — VOFOR Educação</title>
+<title>Admin — VOFOR</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0f0d0b;--bg2:#1c1814;--bg3:#2e2520;--bg4:#080604;
-  --gold:#b4afa8;--gold2:#ccc8c2;
-  --text:#ede8e2;--muted:#8a7d70;--muted2:rgba(200,188,175,0.28);
-  --border:rgba(180,175,168,0.15);--border2:rgba(180,175,168,0.35);
-  --green:#0fa968;--red:#e05454;--radius:10px;
+  --bg:#07060d;--bg2:#0f0e1a;--bg3:#161525;--bg4:#050409;
+  --text:#f0eeff;--muted:#7b7a9a;--muted2:rgba(123,122,154,0.2);
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.16);
+  --purple:#7c3aed;--purple2:#a78bfa;--blue:#2563eb;--blue2:#3b82f6;
+  --green:#10b981;--red:#ef4444;--gold:#f59e0b;--cyan:#06b6d4;
+  --radius:10px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg4);color:var(--text);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;-webkit-font-smoothing:antialiased}
 a{text-decoration:none;color:inherit}
 
-/* NAV */
-nav{padding:0 28px;height:58px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg4);position:sticky;top:0;z-index:100}
-.brand{display:inline-flex;align-items:center;gap:12px}
-.brand-mark{width:34px;height:34px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.15);background:#1a1a1a;color:#fff;display:grid;place-items:center;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700}
-.brand-name{font-family:'Playfair Display',serif;color:var(--text);letter-spacing:3px;font-size:.95rem;font-weight:600}
-.admin-badge{font-size:.68rem;font-weight:700;padding:2px 9px;border-radius:20px;background:rgba(224,84,84,.15);color:var(--red);border:1px solid rgba(224,84,84,.3);letter-spacing:.06em;text-transform:uppercase}
-.nav-right{display:flex;align-items:center;gap:10px}
-.nav-user-pill{display:flex;align-items:center;gap:7px;padding:5px 12px 5px 5px;border:1px solid var(--border);border-radius:100px;background:rgba(255,255,255,0.03)}
-.nup-avatar{width:24px;height:24px;border-radius:50%;background:rgba(180,175,168,0.18);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;color:var(--gold);flex-shrink:0;font-family:'Playfair Display',serif}
-.nup-name{font-size:.78rem;color:var(--text);font-weight:500}
-.btn-nav{font-size:12px;color:var(--muted);padding:6px 14px;border:1px solid var(--border);border-radius:7px;cursor:pointer;background:none;font-family:'Outfit',sans-serif;transition:all .15s;text-decoration:none}
-.btn-nav:hover{color:var(--gold);border-color:var(--border2)}
-
-/* LAYOUT */
-.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 58px)}
-
-/* SIDEBAR */
-.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:20px 12px;display:flex;flex-direction:column;gap:2px}
-.sb-section{font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted2);padding:0 12px;margin:16px 0 6px}
-.sb-section:first-child{margin-top:0}
-.sb-item{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .18s;border:1px solid transparent;margin-bottom:2px}
-.sb-item:hover{background:rgba(200,188,175,0.05);color:var(--text)}
-.sb-item.active{background:rgba(180,175,168,0.08);color:var(--gold);border-color:rgba(180,175,168,0.18)}
-.sb-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;background:rgba(200,188,175,0.05);flex-shrink:0}
-.sb-item.active .sb-icon,.sb-item:hover .sb-icon{background:rgba(180,175,168,0.1)}
-.sb-icon svg{width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-.sb-item.active .sb-icon svg,.sb-item:hover .sb-icon svg{stroke:var(--gold)}
-.sb-divider{height:1px;background:var(--border);margin:10px 4px}
+/* ── SIDEBAR ── */
+.sidebar{width:230px;min-height:100vh;background:var(--bg4);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:100}
+.sb-head{padding:20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.sb-logo{font-family:'Jost',sans-serif;font-size:.95rem;font-weight:300;letter-spacing:.4em;color:var(--text);text-transform:uppercase}
+.sb-badge{font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.25);letter-spacing:.06em;text-transform:uppercase}
+.sb-sec{font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted2);padding:0 16px;margin:16px 0 6px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 12px;margin:1px 6px;border-radius:8px;font-size:.82rem;font-weight:500;color:var(--muted);cursor:pointer;transition:all .15s;border:1px solid transparent}
+.sb-item:hover{background:rgba(255,255,255,0.04);color:var(--text)}
+.sb-item.active{background:rgba(255,255,255,0.06);color:var(--text);border-color:rgba(255,255,255,0.1)}
+.sb-icon{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px}
+.sb-divider{height:1px;background:var(--border);margin:10px 6px}
 .sb-spacer{flex:1}
+.sb-user{padding:12px 6px;border-top:1px solid var(--border)}
+.nup{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:background .15s}
+.nup:hover{background:rgba(255,255,255,0.04)}
+.nup-av{width:28px;height:28px;border-radius:50%;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.25);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:var(--red);flex-shrink:0}
+.nup-name{font-size:.8rem;font-weight:500}
+.nup-sub{font-size:.65rem;color:var(--muted)}
 
-/* MAIN */
-.main{padding:24px 28px;overflow-y:auto;background:var(--bg4)}
-.page-hd{margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
-.page-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700}
-.page-title em{font-style:italic;color:var(--gold)}
-.page-sub{font-size:12px;color:var(--muted);margin-top:4px;font-weight:300}
+/* ── MAIN ── */
+.main{flex:1;margin-left:230px;display:flex;flex-direction:column;min-height:100vh}
+.topbar{height:58px;padding:0 26px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;background:rgba(7,6,13,0.9);backdrop-filter:blur(20px);position:sticky;top:0;z-index:50}
+.topbar-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600}
+.topbar-title em{font-style:italic;color:var(--purple2)}
+.btn-refresh{margin-left:auto;font-size:.75rem;color:var(--muted);padding:6px 14px;border:1px solid var(--border);border-radius:7px;cursor:pointer;background:none;font-family:'DM Sans',sans-serif;transition:all .15s}
+.btn-refresh:hover{color:var(--text);border-color:var(--border2)}
+.btn-painel{font-size:.75rem;color:var(--muted);padding:6px 14px;border:1px solid var(--border);border-radius:7px;cursor:pointer;background:none;font-family:'DM Sans',sans-serif;transition:all .15s;text-decoration:none}
+.btn-painel:hover{color:var(--text);border-color:var(--border2)}
 
-/* STATS */
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-.stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;transition:border-color .2s}
-.stat:hover{border-color:var(--border2)}
-.stat-label{font-size:9px;color:var(--muted2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:8px;font-weight:600}
-.stat-val{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--gold);line-height:1}
-.stat-sub{font-size:11px;color:var(--muted2);margin-top:4px;font-weight:300}
-.stat-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px}
+.content{padding:22px 26px;flex:1}
 
-/* ACESSO RÁPIDO */
-.quick-links{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
-.ql{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;text-decoration:none;display:flex;align-items:center;gap:10px;transition:all .18s;cursor:pointer}
-.ql:hover{border-color:var(--border2);background:var(--bg3)}
-.ql-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.ql-name{font-size:.82rem;font-weight:600;color:var(--text)}
-.ql-sub{font-size:.7rem;color:var(--muted);margin-top:2px}
-
-/* PANELS */
+/* ── PAINÉIS ── */
 .panel{display:none}
 .panel.active{display:block}
 
-/* TABLE */
+/* ── STATS ── */
+.stats-geral{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;transition:border-color .2s}
+.stat:hover{border-color:var(--border2)}
+.stat-label{font-size:.65rem;color:var(--muted2);text-transform:uppercase;letter-spacing:.14em;font-weight:600;margin-bottom:8px}
+.stat-val{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;line-height:1}
+.stat-sub{font-size:.7rem;color:var(--muted);margin-top:4px}
+
+/* SISTEMA CARDS */
+.sistemas-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.sis-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px;position:relative;overflow:hidden}
+.sis-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.sis-card.concursos::before{background:linear-gradient(90deg,#b4afa8,#8a8680)}
+.sis-card.medicina::before{background:linear-gradient(90deg,var(--blue),var(--cyan))}
+.sis-card.enem::before{background:linear-gradient(90deg,var(--purple),var(--purple2))}
+.sis-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sis-icon{font-size:1.3rem}
+.sis-nome{font-size:.85rem;font-weight:600}
+.sis-badge{font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:auto}
+.sis-badge.concursos{background:rgba(180,175,168,.1);color:#b4afa8;border:1px solid rgba(180,175,168,.2)}
+.sis-badge.medicina{background:rgba(37,99,235,.1);color:var(--blue2);border:1px solid rgba(59,130,246,.2)}
+.sis-badge.enem{background:rgba(124,58,237,.1);color:var(--purple2);border:1px solid rgba(167,139,250,.2)}
+.sis-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sis-stat{background:var(--bg3);border-radius:7px;padding:10px 12px}
+.sis-stat-n{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;line-height:1;margin-bottom:3px}
+.sis-stat-l{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+
+/* ── TABLE ── */
 .tbl-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:16px}
-.tbl-header{padding:12px 18px;border-bottom:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.tbl-title{font-size:.85rem;font-weight:600}
-.tbl-actions{display:flex;gap:8px;align-items:center}
-.tbl-search{background:var(--bg4);border:1px solid var(--border);border-radius:7px;padding:7px 12px;font-size:.78rem;color:var(--text);font-family:'Outfit',sans-serif;outline:none;width:200px;transition:border-color .15s}
+.tbl-head{padding:12px 18px;border-bottom:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.tbl-title{font-size:.82rem;font-weight:600}
+.tbl-search{background:var(--bg4);border:1px solid var(--border);border-radius:7px;padding:7px 12px;font-size:.77rem;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;width:190px;transition:border-color .15s;color-scheme:dark}
 .tbl-search:focus{border-color:var(--border2)}
 .tbl-search::placeholder{color:var(--muted2)}
+.tbl-filter{background:var(--bg4);border:1px solid var(--border);border-radius:7px;padding:7px 12px;font-size:.77rem;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;appearance:none;color-scheme:dark;cursor:pointer}
 table{width:100%;border-collapse:collapse}
-thead tr{border-bottom:1px solid var(--border)}
-thead th{padding:10px 14px;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);text-align:left;white-space:nowrap}
+thead th{padding:10px 14px;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);text-align:left;border-bottom:1px solid var(--border)}
 tbody tr{border-bottom:1px solid var(--border);transition:background .12s}
 tbody tr:last-child{border-bottom:none}
-tbody tr:hover{background:rgba(180,175,168,.03)}
-tbody td{padding:11px 14px;font-size:.82rem;vertical-align:middle}
-.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:100px;font-size:.67rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
-.badge-gratis{background:rgba(180,175,168,.1);color:var(--muted);border:1px solid var(--border)}
-.badge-basic{background:rgba(180,175,168,.15);color:var(--gold);border:1px solid rgba(180,175,168,.28)}
-.badge-pro{background:rgba(15,169,104,.1);color:var(--green);border:1px solid rgba(15,169,104,.25)}
-.badge-admin{background:rgba(224,84,84,.1);color:var(--red);border:1px solid rgba(224,84,84,.25)}
-.badge-ativo{background:rgba(15,169,104,.1);color:var(--green);border:1px solid rgba(15,169,104,.2)}
-.btn-sm{padding:4px 10px;border-radius:6px;font-size:.72rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s;border:1px solid var(--border);background:transparent;color:var(--muted)}
+tbody tr:hover{background:rgba(255,255,255,.02)}
+tbody td{padding:11px 14px;font-size:.8rem;vertical-align:middle}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:100px;font-size:.65rem;font-weight:700;text-transform:uppercase;white-space:nowrap}
+.badge-gratis{background:rgba(123,122,154,.1);color:var(--muted);border:1px solid var(--border)}
+.badge-pro{background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.2)}
+.badge-admin{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.badge-c{background:rgba(180,175,168,.08);color:#b4afa8;border:1px solid rgba(180,175,168,.15)}
+.badge-m{background:rgba(37,99,235,.08);color:var(--blue2);border:1px solid rgba(59,130,246,.15)}
+.badge-e{background:rgba(124,58,237,.08);color:var(--purple2);border:1px solid rgba(167,139,250,.15)}
+.btn-sm{padding:4px 10px;border-radius:6px;font-size:.7rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;border:1px solid var(--border);background:transparent;color:var(--muted)}
 .btn-sm:hover{border-color:var(--border2);color:var(--text)}
 
 /* PAGINAÇÃO */
-.pagination{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-top:1px solid var(--border);font-size:.78rem;color:var(--muted)}
-.pagination-btns{display:flex;gap:6px}
-.page-btn{padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:.75rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s}
+.pagination{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-top:1px solid var(--border);font-size:.76rem;color:var(--muted)}
+.pag-btns{display:flex;gap:5px}
+.page-btn{padding:5px 11px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
 .page-btn:hover:not(:disabled){border-color:var(--border2);color:var(--text)}
 .page-btn:disabled{opacity:.4;cursor:not-allowed}
-.page-btn.active{background:var(--gold);color:var(--bg4);border-color:var(--gold);font-weight:700}
+.page-btn.active{background:rgba(255,255,255,.08);color:var(--text);border-color:var(--border2);font-weight:700}
+
+/* MÉTRICAS */
+.metricas-tabs{display:flex;gap:6px;margin-bottom:18px}
+.met-tab{padding:8px 18px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:.8rem;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .15s;font-weight:500}
+.met-tab:hover{border-color:var(--border2);color:var(--text)}
+.met-tab.active{font-weight:600}
+.met-tab.active.concursos{background:rgba(180,175,168,.08);color:#ccc8c2;border-color:rgba(180,175,168,.2)}
+.met-tab.active.medicina{background:rgba(37,99,235,.08);color:var(--blue2);border-color:rgba(59,130,246,.2)}
+.met-tab.active.enem{background:rgba(124,58,237,.08);color:var(--purple2);border-color:rgba(167,139,250,.2)}
+.met-panel{display:none}
+.met-panel.active{display:block}
+.met-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* CONFIGURAÇÕES */
+.config-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:14px}
+.config-title{font-size:.9rem;font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:10px}
+.config-sub{font-size:.78rem;color:var(--muted);margin-bottom:18px}
+.config-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.config-field{display:flex;flex-direction:column;gap:6px}
+.config-label{font-size:.68rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.config-select,.config-input{background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:.82rem;font-family:'DM Sans',sans-serif;outline:none;appearance:none;color-scheme:dark;transition:border-color .15s}
+.config-select:focus,.config-input:focus{border-color:var(--border2)}
+.btn-save{padding:9px 20px;background:rgba(255,255,255,.08);color:var(--text);border:1px solid var(--border2);border-radius:8px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;margin-top:6px}
+.btn-save:hover{background:rgba(255,255,255,.12)}
+.btn-save.saved{background:rgba(16,185,129,.1);color:var(--green);border-color:rgba(16,185,129,.25)}
 
 /* MODAL */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
 .modal-bg.show{display:flex}
 .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:26px;width:100%;max-width:460px}
-.modal-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin-bottom:4px}
-.modal-sub{font-size:.8rem;color:var(--muted);margin-bottom:18px;word-break:break-all}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:700;margin-bottom:4px}
+.modal-sub{font-size:.78rem;color:var(--muted);margin-bottom:18px;word-break:break-all}
 .modal-field{margin-bottom:12px}
-.modal-label{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;display:block}
-.modal-select,.modal-input{width:100%;background:var(--bg3);color:var(--text);border:1px solid var(--border2);border-radius:8px;padding:9px 12px;font-size:.85rem;font-family:'Outfit',sans-serif;outline:none;appearance:none}
-.modal-select:focus,.modal-input:focus{border-color:var(--gold)}
+.modal-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;display:block}
+.modal-select{width:100%;background:var(--bg3);color:var(--text);border:1px solid var(--border2);border-radius:8px;padding:9px 12px;font-size:.85rem;font-family:'DM Sans',sans-serif;outline:none;appearance:none}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
-.btn-modal{padding:9px 20px;border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s}
-.btn-modal.primary{background:var(--gold);color:#1c1814;border:none}
-.btn-modal.primary:hover{background:var(--gold2)}
+.btn-modal{padding:9px 20px;border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.btn-modal.primary{background:rgba(255,255,255,.9);color:#07060d;border:none}
+.btn-modal.primary:hover{background:#fff}
 .btn-modal.ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
 .btn-modal.ghost:hover{color:var(--text);border-color:var(--border2)}
 
-/* LOADING */
-.loading-row td{text-align:center;padding:28px;color:var(--muted);font-size:.85rem}
-.empty-row td{text-align:center;padding:28px;color:var(--muted2);font-size:.85rem}
-.spinner-inline{width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px}
-@keyframes spin{to{transform:rotate(360deg)}}
-
 /* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;padding:12px 18px;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;font-size:.85rem;color:var(--text);z-index:999;transform:translateY(60px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:8px}
+.toast{position:fixed;bottom:24px;right:24px;padding:12px 18px;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;font-size:.82rem;color:var(--text);z-index:999;transform:translateY(60px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:8px}
 .toast.show{transform:translateY(0);opacity:1}
 .toast-dot{width:8px;height:8px;border-radius:50%}
 .toast.success .toast-dot{background:var(--green)}
 .toast.error .toast-dot{background:var(--red)}
 
-@media(max-width:960px){.layout{grid-template-columns:1fr}.sidebar{display:none}.stats-grid{grid-template-columns:1fr 1fr}.quick-links{grid-template-columns:1fr 1fr}}
+.spinner-inline{width:13px;height:13px;border:2px solid var(--border2);border-top-color:var(--purple2);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:5px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-cell{text-align:center;padding:28px;color:var(--muted);font-size:.82rem}
+.empty-cell{text-align:center;padding:28px;color:var(--muted2);font-size:.82rem}
+
+@media(max-width:960px){.sidebar{display:none}.main{margin-left:0}.stats-geral{grid-template-columns:1fr 1fr}.sistemas-row{grid-template-columns:1fr}.met-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<nav>
-  <a href="index.html" class="brand">
-    <span style="font-family:'Jost',sans-serif;font-size:1.1rem;font-weight:300;letter-spacing:.45em;color:#ede8e2;text-transform:uppercase;padding-right:.45em">VOFOR</span>
-  </a>
-  <span class="admin-badge">Admin</span>
-  <div class="nav-right">
-    <a href="painel.html" class="btn-nav">← Painel</a>
-    <div class="nav-user-pill">
-      <div class="nup-avatar" id="nav-avatar">?</div>
-      <span class="nup-name" id="nav-user">—</span>
-    </div>
-    <button class="btn-nav" onclick="sair()">Sair</button>
+<aside class="sidebar">
+  <div class="sb-head">
+    <span class="sb-logo">VOFOR</span>
+    <span class="sb-badge">Admin</span>
   </div>
-</nav>
-
-<div class="layout">
-  <aside class="sidebar">
-    <div class="sb-section">Visão geral</div>
-    <div class="sb-item active" onclick="showPanel('overview',this)">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
-      Dashboard
+  <nav style="flex:1;overflow-y:auto;padding:8px 0">
+    <div class="sb-sec">Visão geral</div>
+    <div class="sb-item active" onclick="showPanel('dashboard',this)">
+      <div class="sb-icon">📊</div>Dashboard
     </div>
     <div class="sb-item" onclick="showPanel('usuarios',this)">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
-      Usuários
+      <div class="sb-icon">👥</div>Usuários
     </div>
+    <div class="sb-sec">Métricas</div>
     <div class="sb-item" onclick="showPanel('metricas',this)">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M8 21V10M12 21V3M16 21v-7M4 21v-4"/></svg></div>
-      Métricas
+      <div class="sb-icon">📈</div>Por sistema
     </div>
     <div class="sb-item" onclick="showPanel('questoes-log',this)">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div>
-      Log de Questões
+      <div class="sb-icon">📋</div>Log questões
+    </div>
+    <div class="sb-sec">Configurações</div>
+    <div class="sb-item" onclick="showPanel('config',this)">
+      <div class="sb-icon">⚙️</div>Dificuldade IA
     </div>
     <div class="sb-divider"></div>
-    <div class="sb-section">Testar site</div>
-    <div class="sb-item" onclick="window.open('painel.html','_blank')">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
-      Painel
+    <div class="sb-sec">Testar site</div>
+    <div class="sb-item" onclick="window.open('painel.html','_blank')"><div class="sb-icon">⚖️</div>Concursos</div>
+    <div class="sb-item" onclick="window.open('med-painel.html','_blank')"><div class="sb-icon">🩺</div>Medicina</div>
+    <div class="sb-item" onclick="window.open('enem-painel.html','_blank')"><div class="sb-icon">📚</div>ENEM</div>
+    <div class="sb-item" onclick="window.open('index.html','_blank')"><div class="sb-icon">🏠</div>Home</div>
+  </nav>
+  <div class="sb-user">
+    <div class="nup" onclick="sair()">
+      <div class="nup-av" id="nav-avatar">?</div>
+      <div><div class="nup-name" id="nav-user">—</div><div class="nup-sub">Sair</div></div>
     </div>
-    <div class="sb-item" onclick="window.open('questoes.html','_blank')">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/></svg></div>
-      Questões
-    </div>
-    <div class="sb-item" onclick="window.open('plano.html','_blank')">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
-      Plano
-    </div>
-    <div class="sb-item" onclick="window.open('simulados.html','_blank')">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
-      Simulados
-    </div>
-    <div class="sb-item" onclick="window.open('desempenho.html','_blank')">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-      Desempenho
-    </div>
-    <div class="sb-item" onclick="window.open('anotacoes.html','_blank')">
-      <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
-      Anotações
-    </div>
-    <div class="sb-spacer"></div>
-  </aside>
+  </div>
+</aside>
 
-  <main class="main">
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title">Painel <em>Admin</em></div>
+    <a href="vofor-login.html" class="btn-painel">← Seletor</a>
+    <button class="btn-refresh" onclick="carregarTudo()">↻ Atualizar</button>
+  </div>
+
+  <div class="content">
 
     <!-- ══ DASHBOARD ══ -->
-    <div class="panel active" id="panel-overview">
-      <div class="page-hd">
-        <div>
-          <h1 class="page-title">Dashboard <em>Admin</em></h1>
-          <p class="page-sub">Visão geral do sistema em tempo real.</p>
-        </div>
-        <button class="btn-nav" onclick="carregarTudo()">↻ Atualizar</button>
-      </div>
-
-      <div class="stats-grid" id="stats-grid">
-        <div class="stat"><div class="stat-label">Total usuários</div><div class="stat-val" id="st-usuarios"><span class="spinner-inline"></span></div><div class="stat-sub">cadastrados</div></div>
+    <div class="panel active" id="panel-dashboard">
+      <!-- Stats gerais -->
+      <div class="stats-geral">
+        <div class="stat"><div class="stat-label">Total usuários</div><div class="stat-val" id="st-total"><span class="spinner-inline"></span></div><div class="stat-sub">nos 3 sistemas</div></div>
         <div class="stat"><div class="stat-label">Ativos hoje</div><div class="stat-val" id="st-hoje" style="color:var(--green)">—</div><div class="stat-sub">responderam questões</div></div>
         <div class="stat"><div class="stat-label">Total questões</div><div class="stat-val" id="st-questoes">—</div><div class="stat-sub">respondidas no total</div></div>
-        <div class="stat"><div class="stat-label">Taxa média</div><div class="stat-val" id="st-taxa">—</div><div class="stat-sub">de acerto geral</div></div>
-        <div class="stat"><div class="stat-label">Planos gerados</div><div class="stat-val" id="st-planos">—</div><div class="stat-sub">tópicos no total</div></div>
-        <div class="stat"><div class="stat-label">Ativos 7 dias</div><div class="stat-val" id="st-semana">—</div><div class="stat-sub">usuários únicos</div></div>
+        <div class="stat"><div class="stat-label">Taxa média geral</div><div class="stat-val" id="st-taxa">—</div><div class="stat-sub">de acerto</div></div>
       </div>
 
-      <!-- Acesso rápido -->
-      <div style="margin-bottom:14px;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2)">Testar páginas do site</div>
-      <div class="quick-links">
-        <a href="painel.html" target="_blank" class="ql"><div class="ql-icon" style="background:rgba(180,175,168,.1)">🏠</div><div><div class="ql-name">Painel</div><div class="ql-sub">Dashboard do aluno</div></div></a>
-        <a href="questoes.html" target="_blank" class="ql"><div class="ql-icon" style="background:rgba(180,175,168,.1)">❓</div><div><div class="ql-name">Questões</div><div class="ql-sub">Questões do dia</div></div></a>
-        <a href="plano.html" target="_blank" class="ql"><div class="ql-icon" style="background:rgba(180,175,168,.1)">📋</div><div><div class="ql-name">Plano</div><div class="ql-sub">Plano de estudos</div></div></a>
-        <a href="simulados.html" target="_blank" class="ql"><div class="ql-icon" style="background:rgba(180,175,168,.1)">📄</div><div><div class="ql-name">Simulados</div><div class="ql-sub">Simulados completos</div></div></a>
-        <a href="desempenho.html" target="_blank" class="ql"><div class="ql-icon" style="background:rgba(180,175,168,.1)">📈</div><div><div class="ql-name">Desempenho</div><div class="ql-sub">Gráficos e evolução</div></div></a>
-        <a href="anotacoes.html" target="_blank" class="ql"><div class="ql-icon" style="background:rgba(180,175,168,.1)">✏️</div><div><div class="ql-name">Anotações</div><div class="ql-sub">Editor de notas</div></div></a>
-        <a href="perfil.html" target="_blank" class="ql"><div class="ql-icon" style="background:rgba(180,175,168,.1)">👤</div><div><div class="ql-name">Perfil</div><div class="ql-sub">Config. de perfil</div></div></a>
-        <a href="diagnostico.html" target="_blank" class="ql"><div class="ql-icon" style="background:rgba(180,175,168,.1)">🎯</div><div><div class="ql-name">Diagnóstico</div><div class="ql-sub">Teste inicial</div></div></a>
+      <!-- Cards por sistema -->
+      <div class="sistemas-row">
+        <div class="sis-card concursos">
+          <div class="sis-header">
+            <span class="sis-icon">⚖️</span>
+            <span class="sis-nome">Concursos Públicos</span>
+            <span class="sis-badge concursos">Ativo</span>
+          </div>
+          <div class="sis-stats">
+            <div class="sis-stat"><div class="sis-stat-n" id="sc-usuarios">—</div><div class="sis-stat-l">Usuários</div></div>
+            <div class="sis-stat"><div class="sis-stat-n" id="sc-questoes">—</div><div class="sis-stat-l">Questões</div></div>
+            <div class="sis-stat"><div class="sis-stat-n" id="sc-taxa">—</div><div class="sis-stat-l">Taxa acerto</div></div>
+            <div class="sis-stat"><div class="sis-stat-n" id="sc-hoje">—</div><div class="sis-stat-l">Ativos hoje</div></div>
+          </div>
+        </div>
+        <div class="sis-card medicina">
+          <div class="sis-header">
+            <span class="sis-icon">🩺</span>
+            <span class="sis-nome">Medicina</span>
+            <span class="sis-badge medicina">Ativo</span>
+          </div>
+          <div class="sis-stats">
+            <div class="sis-stat"><div class="sis-stat-n" id="sm-usuarios">—</div><div class="sis-stat-l">Usuários</div></div>
+            <div class="sis-stat"><div class="sis-stat-n" id="sm-questoes">—</div><div class="sis-stat-l">Questões</div></div>
+            <div class="sis-stat"><div class="sis-stat-n" id="sm-taxa">—</div><div class="sis-stat-l">Taxa acerto</div></div>
+            <div class="sis-stat"><div class="sis-stat-n" id="sm-hoje">—</div><div class="sis-stat-l">Ativos hoje</div></div>
+          </div>
+        </div>
+        <div class="sis-card enem">
+          <div class="sis-header">
+            <span class="sis-icon">📚</span>
+            <span class="sis-nome">ENEM</span>
+            <span class="sis-badge enem">Ativo</span>
+          </div>
+          <div class="sis-stats">
+            <div class="sis-stat"><div class="sis-stat-n" id="se-usuarios">—</div><div class="sis-stat-l">Usuários</div></div>
+            <div class="sis-stat"><div class="sis-stat-n" id="se-questoes">—</div><div class="sis-stat-l">Questões</div></div>
+            <div class="sis-stat"><div class="sis-stat-n" id="se-redacoes">—</div><div class="sis-stat-l">Redações</div></div>
+            <div class="sis-stat"><div class="sis-stat-n" id="se-hoje">—</div><div class="sis-stat-l">Ativos hoje</div></div>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- ══ USUÁRIOS ══ -->
     <div class="panel" id="panel-usuarios">
-      <div class="page-hd">
-        <div>
-          <h1 class="page-title">Usuários</h1>
-          <p class="page-sub" id="usuarios-count">Carregando...</p>
-        </div>
-      </div>
       <div class="tbl-wrap">
-        <div class="tbl-header">
+        <div class="tbl-head">
           <span class="tbl-title">Todos os usuários</span>
-          <div class="tbl-actions">
-            <input class="tbl-search" id="search-usuarios" placeholder="Buscar email, concurso..." oninput="buscarUsuarios()">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <select class="tbl-filter" id="filtro-sistema" onchange="carregarUsuarios(1)">
+              <option value="">Todos os sistemas</option>
+              <option value="concursos">Concursos</option>
+              <option value="medicina">Medicina</option>
+              <option value="enem">ENEM</option>
+            </select>
+            <input class="tbl-search" id="search-usuarios" placeholder="Buscar email ou nome..." oninput="buscarUsuarios()">
           </div>
         </div>
         <table>
-          <thead>
-            <tr>
-              <th>Nome / Email</th>
-              <th>Concurso</th>
-              <th>Nível</th>
-              <th>Plano</th>
-              <th>Questões</th>
-              <th>Último acesso</th>
-              <th>Status</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody id="tbody-usuarios">
-            <tr class="loading-row"><td colspan="8"><span class="spinner-inline"></span>Carregando usuários...</td></tr>
-          </tbody>
+          <thead><tr><th>Nome / Email</th><th>Sistemas</th><th>Plano</th><th>Questões</th><th>Último acesso</th><th>Ações</th></tr></thead>
+          <tbody id="tbody-usuarios"><tr><td colspan="6" class="loading-cell"><span class="spinner-inline"></span>Carregando...</td></tr></tbody>
         </table>
-        <div class="pagination" id="paginacao">
+        <div class="pagination">
           <span id="pag-info">—</span>
-          <div class="pagination-btns" id="pag-btns"></div>
+          <div class="pag-btns" id="pag-btns"></div>
         </div>
       </div>
     </div>
 
     <!-- ══ MÉTRICAS ══ -->
     <div class="panel" id="panel-metricas">
-      <div class="page-hd">
-        <h1 class="page-title">Métricas</h1>
+      <div class="metricas-tabs">
+        <button class="met-tab active concursos" onclick="showMet('concursos',this)">⚖️ Concursos</button>
+        <button class="met-tab medicina" onclick="showMet('medicina',this)">🩺 Medicina</button>
+        <button class="met-tab enem" onclick="showMet('enem',this)">📚 ENEM</button>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-        <div class="tbl-wrap">
-          <div class="tbl-header"><span class="tbl-title">Disciplinas mais respondidas</span></div>
-          <table>
-            <thead><tr><th>Disciplina</th><th>Questões</th><th>Taxa acerto</th></tr></thead>
-            <tbody id="tbody-disciplinas"><tr class="loading-row"><td colspan="3"><span class="spinner-inline"></span>Carregando...</td></tr></tbody>
-          </table>
+
+      <!-- Concursos -->
+      <div class="met-panel active" id="met-concursos">
+        <div class="met-grid">
+          <div class="tbl-wrap">
+            <div class="tbl-head"><span class="tbl-title">Disciplinas mais respondidas</span></div>
+            <table><thead><tr><th>Disciplina</th><th>Questões</th><th>Taxa</th></tr></thead>
+            <tbody id="met-disc-c"><tr><td colspan="3" class="loading-cell"><span class="spinner-inline"></span></td></tr></tbody></table>
+          </div>
+          <div class="tbl-wrap">
+            <div class="tbl-head"><span class="tbl-title">Concursos mais estudados</span></div>
+            <table><thead><tr><th>Concurso</th><th>Usuários</th></tr></thead>
+            <tbody id="met-conc"><tr><td colspan="2" class="loading-cell"><span class="spinner-inline"></span></td></tr></tbody></table>
+          </div>
         </div>
-        <div class="tbl-wrap">
-          <div class="tbl-header"><span class="tbl-title">Concursos mais estudados</span></div>
-          <table>
-            <thead><tr><th>Concurso</th><th>Usuários</th></tr></thead>
-            <tbody id="tbody-concursos"><tr class="loading-row"><td colspan="2"><span class="spinner-inline"></span>Carregando...</td></tr></tbody>
-          </table>
+      </div>
+
+      <!-- Medicina -->
+      <div class="met-panel" id="met-medicina">
+        <div class="met-grid">
+          <div class="tbl-wrap">
+            <div class="tbl-head"><span class="tbl-title">Disciplinas mais respondidas</span></div>
+            <table><thead><tr><th>Disciplina</th><th>Questões</th><th>Taxa</th></tr></thead>
+            <tbody id="met-disc-m"><tr><td colspan="3" class="loading-cell"><span class="spinner-inline"></span></td></tr></tbody></table>
+          </div>
+          <div class="tbl-wrap">
+            <div class="tbl-head"><span class="tbl-title">Vestibulares mais estudados</span></div>
+            <table><thead><tr><th>Vestibular</th><th>Usuários</th></tr></thead>
+            <tbody id="met-vest"><tr><td colspan="2" class="loading-cell"><span class="spinner-inline"></span></td></tr></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ENEM -->
+      <div class="met-panel" id="met-enem">
+        <div class="met-grid">
+          <div class="tbl-wrap">
+            <div class="tbl-head"><span class="tbl-title">Áreas mais respondidas</span></div>
+            <table><thead><tr><th>Área</th><th>Questões</th><th>Taxa</th></tr></thead>
+            <tbody id="met-areas"><tr><td colspan="3" class="loading-cell"><span class="spinner-inline"></span></td></tr></tbody></table>
+          </div>
+          <div class="tbl-wrap">
+            <div class="tbl-head"><span class="tbl-title">Redações</span></div>
+            <table><thead><tr><th>Métrica</th><th>Valor</th></tr></thead>
+            <tbody id="met-redacoes"><tr><td colspan="2" class="loading-cell"><span class="spinner-inline"></span></td></tr></tbody></table>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- ══ LOG QUESTÕES ══ -->
     <div class="panel" id="panel-questoes-log">
-      <div class="page-hd">
-        <h1 class="page-title">Log de Questões</h1>
+      <div class="metricas-tabs" style="margin-bottom:16px">
+        <button class="met-tab active concursos" onclick="showLogTab('c',this)">⚖️ Concursos</button>
+        <button class="met-tab medicina" onclick="showLogTab('m',this)">🩺 Medicina</button>
+        <button class="met-tab enem" onclick="showLogTab('e',this)">📚 ENEM</button>
       </div>
       <div class="tbl-wrap">
-        <div class="tbl-header"><span class="tbl-title">Últimas 50 questões respondidas</span></div>
+        <div class="tbl-head"><span class="tbl-title">Últimas 50 questões respondidas</span></div>
         <table>
-          <thead><tr><th>Usuário</th><th>Disciplina</th><th>Banca</th><th>Resultado</th><th>Data</th></tr></thead>
-          <tbody id="tbody-log"><tr class="loading-row"><td colspan="5"><span class="spinner-inline"></span>Carregando...</td></tr></tbody>
+          <thead><tr><th>Usuário</th><th>Disciplina/Área</th><th>Resultado</th><th>Data</th></tr></thead>
+          <tbody id="tbody-log"><tr><td colspan="4" class="loading-cell"><span class="spinner-inline"></span>Carregando...</td></tr></tbody>
         </table>
       </div>
     </div>
 
-  </main>
+    <!-- ══ CONFIGURAÇÕES ══ -->
+    <div class="panel" id="panel-config">
+
+      <!-- Concursos -->
+      <div class="config-section">
+        <div class="config-title">⚖️ Configurações — Concursos Públicos</div>
+        <div class="config-sub">Ajusta o nível de dificuldade das questões geradas por IA para o sistema de concursos.</div>
+        <div class="config-row">
+          <div class="config-field">
+            <div class="config-label">Nível de dificuldade</div>
+            <select class="config-select" id="cfg-c-nivel">
+              <option value="iniciante">Iniciante — questões simples</option>
+              <option value="basico">Básico</option>
+              <option value="intermediario" selected>Intermediário (padrão)</option>
+              <option value="avancado">Avançado</option>
+              <option value="expert">Expert — nível alto</option>
+            </select>
+          </div>
+          <div class="config-field">
+            <div class="config-label">Bancas prioritárias</div>
+            <select class="config-select" id="cfg-c-bancas">
+              <option value="todas">Todas as bancas</option>
+              <option value="CESPE">CESPE/CEBRASPE</option>
+              <option value="FCC">FCC</option>
+              <option value="FGV">FGV</option>
+              <option value="VUNESP">VUNESP</option>
+            </select>
+          </div>
+        </div>
+        <div class="config-row">
+          <div class="config-field">
+            <div class="config-label">Estilo das questões</div>
+            <select class="config-select" id="cfg-c-estilo">
+              <option value="normal">Normal</option>
+              <option value="contextualizado">Contextualizado (textos longos)</option>
+              <option value="direto">Direto (sem contexto)</option>
+            </select>
+          </div>
+          <div class="config-field">
+            <div class="config-label">Peso no gabarito</div>
+            <select class="config-select" id="cfg-c-peso">
+              <option value="equilibrado">Equilibrado</option>
+              <option value="mais_erros">Mais distratores fortes</option>
+              <option value="simples">Gabaritos mais óbvios</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-save" id="btn-save-c" onclick="salvarConfig('concursos')">Salvar configurações</button>
+      </div>
+
+      <!-- Medicina -->
+      <div class="config-section">
+        <div class="config-title">🩺 Configurações — Medicina</div>
+        <div class="config-sub">Ajusta o nível de dificuldade para o sistema de vestibulares de medicina.</div>
+        <div class="config-row">
+          <div class="config-field">
+            <div class="config-label">Nível de dificuldade</div>
+            <select class="config-select" id="cfg-m-nivel">
+              <option value="iniciante">Iniciante</option>
+              <option value="basico">Básico</option>
+              <option value="intermediario" selected>Intermediário (padrão)</option>
+              <option value="avancado">Avançado</option>
+              <option value="fuvest">Nível FUVEST — máximo</option>
+            </select>
+          </div>
+          <div class="config-field">
+            <div class="config-label">Vestibular referência</div>
+            <select class="config-select" id="cfg-m-vest">
+              <option value="geral">Geral (todos)</option>
+              <option value="FUVEST">FUVEST</option>
+              <option value="UNICAMP">UNICAMP</option>
+              <option value="Einstein">Einstein</option>
+              <option value="ENEM">ENEM/SISU</option>
+            </select>
+          </div>
+        </div>
+        <div class="config-row">
+          <div class="config-field">
+            <div class="config-label">Foco de disciplinas</div>
+            <select class="config-select" id="cfg-m-foco">
+              <option value="todas">Todas equilibradas</option>
+              <option value="bio_quim">Bio e Química (maior peso)</option>
+              <option value="exatas">Física e Matemática (maior peso)</option>
+              <option value="humanas">Humanas e Redação (maior peso)</option>
+            </select>
+          </div>
+          <div class="config-field">
+            <div class="config-label">Profundidade da explicação</div>
+            <select class="config-select" id="cfg-m-explic">
+              <option value="breve">Breve (1-2 linhas)</option>
+              <option value="normal" selected>Normal</option>
+              <option value="detalhada">Detalhada (com referências)</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-save" id="btn-save-m" onclick="salvarConfig('medicina')">Salvar configurações</button>
+      </div>
+
+      <!-- ENEM -->
+      <div class="config-section">
+        <div class="config-title">📚 Configurações — ENEM</div>
+        <div class="config-sub">Ajusta o nível e estilo das questões geradas para o sistema ENEM.</div>
+        <div class="config-row">
+          <div class="config-field">
+            <div class="config-label">Nível de dificuldade</div>
+            <select class="config-select" id="cfg-e-nivel">
+              <option value="iniciante">Iniciante</option>
+              <option value="basico">Básico</option>
+              <option value="intermediario" selected>Intermediário (padrão)</option>
+              <option value="avancado">Avançado</option>
+              <option value="enem_alto">Alto (pré-vestibular)</option>
+            </select>
+          </div>
+          <div class="config-field">
+            <div class="config-label">Estilo das questões</div>
+            <select class="config-select" id="cfg-e-estilo">
+              <option value="contextualizado" selected>Contextualizado (padrão INEP)</option>
+              <option value="direto">Direto</option>
+              <option value="interdisciplinar">Interdisciplinar</option>
+            </select>
+          </div>
+        </div>
+        <div class="config-row">
+          <div class="config-field">
+            <div class="config-label">Área prioritária</div>
+            <select class="config-select" id="cfg-e-area">
+              <option value="todas">Todas equilibradas</option>
+              <option value="linguagens">Linguagens</option>
+              <option value="matematica">Matemática</option>
+              <option value="natureza">Ciências da Natureza</option>
+              <option value="humanas">Ciências Humanas</option>
+            </select>
+          </div>
+          <div class="config-field">
+            <div class="config-label">Critério de redação</div>
+            <select class="config-select" id="cfg-e-red">
+              <option value="enem" selected>ENEM (5 competências)</option>
+              <option value="rigoroso">Rigoroso (notas menores)</option>
+              <option value="incentivador">Incentivador (notas maiores)</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-save" id="btn-save-e" onclick="salvarConfig('enem')">Salvar configurações</button>
+      </div>
+
+    </div>
+
+  </div>
 </div>
 
 <!-- MODAL EDITAR USUÁRIO -->
@@ -327,15 +528,15 @@ tbody td{padding:11px 14px;font-size:.82rem;vertical-align:middle}
     <div class="modal-title">Editar usuário</div>
     <div class="modal-sub" id="modal-info">—</div>
     <div class="modal-field">
-      <label class="modal-label">Plano</label>
+      <label class="modal-label">Plano (Concursos)</label>
       <select class="modal-select" id="modal-plano">
-        <option value="gratis">Grátis — 20 questões/dia</option>
-        <option value="basic">Basic — 100 questões/dia</option>
-        <option value="pro">Pro — Ilimitado</option>
+        <option value="gratis">Grátis</option>
+        <option value="basic">Basic</option>
+        <option value="pro">Pro</option>
       </select>
     </div>
     <div class="modal-field">
-      <label class="modal-label">Nível</label>
+      <label class="modal-label">Nível (Concursos)</label>
       <select class="modal-select" id="modal-nivel">
         <option value="iniciante">Iniciante</option>
         <option value="basico">Básico</option>
@@ -352,7 +553,7 @@ tbody td{padding:11px 14px;font-size:.82rem;vertical-align:middle}
     </div>
     <div class="modal-actions">
       <button class="btn-modal ghost" onclick="fecharModal()">Cancelar</button>
-      <button class="btn-modal primary" onclick="salvarUsuario()">Salvar alterações</button>
+      <button class="btn-modal primary" onclick="salvarUsuario()">Salvar</button>
     </div>
   </div>
 </div>
@@ -361,157 +562,218 @@ tbody td{padding:11px 14px;font-size:.82rem;vertical-align:middle}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const{createClient}=supabase;
-const sb=createClient('https://lklmzhunhiwqsbhnymaw.supabase.co','sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU');
-
-let currentUserId=null;
-let todosUsuarios=[], usuarioEditando=null;
-let paginaAtual=1; const LIMIT=50;
-let buscarTimer=null;
+const sb=supabase.createClient('https://lklmzhunhiwqsbhnymaw.supabase.co','sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU');
+let currentUserId=null, statsData=null;
+let todosUsuarios=[], usuarioEditando=null, paginaAtual=1;
+const LIMIT=50;
+let logTab='c', buscarTimer=null;
 
 async function init(){
   const{data:{session}}=await sb.auth.getSession();
-  if(!session){window.location.href='login.html';return;}
+  if(!session){window.location.href='vofor-login.html';return;}
   currentUserId=session.user.id;
-
-  const{data:perfil}=await sb.from('perfis').select('is_admin').eq('id',currentUserId).single();
-  if(!perfil?.is_admin){window.location.href='painel.html';return;}
-
-  const nome=session.user.user_metadata?.full_name||session.user.user_metadata?.nome||session.user.email.split('@')[0];
+  const{data:p}=await sb.from('perfis').select('is_admin').eq('id',currentUserId).single();
+  if(!p?.is_admin){window.location.href='painel.html';return;}
+  const nome=session.user.user_metadata?.full_name||session.user.email.split('@')[0];
   document.getElementById('nav-avatar').textContent=nome.substring(0,2).toUpperCase();
   document.getElementById('nav-user').textContent=nome;
-
   carregarTudo();
+  carregarConfig();
 }
 
 async function carregarTudo(){
   await Promise.all([carregarStats(), carregarUsuarios()]);
+  carregarLog('c');
 }
 
 async function carregarStats(){
   try{
     const r=await fetch('/api/admin-stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:currentUserId})});
-    const d=await r.json();
-    if(d.error){console.error(d.error);return;}
-    document.getElementById('st-usuarios').textContent=d.totalUsuarios||0;
-    document.getElementById('st-hoje').textContent=d.ativosHoje||0;
-    document.getElementById('st-questoes').textContent=d.totalQuestoes||0;
-    document.getElementById('st-taxa').textContent=(d.taxaMedia||0)+'%';
-    document.getElementById('st-planos').textContent=d.totalPlanos||0;
-    document.getElementById('st-semana').textContent=d.ativosSemana||0;
-
-    // Métricas disciplinas
-    const td=document.getElementById('tbody-disciplinas');
-    if(d.disciplinas?.length){
-      td.innerHTML=d.disciplinas.map(x=>{
-        const cor=x.taxa>=70?'var(--green)':x.taxa>=50?'var(--gold)':'var(--red)';
-        return`<tr><td>${x.disciplina||'—'}</td><td style="font-family:'Playfair Display',serif;color:var(--gold)">${x.total}</td><td style="color:${cor};font-weight:600">${x.taxa}%</td></tr>`;
-      }).join('');
-    } else td.innerHTML='<tr class="empty-row"><td colspan="3">Sem dados</td></tr>';
-
-    // Métricas concursos
-    const tc=document.getElementById('tbody-concursos');
-    if(d.concursos?.length){
-      tc.innerHTML=d.concursos.map(x=>`<tr><td>${x.concurso||'—'}</td><td style="font-family:'Playfair Display',serif;color:var(--gold)">${x.usuarios}</td></tr>`).join('');
-    } else tc.innerHTML='<tr class="empty-row"><td colspan="2">Sem dados</td></tr>';
-
+    statsData=await r.json();
+    if(statsData.error){console.error(statsData.error);return;}
+    // Geral
+    document.getElementById('st-total').textContent=statsData.totalUsuarios||0;
+    document.getElementById('st-hoje').textContent=statsData.ativosHoje||0;
+    document.getElementById('st-questoes').textContent=statsData.totalQuestoes||0;
+    document.getElementById('st-taxa').textContent=(statsData.taxaMediaGeral||0)+'%';
+    // Concursos
+    const c=statsData.concursos||{};
+    document.getElementById('sc-usuarios').textContent=c.usuarios||0;
+    document.getElementById('sc-questoes').textContent=c.questoes||0;
+    document.getElementById('sc-taxa').textContent=(c.taxaMedia||0)+'%';
+    document.getElementById('sc-hoje').textContent=c.ativosHoje||0;
+    // Medicina
+    const m=statsData.medicina||{};
+    document.getElementById('sm-usuarios').textContent=m.usuarios||0;
+    document.getElementById('sm-questoes').textContent=m.questoes||0;
+    document.getElementById('sm-taxa').textContent=(m.taxaMedia||0)+'%';
+    document.getElementById('sm-hoje').textContent=m.ativosHoje||0;
+    // ENEM
+    const e=statsData.enem||{};
+    document.getElementById('se-usuarios').textContent=e.usuarios||0;
+    document.getElementById('se-questoes').textContent=e.questoes||0;
+    document.getElementById('se-redacoes').textContent=e.redacoes||0;
+    document.getElementById('se-hoje').textContent=e.ativosHoje||0;
+    // Preenche métricas
+    renderDiscTable('met-disc-c', c.disciplinas);
+    renderDiscTable('met-disc-m', m.disciplinas);
+    renderDiscTable('met-areas', e.areas, 'area');
+    renderSimpleTable('met-conc', c.concursosMaisEstudados, 'concurso');
+    renderSimpleTable('met-vest', m.vestibulares, 'vestibular');
+    if(e.redacoes){
+      document.getElementById('met-redacoes').innerHTML=`
+        <tr><td>Total redações</td><td style="font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--purple2)">${e.redacoes}</td></tr>
+        <tr><td>Nota média</td><td style="font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--gold)">${e.notaMediaRedacao||0}/1000</td></tr>`;
+    } else {
+      document.getElementById('met-redacoes').innerHTML='<tr><td colspan="2" class="empty-cell">Sem dados</td></tr>';
+    }
   }catch(e){console.error(e);}
 }
 
-async function carregarUsuarios(pagina=1, search=''){
-  paginaAtual=pagina;
-  document.getElementById('tbody-usuarios').innerHTML='<tr class="loading-row"><td colspan="8"><span class="spinner-inline"></span>Carregando...</td></tr>';
-  try{
-    const r=await fetch('/api/admin-users',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:currentUserId,page:pagina,limit:LIMIT,search})});
-    const d=await r.json();
-    if(d.error){document.getElementById('tbody-usuarios').innerHTML=`<tr class="empty-row"><td colspan="8">Erro: ${d.error}</td></tr>`;return;}
-
-    todosUsuarios=d.usuarios||[];
-    document.getElementById('usuarios-count').textContent=`${d.total} usuários cadastrados`;
-    renderUsuarios(todosUsuarios);
-    renderPaginacao(d.total, pagina);
-    carregarLogQuestoes();
-  }catch(e){document.getElementById('tbody-usuarios').innerHTML=`<tr class="empty-row"><td colspan="8">Erro ao carregar</td></tr>`;}
-}
-
-function renderUsuarios(lista){
-  const tbody=document.getElementById('tbody-usuarios');
-  if(!lista.length){tbody.innerHTML='<tr class="empty-row"><td colspan="8">Nenhum usuário encontrado.</td></tr>';return;}
-  tbody.innerHTML=lista.map(u=>{
-    const lastSignIn=u.last_sign_in?new Date(u.last_sign_in).toLocaleDateString('pt-BR'):'—';
-    return`<tr>
-      <td>
-        <div style="font-weight:500;font-size:.82rem">${u.nome||'—'}</div>
-        <div style="font-size:.72rem;color:var(--muted);margin-top:2px">${u.email||'—'}</div>
-      </td>
-      <td style="font-size:.78rem;color:var(--muted);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${u.concurso?u.concurso.substring(0,30):'—'}</td>
-      <td style="font-size:.78rem">${u.nivel||'—'}</td>
-      <td>
-        <span class="badge badge-${u.plano||'gratis'}">${u.plano||'grátis'}</span>
-        ${u.is_admin?'<span class="badge badge-admin" style="margin-left:3px">admin</span>':''}
-      </td>
-      <td style="font-family:'Playfair Display',serif;font-size:.95rem;color:var(--gold)">${u.qtd_questoes}</td>
-      <td style="font-size:.75rem;color:var(--muted)">${lastSignIn}</td>
-      <td>${u.ativo_hoje?'<span class="badge badge-ativo">ativo hoje</span>':'<span style="font-size:.72rem;color:var(--muted2)">inativo</span>'}</td>
-      <td><button class="btn-sm" onclick="abrirModal('${u.id}','${u.email}','${u.nome}','${u.plano||'gratis'}','${u.is_admin}','${u.nivel||'intermediario'}')">Editar</button></td>
-    </tr>`;
+function renderDiscTable(tbodyId, data, keyName='disciplina'){
+  const el=document.getElementById(tbodyId);
+  if(!data?.length){el.innerHTML='<tr><td colspan="3" class="empty-cell">Sem dados</td></tr>';return;}
+  el.innerHTML=data.map(x=>{
+    const cor=x.taxa>=70?'var(--green)':x.taxa>=50?'var(--gold)':'var(--red)';
+    return`<tr><td>${x[keyName]||'—'}</td><td style="font-family:'Cormorant Garamond',serif;color:var(--purple2)">${x.total}</td><td style="color:${cor};font-weight:700">${x.taxa}%</td></tr>`;
   }).join('');
 }
 
-function renderPaginacao(total, pagina){
-  const totalPags=Math.ceil(total/LIMIT);
-  document.getElementById('pag-info').textContent=`Mostrando ${((pagina-1)*LIMIT)+1}–${Math.min(pagina*LIMIT,total)} de ${total}`;
-  const btns=document.getElementById('pag-btns');
-  btns.innerHTML='';
-  const prev=document.createElement('button');
-  prev.className='page-btn';prev.textContent='← Anterior';prev.disabled=pagina===1;
-  prev.onclick=()=>carregarUsuarios(pagina-1,document.getElementById('search-usuarios').value);
-  btns.appendChild(prev);
-  // Páginas
-  const start=Math.max(1,pagina-2), end=Math.min(totalPags,pagina+2);
-  for(let i=start;i<=end;i++){
-    const btn=document.createElement('button');
-    btn.className='page-btn'+(i===pagina?' active':'');
-    btn.textContent=i;
-    const p=i;
-    btn.onclick=()=>carregarUsuarios(p,document.getElementById('search-usuarios').value);
-    btns.appendChild(btn);
-  }
-  const next=document.createElement('button');
-  next.className='page-btn';next.textContent='Próxima →';next.disabled=pagina===totalPags;
-  next.onclick=()=>carregarUsuarios(pagina+1,document.getElementById('search-usuarios').value);
-  btns.appendChild(next);
+function renderSimpleTable(tbodyId, data, keyName){
+  const el=document.getElementById(tbodyId);
+  if(!data?.length){el.innerHTML='<tr><td colspan="2" class="empty-cell">Sem dados</td></tr>';return;}
+  el.innerHTML=data.map(x=>`<tr><td>${x[keyName]||'—'}</td><td style="font-family:'Cormorant Garamond',serif;color:var(--purple2)">${x.usuarios}</td></tr>`).join('');
+}
+
+async function carregarUsuarios(pagina=1){
+  paginaAtual=pagina;
+  const sistema=document.getElementById('filtro-sistema').value;
+  const search=document.getElementById('search-usuarios').value;
+  document.getElementById('tbody-usuarios').innerHTML='<tr><td colspan="6" class="loading-cell"><span class="spinner-inline"></span>Carregando...</td></tr>';
+  try{
+    const r=await fetch('/api/admin-users',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:currentUserId,page:pagina,limit:LIMIT,search})});
+    const d=await r.json();
+    if(d.error){document.getElementById('tbody-usuarios').innerHTML=`<tr><td colspan="6" class="empty-cell">Erro: ${d.error}</td></tr>`;return;}
+    todosUsuarios=d.usuarios||[];
+    // Busca quais sistemas cada usuário tem
+    const ids=todosUsuarios.map(u=>u.id);
+    const[{data:medPerfis},{data:enemPerfis}]=await Promise.all([
+      sb.from('medicina_perfis').select('id').in('id',ids),
+      sb.from('enem_perfis').select('id').in('id',ids),
+    ]);
+    const medSet=new Set(medPerfis?.map(p=>p.id)||[]);
+    const enemSet=new Set(enemPerfis?.map(p=>p.id)||[]);
+    todosUsuarios=todosUsuarios.map(u=>({...u,tem_medicina:medSet.has(u.id),tem_enem:enemSet.has(u.id)}));
+    // Filtra por sistema se necessário
+    let lista=todosUsuarios;
+    if(sistema==='medicina')lista=lista.filter(u=>u.tem_medicina);
+    else if(sistema==='enem')lista=lista.filter(u=>u.tem_enem);
+    else if(sistema==='concursos')lista=lista.filter(u=>!u.tem_medicina&&!u.tem_enem||true);
+    document.getElementById('pag-info').textContent=`${lista.length} usuários`;
+    document.getElementById('tbody-usuarios').innerHTML=lista.map(u=>{
+      const lastSignIn=u.last_sign_in?new Date(u.last_sign_in).toLocaleDateString('pt-BR'):'—';
+      const sistemas=`
+        <span class="badge badge-c">C</span>
+        ${u.tem_medicina?'<span class="badge badge-m" style="margin-left:3px">M</span>':''}
+        ${u.tem_enem?'<span class="badge badge-e" style="margin-left:3px">E</span>':''}
+      `;
+      return`<tr>
+        <td><div style="font-weight:500;font-size:.82rem">${u.nome||'—'}</div><div style="font-size:.7rem;color:var(--muted);margin-top:2px">${u.email||'—'}</div></td>
+        <td>${sistemas}${u.is_admin?'<span class="badge badge-admin" style="margin-left:3px">adm</span>':''}</td>
+        <td><span class="badge badge-${u.plano||'gratis'}">${u.plano||'grátis'}</span></td>
+        <td style="font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--purple2)">${u.qtd_questoes||0}</td>
+        <td style="font-size:.74rem;color:var(--muted)">${lastSignIn}</td>
+        <td><button class="btn-sm" onclick="abrirModal('${u.id}','${u.email}','${u.nome||''}','${u.plano||'gratis'}','${u.is_admin}','${u.nivel||'intermediario'}')">Editar</button></td>
+      </tr>`;
+    }).join('')||'<tr><td colspan="6" class="empty-cell">Nenhum usuário</td></tr>';
+  }catch(e){document.getElementById('tbody-usuarios').innerHTML='<tr><td colspan="6" class="empty-cell">Erro ao carregar</td></tr>';}
 }
 
 function buscarUsuarios(){
   clearTimeout(buscarTimer);
-  buscarTimer=setTimeout(()=>{
-    carregarUsuarios(1,document.getElementById('search-usuarios').value);
-  },400);
+  buscarTimer=setTimeout(()=>carregarUsuarios(1),400);
 }
 
-async function carregarLogQuestoes(){
+async function carregarLog(sistema){
+  logTab=sistema;
+  const tabela=sistema==='c'?'questoes_respondidas':sistema==='m'?'medicina_questoes':'enem_questoes';
+  document.getElementById('tbody-log').innerHTML='<tr><td colspan="4" class="loading-cell"><span class="spinner-inline"></span></td></tr>';
+  const{data}=await sb.from(tabela).select('user_id,disciplina,area,acertou,created_at').order('created_at',{ascending:false}).limit(50);
+  if(!data?.length){document.getElementById('tbody-log').innerHTML='<tr><td colspan="4" class="empty-cell">Sem dados</td></tr>';return;}
+  document.getElementById('tbody-log').innerHTML=data.map(q=>{
+    const dt=new Date(q.created_at).toLocaleString('pt-BR');
+    return`<tr>
+      <td style="font-size:.72rem;color:var(--muted);font-family:monospace">${q.user_id.substring(0,10)}...</td>
+      <td>${q.disciplina||q.area||'—'}</td>
+      <td><span style="color:${q.acertou?'var(--green)':'var(--red)'};font-weight:700">${q.acertou?'✓':'✗'}</span></td>
+      <td style="font-size:.72rem;color:var(--muted)">${dt}</td>
+    </tr>`;
+  }).join('');
+}
+
+function showLogTab(sistema,el){
+  document.querySelectorAll('#panel-questoes-log .met-tab').forEach(t=>t.classList.remove('active','concursos','medicina','enem'));
+  const cls=sistema==='c'?'concursos':sistema==='m'?'medicina':'enem';
+  el.classList.add('active',cls);
+  carregarLog(sistema);
+}
+
+async function carregarConfig(){
   try{
-    const{data}=await sb.from('questoes_respondidas').select('user_id,disciplina,banca,acertou,created_at').order('created_at',{ascending:false}).limit(50);
-    if(!data)return;
-    document.getElementById('tbody-log').innerHTML=data.map(q=>{
-      const dt=new Date(q.created_at).toLocaleString('pt-BR');
-      return`<tr>
-        <td style="font-size:.72rem;color:var(--muted);font-family:monospace">${q.user_id.substring(0,12)}...</td>
-        <td>${q.disciplina||'—'}</td>
-        <td style="color:var(--muted);font-size:.78rem">${q.banca||'—'}</td>
-        <td><span style="color:${q.acertou?'var(--green)':'var(--red)'};font-weight:700">${q.acertou?'✓ Acerto':'✗ Erro'}</span></td>
-        <td style="color:var(--muted);font-size:.75rem">${dt}</td>
-      </tr>`;
-    }).join('')||'<tr class="empty-row"><td colspan="5">Sem dados</td></tr>';
-  }catch(e){}
+    const r=await fetch('/api/admin-config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'get',user_id:currentUserId})});
+    const d=await r.json();
+    if(!d.config)return;
+    const c=d.config.dificuldade_concursos||{};
+    const m=d.config.dificuldade_medicina||{};
+    const e=d.config.dificuldade_enem||{};
+    if(c.nivel)document.getElementById('cfg-c-nivel').value=c.nivel;
+    if(c.bancas)document.getElementById('cfg-c-bancas').value=c.bancas;
+    if(c.estilo)document.getElementById('cfg-c-estilo').value=c.estilo;
+    if(m.nivel)document.getElementById('cfg-m-nivel').value=m.nivel;
+    if(m.vestibular)document.getElementById('cfg-m-vest').value=m.vestibular;
+    if(m.foco)document.getElementById('cfg-m-foco').value=m.foco;
+    if(e.nivel)document.getElementById('cfg-e-nivel').value=e.nivel;
+    if(e.estilo)document.getElementById('cfg-e-estilo').value=e.estilo;
+    if(e.area)document.getElementById('cfg-e-area').value=e.area;
+  }catch(err){console.error(err);}
 }
 
-function showPanel(nome, el){
+async function salvarConfig(sistema){
+  const btnId=`btn-save-${sistema[0]}`;
+  const btn=document.getElementById(btnId);
+  btn.textContent='Salvando...';btn.disabled=true;
+  let id, valor;
+  if(sistema==='concursos'){
+    id='dificuldade_concursos';
+    valor={nivel:document.getElementById('cfg-c-nivel').value,bancas:document.getElementById('cfg-c-bancas').value,estilo:document.getElementById('cfg-c-estilo').value,peso:document.getElementById('cfg-c-peso').value};
+  } else if(sistema==='medicina'){
+    id='dificuldade_medicina';
+    valor={nivel:document.getElementById('cfg-m-nivel').value,vestibular:document.getElementById('cfg-m-vest').value,foco:document.getElementById('cfg-m-foco').value,explicacao:document.getElementById('cfg-m-explic').value};
+  } else {
+    id='dificuldade_enem';
+    valor={nivel:document.getElementById('cfg-e-nivel').value,estilo:document.getElementById('cfg-e-estilo').value,area:document.getElementById('cfg-e-area').value,redacao:document.getElementById('cfg-e-red').value};
+  }
+  try{
+    const r=await fetch('/api/admin-config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'save',user_id:currentUserId,id,valor})});
+    const d=await r.json();
+    if(d.ok){btn.textContent='✓ Salvo!';btn.classList.add('saved');setTimeout(()=>{btn.textContent='Salvar configurações';btn.classList.remove('saved');btn.disabled=false;},2000);}
+    else{btn.textContent='Erro';btn.disabled=false;showToast('Erro ao salvar','error');}
+  }catch(e){btn.textContent='Salvar configurações';btn.disabled=false;showToast('Erro ao salvar','error');}
+}
+
+function showPanel(nome,el){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
   document.getElementById('panel-'+nome).classList.add('active');
   if(el)el.classList.add('active');
+  if(nome==='usuarios')carregarUsuarios(1);
+}
+
+function showMet(nome,el){
+  document.querySelectorAll('.met-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('#panel-metricas .met-tab').forEach(t=>t.classList.remove('active','concursos','medicina','enem'));
+  document.getElementById('met-'+nome).classList.add('active');
+  el.classList.add('active',nome);
 }
 
 function abrirModal(id,email,nome,plano,isAdmin,nivel){
@@ -522,11 +784,7 @@ function abrirModal(id,email,nome,plano,isAdmin,nivel){
   document.getElementById('modal-nivel').value=nivel;
   document.getElementById('modal-usuario').classList.add('show');
 }
-
-function fecharModal(){
-  document.getElementById('modal-usuario').classList.remove('show');
-  usuarioEditando=null;
-}
+function fecharModal(){document.getElementById('modal-usuario').classList.remove('show');usuarioEditando=null;}
 
 async function salvarUsuario(){
   if(!usuarioEditando)return;
@@ -539,7 +797,7 @@ async function salvarUsuario(){
     if(d.error){showToast('Erro: '+d.error,'error');return;}
     showToast('Usuário atualizado!','success');
     fecharModal();
-    carregarUsuarios(paginaAtual,document.getElementById('search-usuarios').value);
+    carregarUsuarios(paginaAtual);
   }catch(e){showToast('Erro ao salvar','error');}
 }
 
@@ -550,7 +808,7 @@ function showToast(msg,type='success'){
   setTimeout(()=>t.classList.remove('show'),3000);
 }
 
-async function sair(){await sb.auth.signOut();window.location.href='index.html';}
+async function sair(){await sb.auth.signOut();window.location.href='vofor-login.html';}
 init();
 </script>
 </body>
