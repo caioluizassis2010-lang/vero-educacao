@@ -268,7 +268,12 @@ async function init(){
   const meses=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
   document.getElementById('topbar-date').textContent=`${dias[d.getDay()]}, ${d.getDate()} de ${meses[d.getMonth()]}`;
   const{data:p}=await sb.from('enem_perfis').select('*').eq('id',userId).single();
-  if(!p){window.location.href='enem-perfil.html';return;}
+  if(!p){
+      const{data:adm}=await sb.from('perfis').select('is_admin').eq('id',userId).single();
+      if(adm?.is_admin){
+        await sb.from('enem_perfis').upsert({id:userId,nivel:'avancado',horas_dia:'8h',diagnostico_completo:true});
+      } else { window.location.href='enem-perfil.html';return; }
+    }
   if(!p.diagnostico_completo){window.location.href='enem-diagnostico.html';return;}
   if(p.universidade_alvo){document.getElementById('meta-value').textContent=p.universidade_alvo+(p.curso_alvo?' · '+p.curso_alvo:'');document.getElementById('meta-card').style.display='block';}
   await Promise.all([carregarQuestoes(),carregarPlano(),carregarRedacoes()]);

@@ -425,5 +425,34 @@ async function capturar(){
   document.getElementById('cap-ok').style.display='inline-block';
 }
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(async function(){
+  try{
+    const sb=supabase.createClient('https://lklmzhunhiwqsbhnymaw.supabase.co','sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU');
+    const{data:{session}}=await sb.auth.getSession();
+    if(!session)return;
+    const user=session.user;
+    const nome=user.user_metadata?.full_name||user.user_metadata?.nome||user.email.split('@')[0];
+    const ini=nome.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+    // Verifica se é admin
+    const{data:perfil}=await sb.from('perfis').select('is_admin').eq('id',user.id).single();
+    const isAdmin=perfil?.is_admin;
+    const navR=document.querySelector('.nav-right');
+    if(navR){
+      navR.innerHTML=`
+        <a href="vofor-login.html" style="font-size:.82rem;color:var(--muted);padding:8px 18px;border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:all .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">← Seletor</a>
+        <div style="display:flex;align-items:center;gap:7px;padding:5px 14px 5px 5px;border:1px solid var(--border);border-radius:100px;background:rgba(255,255,255,0.04);cursor:pointer" onclick="window.location.href=PAINEL_URL">
+          <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#6d28d9,#7c3aed);border:1px solid rgba(167,139,250,0.35);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff;flex-shrink:0">${ini}</div>
+          <span style="font-size:.78rem;color:var(--text);font-weight:500">${nome.split(' ')[0]}</span>
+        </div>
+        <button onclick="sb.auth.signOut().then(()=>location.reload())" style="font-size:.78rem;color:var(--muted);padding:7px 14px;border:1px solid var(--border);border-radius:8px;cursor:pointer;background:none;font-family:'DM Sans',sans-serif;transition:all .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Sair</button>
+      `.replace('PAINEL_URL', 'enem-painel.html').replace('linear-gradient(135deg,#6d28d9,#7c3aed)', linear-gradient(135deg,#6d28d9,#7c3aed)).replace('rgba(167,139,250,0.35)', rgba(167,139,250,0.35));
+    }
+  }catch(e){}
+})();
+</script>
+
 </body>
 </html>

@@ -473,7 +473,16 @@ async function init(){
 
   // Perfil
   const{data:p}=await sb.from('medicina_perfis').select('*').eq('id',userId).single();
-  if(!p){window.location.href='med-perfil.html';return;}
+  if(!p){
+      // Verifica se é admin — admin entra sem precisar de perfil
+      const{data:adm}=await sb.from('perfis').select('is_admin').eq('id',userId).single();
+      if(adm?.is_admin){
+        // Cria perfil temporário para admin
+        await sb.from('medicina_perfis').upsert({id:userId,vestibular_alvo:'Admin',nivel:'avancado',horas_dia:'8h',diagnostico_completo:true});
+      } else {
+        window.location.href='med-perfil.html';return;
+      }
+    }
   if(!p.diagnostico_completo){window.location.href='med-diagnostico.html';return;}
   perfil=p;
 
