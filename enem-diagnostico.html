@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vofor ENEM — Diagnóstico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#07050f;--bg2:#100c1e;--bg3:#171030;--purple:#7c3aed;--purple2:#a78bfa;--purple3:#6d28d9;--violet:#8b5cf6;--text:#f5f3ff;--muted:#8b7da8;--muted2:rgba(139,125,168,0.22);--border:rgba(167,139,250,0.12);--border2:rgba(167,139,250,0.28);--green:#10b981;--red:#ef4444}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 80% 60% at 20% 20%,rgba(124,58,237,0.08) 0%,transparent 60%)}
+nav{padding:18px 40px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(7,5,15,0.8);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none}
+.nav-vofor{font-family:'Jost',sans-serif;font-size:1.05rem;font-weight:300;letter-spacing:.45em;color:var(--text);text-transform:uppercase;padding-right:.45em}
+.nav-divider{width:1px;height:14px;background:rgba(167,139,250,0.3);display:inline-block}
+.nav-sub{font-family:'Jost',sans-serif;font-size:.58rem;font-weight:300;letter-spacing:.28em;color:rgba(139,125,168,0.6);text-transform:uppercase}
+.prog-wrap{display:flex;align-items:center;gap:12px;font-size:.8rem;color:var(--muted)}
+.prog-bg{width:120px;height:4px;background:var(--border);border-radius:2px}
+.prog-fill{height:4px;border-radius:2px;background:linear-gradient(90deg,var(--purple3),var(--violet));transition:width .3s}
+.main{max-width:680px;margin:0 auto;padding:48px 24px}
+.intro{text-align:center;padding:40px 0 60px}
+.intro-icon{font-size:3rem;margin-bottom:20px}
+.intro-title{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:700;line-height:1.1;margin-bottom:12px}
+.intro-title em{font-style:italic;color:var(--purple2)}
+.intro-sub{font-size:.95rem;color:var(--muted);font-weight:300;line-height:1.75;max-width:480px;margin:0 auto 32px}
+.intro-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:36px}
+.chip{padding:5px 14px;border-radius:100px;background:rgba(124,58,237,0.1);border:1px solid rgba(167,139,250,0.2);font-size:.78rem;color:var(--purple2);font-weight:500}
+.btn-start{padding:14px 36px;background:linear-gradient(135deg,var(--purple3),var(--purple));color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(124,58,237,0.3);transition:all .2s}
+.btn-start:hover{transform:translateY(-1px)}
+.q-wrap{display:none}
+.q-area{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--violet);margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.q-area::before{content:'';width:16px;height:1px;background:var(--violet);opacity:.5}
+.q-num{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--muted);margin-bottom:6px}
+.q-text{font-size:1.05rem;font-weight:400;line-height:1.75;margin-bottom:26px}
+.q-opts{display:flex;flex-direction:column;gap:9px;margin-bottom:24px}
+.q-opt{padding:13px 18px;background:var(--bg2);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:13px;text-align:left;font-family:'DM Sans',sans-serif;color:var(--text);font-size:.9rem;line-height:1.5;width:100%}
+.q-opt:hover:not(:disabled){border-color:var(--border2);background:rgba(124,58,237,0.05)}
+.q-opt.correct{border-color:var(--green)!important;background:rgba(16,185,129,0.08)!important;color:var(--green)!important}
+.q-opt.wrong{border-color:var(--red)!important;background:rgba(239,68,68,0.08)!important;color:var(--red)!important}
+.q-opt:disabled{cursor:not-allowed}
+.opt-letter{width:26px;height:26px;border-radius:7px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0;color:var(--muted)}
+.q-opt.correct .opt-letter{border-color:var(--green);background:rgba(16,185,129,0.15);color:var(--green)}
+.q-opt.wrong .opt-letter{border-color:var(--red);background:rgba(239,68,68,0.15);color:var(--red)}
+.q-feedback{padding:14px 18px;border-radius:10px;font-size:.88rem;line-height:1.65;margin-bottom:20px;display:none}
+.q-feedback.acerto{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);color:var(--green)}
+.q-feedback.erro{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);color:var(--red)}
+.btn-prox{width:100%;padding:13px;background:linear-gradient(135deg,var(--purple3),var(--purple));color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.92rem;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(124,58,237,0.25);display:none}
+.btn-prox:hover{transform:translateY(-1px)}
+.loading{text-align:center;padding:60px 0;display:none}
+.loading-icon{font-size:2.5rem;animation:pulse 1.5s infinite;margin-bottom:16px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.loading-txt{font-size:.95rem;color:var(--muted)}
+.resultado{display:none;text-align:center;padding:40px 0}
+.res-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px}
+.res-stat{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.res-stat-n{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--purple2);line-height:1}
+.res-stat-l{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:5px}
+.btn-painel{padding:14px 36px;background:linear-gradient(135deg,var(--purple3),var(--purple));color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(124,58,237,0.3);transition:all .2s}
+.btn-painel:hover{transform:translateY(-1px)}
+</style>
+</head>
+<body>
+<nav>
+  <a href="enem.html" class="brand">
+    <span class="nav-vofor">VOFOR</span>
+    <span class="nav-divider"></span>
+    <span class="nav-sub">enem</span>
+  </a>
+  <div class="prog-wrap">
+    <span id="prog-txt">0 / 20</span>
+    <div class="prog-bg"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="intro" id="intro">
+    <div class="intro-icon">📚</div>
+    <h1 class="intro-title">Diagnóstico<br><em>inicial</em></h1>
+    <p class="intro-sub">20 questões nas 5 áreas do ENEM para mapear seu nível real. Leva cerca de 15 minutos.</p>
+    <div class="intro-chips">
+      <span class="chip">Linguagens</span><span class="chip">Matemática</span>
+      <span class="chip">Ciências da Natureza</span><span class="chip">Ciências Humanas</span><span class="chip">Redação</span>
+    </div>
+    <button class="btn-start" onclick="iniciar()">Iniciar diagnóstico →</button>
+  </div>
+  <div class="loading" id="loading">
+    <div class="loading-icon">🔮</div>
+    <div class="loading-txt" id="loading-txt">Gerando questões calibradas...</div>
+  </div>
+  <div class="q-wrap" id="q-wrap">
+    <div class="q-area" id="q-area">Linguagens</div>
+    <div class="q-num" id="q-num">Questão 1 de 20</div>
+    <div class="q-text" id="q-text"></div>
+    <div class="q-opts" id="q-opts"></div>
+    <div class="q-feedback" id="q-feedback"></div>
+    <button class="btn-prox" id="btn-prox" onclick="proxima()">Próxima questão →</button>
+  </div>
+  <div class="resultado" id="resultado">
+    <div style="font-size:3.5rem;margin-bottom:20px">🎯</div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:700;margin-bottom:10px">Diagnóstico <em style="font-style:italic;color:var(--purple2)">concluído!</em></h2>
+    <p style="font-size:.92rem;color:var(--muted);margin-bottom:32px;line-height:1.7">Seu perfil foi analisado. A IA vai personalizar seu plano e questões.</p>
+    <div class="res-stats">
+      <div class="res-stat"><div class="res-stat-n" id="res-total">0</div><div class="res-stat-l">Questões</div></div>
+      <div class="res-stat"><div class="res-stat-n" id="res-acertos" style="color:var(--green)">0</div><div class="res-stat-l">Acertos</div></div>
+      <div class="res-stat"><div class="res-stat-n" id="res-taxa" style="color:var(--purple2)">0%</div><div class="res-stat-l">Taxa</div></div>
+    </div>
+    <button class="btn-painel" onclick="location.href='enem-painel.html'">Ir para meu painel →</button>
+  </div>
+</div>
+
+<script>
+const sb=supabase.createClient('https://lklmzhunhiwqsbhnymaw.supabase.co','sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU');
+let userId=null,perfil=null,questoes=[],qAtual=0,respostas=[];
+const AREAS=[
+  {key:'linguagens',label:'Linguagens',n:5},
+  {key:'matematica',label:'Matemática',n:4},
+  {key:'natureza',label:'Ciências da Natureza',n:4},
+  {key:'humanas',label:'Ciências Humanas',n:4},
+  {key:'redacao',label:'Redação/Interpretação',n:3}
+];
+
+async function init(){
+  const{data:{session}}=await sb.auth.getSession();
+  if(!session){window.location.href='enem-login.html';return;}
+  userId=session.user.id;
+  const{data:p}=await sb.from('enem_perfis').select('*').eq('id',userId).single();
+  if(!p){window.location.href='enem-perfil.html';return;}
+  if(p.diagnostico_completo){window.location.href='enem-painel.html';return;}
+  perfil=p;
+}
+
+async function iniciar(){
+  document.getElementById('intro').style.display='none';
+  document.getElementById('loading').style.display='block';
+  const lista=[];
+  AREAS.forEach(a=>{for(let i=0;i<a.n;i++)lista.push(a);});
+  const prompt=`Você é especialista em ENEM (INEP).
+Crie 20 questões de diagnóstico no padrão ENEM, nível ${perfil.nivel||'intermediario'}.
+Distribuição: 5 Linguagens, 4 Matemática, 4 Ciências da Natureza, 4 Ciências Humanas, 3 Redação/Interpretação.
+Retorne SOMENTE JSON sem markdown:
+{"questoes":[{"area":"linguagens","disciplina":"Português","assunto":"Interpretação de texto","enunciado":"Texto...","opcoes":["A) texto","B) texto","C) texto","D) texto","E) texto"],"gabarito":"B","explicacao":"Explicação"}]}
+Crie exatamente 20 questões na ordem de áreas acima.`;
+  try{
+    document.getElementById('loading-txt').textContent='Calibrando questões para o ENEM...';
+    const r=await fetch('/api/groq',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:prompt}],max_tokens:3500,temperature:0.5})});
+    const json=await r.json();
+    let txt=json.choices?.[0]?.message?.content||'';
+    txt=txt.replace(/```json|```/g,'').trim();
+    questoes=JSON.parse(txt).questoes||[];
+    if(!questoes.length)throw new Error();
+  }catch(e){
+    questoes=lista.map((a,i)=>({area:a.key,disciplina:a.label,assunto:'Geral',enunciado:`Questão ${i+1} de ${a.label} — recarregue para gerar novamente.`,opcoes:['A) Opção A','B) Opção B','C) Opção C','D) Opção D','E) Opção E'],gabarito:'A',explicacao:'Questão de fallback.'}));
+  }
+  document.getElementById('loading').style.display='none';
+  mostrarQuestao(0);
+}
+
+function mostrarQuestao(idx){
+  qAtual=idx;const q=questoes[idx];if(!q)return;
+  document.getElementById('q-wrap').style.display='block';
+  document.getElementById('q-area').textContent=q.disciplina||q.area;
+  document.getElementById('q-num').textContent=`Questão ${idx+1} de ${questoes.length}`;
+  document.getElementById('q-text').textContent=q.enunciado;
+  document.getElementById('prog-txt').textContent=`${idx+1} / ${questoes.length}`;
+  document.getElementById('prog-fill').style.width=((idx+1)/questoes.length*100)+'%';
+  document.getElementById('q-feedback').style.display='none';
+  document.getElementById('btn-prox').style.display='none';
+  const letras=['A','B','C','D','E'];
+  document.getElementById('q-opts').innerHTML=q.opcoes.map((op,i)=>`
+    <button class="q-opt" onclick="responder(this,'${letras[i]}')">
+      <div class="opt-letter">${letras[i]}</div>
+      <span>${op.replace(/^[A-E]\)\s*/,'')}</span>
+    </button>`).join('');
+}
+
+async function responder(el,letra){
+  document.querySelectorAll('.q-opt').forEach(b=>b.disabled=true);
+  const q=questoes[qAtual];const acertou=letra===q.gabarito;
+  document.querySelectorAll('.q-opt').forEach(b=>{const l=b.querySelector('.opt-letter').textContent;if(l===q.gabarito)b.classList.add('correct');else if(l===letra&&!acertou)b.classList.add('wrong');});
+  const fb=document.getElementById('q-feedback');
+  fb.className='q-feedback '+(acertou?'acerto':'erro');
+  fb.textContent=(acertou?'✓ Correto! ':'✗ Incorreto. ')+q.explicacao;
+  fb.style.display='block';
+  document.getElementById('btn-prox').style.display='block';
+  document.getElementById('btn-prox').textContent=qAtual<questoes.length-1?'Próxima questão →':'Ver resultado →';
+  respostas.push({...q,acertou});
+  await sb.from('enem_questoes').insert({user_id:userId,area:q.area,disciplina:q.disciplina,assunto:q.assunto,enunciado:q.enunciado,gabarito:q.gabarito,acertou});
+}
+
+async function proxima(){
+  if(qAtual<questoes.length-1){mostrarQuestao(qAtual+1);}
+  else{
+    document.getElementById('q-wrap').style.display='none';
+    const total=respostas.length,acertos=respostas.filter(r=>r.acertou).length;
+    document.getElementById('res-total').textContent=total;
+    document.getElementById('res-acertos').textContent=acertos;
+    document.getElementById('res-taxa').textContent=Math.round(acertos/total*100)+'%';
+    await sb.from('enem_perfis').update({diagnostico_completo:true}).eq('id',userId);
+    document.getElementById('resultado').style.display='block';
+  }
+}
+init();
+</script>
+</body>
+</html>

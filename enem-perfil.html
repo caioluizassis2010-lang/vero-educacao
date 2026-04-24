@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vofor ENEM — Perfil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07050f;--bg2:#100c1e;--bg3:#171030;--purple:#7c3aed;--purple2:#a78bfa;--purple3:#6d28d9;--violet:#8b5cf6;--text:#f5f3ff;--muted:#8b7da8;--muted2:rgba(139,125,168,0.22);--border:rgba(167,139,250,0.12);--border2:rgba(167,139,250,0.28);--green:#10b981;--red:#ef4444}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 80% 60% at 20% 20%,rgba(124,58,237,0.08) 0%,transparent 60%)}
+a{text-decoration:none;color:inherit}
+nav{padding:18px 40px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(7,5,15,0.8);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-vofor{font-family:'Jost',sans-serif;font-size:1.05rem;font-weight:300;letter-spacing:.45em;color:var(--text);text-transform:uppercase;padding-right:.45em}
+.nav-divider{width:1px;height:14px;background:rgba(167,139,250,0.3);display:inline-block}
+.nav-sub{font-family:'Jost',sans-serif;font-size:.58rem;font-weight:300;letter-spacing:.28em;color:rgba(139,125,168,0.6);text-transform:uppercase}
+.main{padding:48px 24px;max-width:760px;margin:0 auto}
+.eyebrow{font-size:.7rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--violet);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.eyebrow::before{content:'';width:20px;height:1px;background:var(--violet);opacity:.5}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:700;line-height:1.1;margin-bottom:8px}
+.page-title em{font-style:italic;color:var(--purple2)}
+.page-sub{font-size:.9rem;color:var(--muted);margin-bottom:40px;font-weight:300;line-height:1.7}
+.section{margin-bottom:32px}
+.section-label{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.form-group{margin-bottom:16px}
+.form-label{font-size:.72rem;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px;display:block}
+.form-input,.form-select{width:100%;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:12px 15px;font-size:.9rem;font-family:'DM Sans',sans-serif;outline:none;transition:all .2s;appearance:none;color-scheme:dark}
+.form-input:focus,.form-select:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,58,237,0.1)}
+
+/* Áreas grid */
+.areas-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.area-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:11px;padding:14px;cursor:pointer;transition:all .2s;text-align:center}
+.area-card:hover{border-color:var(--border2)}
+.area-card.selected{border-color:var(--purple);background:rgba(124,58,237,0.1)}
+.area-icon{font-size:1.4rem;margin-bottom:6px}
+.area-name{font-size:.82rem;font-weight:600;color:var(--text)}
+.area-desc{font-size:.68rem;color:var(--muted);margin-top:2px}
+
+/* Nível */
+.nivel-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.nivel-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;cursor:pointer;transition:all .2s;display:flex;gap:12px;align-items:flex-start}
+.nivel-card:hover{border-color:var(--border2)}
+.nivel-card.selected{border-color:var(--purple);background:rgba(124,58,237,0.1)}
+.nivel-icon{font-size:1.2rem;flex-shrink:0;margin-top:2px}
+.nivel-name{font-size:.88rem;font-weight:600;margin-bottom:2px}
+.nivel-desc{font-size:.75rem;color:var(--muted)}
+
+/* Horas */
+.horas-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.hora-btn{padding:10px;background:var(--bg2);border:1.5px solid var(--border);border-radius:9px;text-align:center;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.hora-btn:hover{border-color:var(--border2)}
+.hora-btn.selected{border-color:var(--purple);background:rgba(124,58,237,0.1)}
+.hora-num{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;color:var(--purple2);line-height:1}
+.hora-label{font-size:.68rem;color:var(--muted);margin-top:2px}
+
+.btn-salvar{width:100%;padding:14px;background:linear-gradient(135deg,var(--purple3),var(--purple));color:#fff;border:none;border-radius:10px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;box-shadow:0 4px 20px rgba(124,58,237,0.3);margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-salvar:hover{transform:translateY(-1px)}
+.btn-salvar:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.msg-error{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:8px;padding:10px 14px;font-size:.82rem;color:#ef4444;margin-top:12px;display:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="enem.html" class="brand">
+    <span class="nav-vofor">VOFOR</span>
+    <span class="nav-divider"></span>
+    <span class="nav-sub">enem</span>
+  </a>
+  <span style="font-size:.78rem;color:var(--muted)" id="nav-user"></span>
+</nav>
+<div class="main">
+  <div class="eyebrow">Configurar perfil</div>
+  <h1 class="page-title">Qual é sua <em>meta?</em></h1>
+  <p class="page-sub">Configure sua universidade-alvo e disponibilidade. A IA vai personalizar cada questão e plano para você chegar lá.</p>
+
+  <div class="section">
+    <div class="section-label">Área de foco principal</div>
+    <div class="areas-grid">
+      <div class="area-card" onclick="selArea(this,'linguagens')"><div class="area-icon">📚</div><div class="area-name">Linguagens</div><div class="area-desc">Português e Literatura</div></div>
+      <div class="area-card" onclick="selArea(this,'matematica')"><div class="area-icon">📐</div><div class="area-name">Matemática</div><div class="area-desc">e suas tecnologias</div></div>
+      <div class="area-card" onclick="selArea(this,'natureza')"><div class="area-icon">🔬</div><div class="area-name">Ciências da Natureza</div><div class="area-desc">Bio, Física e Química</div></div>
+      <div class="area-card" onclick="selArea(this,'humanas')"><div class="area-icon">🌍</div><div class="area-name">Ciências Humanas</div><div class="area-desc">História e Geografia</div></div>
+      <div class="area-card" onclick="selArea(this,'redacao')"><div class="area-icon">✍️</div><div class="area-name">Redação</div><div class="area-desc">C1 a C5</div></div>
+      <div class="area-card" onclick="selArea(this,'todas')"><div class="area-icon">🎯</div><div class="area-name">Todas as áreas</div><div class="area-desc">Preparação completa</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Universidade alvo</div>
+    <div class="form-group">
+      <input class="form-input" id="universidade" type="text" placeholder="Ex: USP, UNICAMP, UFBA, UNB...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Curso desejado</label>
+      <input class="form-input" id="curso" type="text" placeholder="Ex: Medicina, Direito, Engenharia...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nota alvo (aproximada)</label>
+      <input class="form-input" id="nota-alvo" type="number" placeholder="Ex: 750" min="0" max="1000">
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Nível atual</div>
+    <div class="nivel-grid">
+      <div class="nivel-card" onclick="selNivel(this,'iniciante')"><div class="nivel-icon">🌱</div><div><div class="nivel-name">Iniciante</div><div class="nivel-desc">Começando do zero</div></div></div>
+      <div class="nivel-card" onclick="selNivel(this,'basico')"><div class="nivel-icon">📖</div><div><div class="nivel-name">Básico</div><div class="nivel-desc">Tenho alguma base</div></div></div>
+      <div class="nivel-card selected" onclick="selNivel(this,'intermediario')"><div class="nivel-icon">🎯</div><div><div class="nivel-name">Intermediário</div><div class="nivel-desc">Boa base, evoluindo</div></div></div>
+      <div class="nivel-card" onclick="selNivel(this,'avancado')"><div class="nivel-icon">🏆</div><div><div class="nivel-name">Avançado</div><div class="nivel-desc">Afinar pontos finais</div></div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Horas de estudo por dia</div>
+    <div class="horas-grid">
+      <div class="hora-btn" onclick="selHoras(this,'1h')"><div class="hora-num">1h</div><div class="hora-label">por dia</div></div>
+      <div class="hora-btn" onclick="selHoras(this,'2h')"><div class="hora-num">2h</div><div class="hora-label">por dia</div></div>
+      <div class="hora-btn selected" onclick="selHoras(this,'4h')"><div class="hora-num">4h</div><div class="hora-label">por dia</div></div>
+      <div class="hora-btn" onclick="selHoras(this,'6h+')"><div class="hora-num">6h+</div><div class="hora-label">dedicação total</div></div>
+    </div>
+  </div>
+
+  <button class="btn-salvar" id="btn-salvar" onclick="salvar()">
+    <span id="btn-txt">Salvar e continuar →</span>
+    <div class="spinner" id="spinner"></div>
+  </button>
+  <div class="msg-error" id="msg-error"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const sb=supabase.createClient('https://lklmzhunhiwqsbhnymaw.supabase.co','sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU');
+let userId=null, areaSel='todas', nivelSel='intermediario', horasSel='4h';
+
+async function init(){
+  const{data:{session}}=await sb.auth.getSession();
+  if(!session){window.location.href='enem-login.html';return;}
+  userId=session.user.id;
+  const nome=session.user.user_metadata?.full_name||session.user.email.split('@')[0];
+  document.getElementById('nav-user').textContent=nome;
+  const{data:p}=await sb.from('enem_perfis').select('*').eq('id',userId).single();
+  if(p){
+    areaSel=p.area_foco||'todas'; nivelSel=p.nivel||'intermediario'; horasSel=p.horas_dia||'4h';
+    if(p.universidade_alvo)document.getElementById('universidade').value=p.universidade_alvo;
+    if(p.curso_alvo)document.getElementById('curso').value=p.curso_alvo;
+    if(p.nota_alvo)document.getElementById('nota-alvo').value=p.nota_alvo;
+  }
+}
+
+function selArea(el,area){document.querySelectorAll('.area-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');areaSel=area;}
+function selNivel(el,nivel){document.querySelectorAll('.nivel-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');nivelSel=nivel;}
+function selHoras(el,h){document.querySelectorAll('.hora-btn').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');horasSel=h;}
+
+async function salvar(){
+  const btn=document.getElementById('btn-salvar');
+  btn.disabled=true;document.getElementById('btn-txt').textContent='Salvando...';document.getElementById('spinner').style.display='block';
+  const{error}=await sb.from('enem_perfis').upsert({
+    id:userId,
+    area_foco:areaSel,
+    nivel:nivelSel,
+    horas_dia:horasSel,
+    universidade_alvo:document.getElementById('universidade').value.trim()||null,
+    curso_alvo:document.getElementById('curso').value.trim()||null,
+    nota_alvo:parseInt(document.getElementById('nota-alvo').value)||null,
+    diagnostico_completo:false
+  });
+  btn.disabled=false;document.getElementById('btn-txt').textContent='Salvar e continuar →';document.getElementById('spinner').style.display='none';
+  if(error){document.getElementById('msg-error').textContent='Erro ao salvar.';document.getElementById('msg-error').style.display='block';return;}
+  window.location.href='enem-diagnostico.html';
+}
+init();
+</script>
+</body>
+</html>
