@@ -166,29 +166,68 @@ tbody td{padding:11px 14px;font-size:.8rem;vertical-align:middle}
 .loading-cell{text-align:center;padding:28px;color:var(--muted);font-size:.82rem}
 .empty-cell{text-align:center;padding:28px;color:var(--muted2);font-size:.82rem}
 
-@media(max-width:960px){.sidebar{display:none}.main{margin-left:0}.stats-geral{grid-template-columns:1fr 1fr}.sistemas-row{grid-template-columns:1fr}.met-grid{grid-template-columns:1fr}}
+@media(max-width:960px){
+  .stats-geral{grid-template-columns:1fr 1fr}
+  .sistemas-row{grid-template-columns:1fr}
+  .met-grid{grid-template-columns:1fr}
+}
 
 /* ── MOBILE ADMIN ── */
-.mobile-header{display:none;height:54px;background:#1a1828;border-bottom:1px solid rgba(255,255,255,0.08);padding:0 16px;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.mobile-header{
+  display:none;height:54px;
+  background:#1a1828;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  padding:0 16px;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:200;
+}
 .mobile-logo{font-family:'Jost',sans-serif;font-size:.95rem;font-weight:300;letter-spacing:.4em;color:#fff;text-transform:uppercase}
 .mobile-badge{font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:20px;background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.25)}
-.hamburger{background:none;border:none;cursor:pointer;padding:4px;color:#fff}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:150;display:none}
+.hamburger{background:none;border:none;cursor:pointer;padding:6px;color:#fff;display:flex;align-items:center}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:149;display:none}
 .overlay.show{display:block}
-@media(max-width:768px){
-  .mobile-header{display:flex!important}
-  .sidebar{transform:translateX(-100%);transition:transform .25s;z-index:160}
+
+@media(max-width:900px){
+  /* Sidebar vira drawer deslizante */
+  .sidebar{
+    transform:translateX(-100%);
+    transition:transform .28s cubic-bezier(.4,0,.2,1);
+    z-index:160;
+    position:fixed;
+  }
   .sidebar.open{transform:translateX(0)}
   .main{margin-left:0!important}
-  .topbar{display:none}
+  .mobile-header{display:flex!important}
+  .topbar{display:none!important}
   .content{padding:14px 14px 80px}
+
+  /* Grids compactos */
   .stats-geral{grid-template-columns:1fr 1fr}
   .sistemas-row{grid-template-columns:1fr}
   .met-grid{grid-template-columns:1fr}
   .config-row{grid-template-columns:1fr}
-  .tbl-head{flex-direction:column;align-items:flex-start}
+
+  /* Tabela responsiva */
+  .tbl-head{flex-direction:column;align-items:flex-start;gap:8px}
   .tbl-search,.tbl-filter{width:100%}
+  table{display:block;overflow-x:auto;white-space:nowrap}
+
+  /* Stats menores no mobile */
+  .stat-val{font-size:1.5rem}
+  .sis-stat-n{font-size:1.2rem}
+
+  /* Modal full width no mobile */
+  .modal{max-width:100%;margin:0 10px}
+
+  /* Metricas tabs scroll horizontal */
+  .metricas-tabs,.met-tabs{overflow-x:auto;white-space:nowrap;padding-bottom:4px;-webkit-overflow-scrolling:touch}
 }
+
+@media(max-width:480px){
+  .stats-geral{grid-template-columns:1fr}
+  .sis-stats{grid-template-columns:1fr 1fr}
+}
+
+
 </style>
 </head>
 <body>
