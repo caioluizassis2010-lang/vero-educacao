@@ -527,6 +527,7 @@ document.addEventListener('DOMContentLoaded',function(){
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:0.05,rootMargin:'0px 0px -10px 0px'});
 document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
@@ -577,6 +578,5 @@ function csSubmitEmail(page){
 function csKeydown(e,page){if(e.key==='Enter')csSubmitEmail(page)}
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </body>
 </html>
