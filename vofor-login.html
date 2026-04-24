@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vofor — Entrar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0a;--bg2:#141414;--bg3:#1e1e1e;
+  --text:#f5f5f5;--muted:#888;--muted2:rgba(200,200,200,0.18);
+  --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);
+  --red:#ef4444;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;
+  min-height:100vh;display:flex;flex-direction:column;
+  background-image:
+    radial-gradient(ellipse 60% 50% at 20% 30%,rgba(180,175,168,0.04) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 70%,rgba(124,58,237,0.04) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 40% at 50% 10%,rgba(37,99,235,0.04) 0%,transparent 60%);
+}
+a{text-decoration:none;color:inherit}
+
+nav{padding:22px 40px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,10,0.8);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100}
+.nav-logo{font-family:'Jost',sans-serif;font-size:1.05rem;font-weight:300;letter-spacing:.45em;color:var(--text);text-transform:uppercase;padding-right:.45em;text-decoration:none}
+.back-link{font-size:.8rem;color:var(--muted);transition:color .2s}
+.back-link:hover{color:var(--text)}
+
+.main{flex:1;display:flex;align-items:center;justify-content:center;padding:48px 24px}
+.card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:18px;padding:48px 44px;
+  width:100%;max-width:440px;
+  box-shadow:0 24px 64px rgba(0,0,0,.5);
+  position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent);
+}
+
+.card-logo{
+  font-family:'Jost',sans-serif;font-size:1.4rem;font-weight:300;
+  letter-spacing:.45em;color:var(--text);text-transform:uppercase;
+  margin-bottom:28px;display:block;text-align:center;
+}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;line-height:1.05;margin-bottom:6px;text-align:center}
+.card-title em{font-style:italic;color:rgba(200,200,200,0.6)}
+.card-sub{font-size:.85rem;color:var(--muted);text-align:center;margin-bottom:32px;font-weight:300;line-height:1.7}
+
+.field{margin-bottom:16px}
+.field label{display:block;font-size:.7rem;font-weight:600;color:var(--muted);letter-spacing:.1em;margin-bottom:7px;text-transform:uppercase}
+.field input{
+  width:100%;background:var(--bg3);color:var(--text);
+  border:1px solid var(--border);border-radius:9px;
+  padding:13px 16px;font-size:.92rem;
+  font-family:'DM Sans',sans-serif;outline:none;
+  transition:all .2s;color-scheme:dark;
+}
+.field input:focus{border-color:rgba(255,255,255,0.3);box-shadow:0 0 0 3px rgba(255,255,255,0.05)}
+.field input::placeholder{color:var(--muted2)}
+
+.forgot{text-align:right;margin-top:-8px;margin-bottom:16px}
+.forgot a{font-size:.75rem;color:var(--muted);transition:color .15s}
+.forgot a:hover{color:var(--text)}
+
+.btn-submit{
+  width:100%;padding:14px;
+  background:#fff;color:#0a0a0a;
+  border:none;border-radius:9px;
+  font-size:.92rem;font-weight:700;cursor:pointer;
+  transition:all .2s;font-family:'DM Sans',sans-serif;
+  letter-spacing:.01em;margin-top:6px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-submit:hover{background:#f0f0f0;transform:translateY(-1px)}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+.msg-error{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:8px;padding:10px 14px;font-size:.82rem;color:#ef4444;margin-top:12px;display:none}
+
+.divider{display:flex;align-items:center;gap:12px;margin:24px 0}
+.divider-line{flex:1;height:1px;background:var(--border)}
+.divider span{font-size:.72rem;color:var(--muted2)}
+
+/* SISTEMAS */
+.sistemas{display:flex;flex-direction:column;gap:10px}
+.sistema-btn{
+  padding:14px 18px;border-radius:11px;border:1px solid var(--border);
+  background:var(--bg3);cursor:pointer;
+  display:flex;align-items:center;gap:14px;
+  font-family:'DM Sans',sans-serif;color:var(--text);
+  transition:all .2s;text-decoration:none;
+}
+.sistema-btn:hover{border-color:var(--border2);transform:translateY(-1px)}
+.sistema-btn.concursos:hover{border-color:rgba(180,175,168,0.4);background:rgba(180,175,168,0.05)}
+.sistema-btn.medicina:hover{border-color:rgba(59,130,246,0.35);background:rgba(37,99,235,0.06)}
+.sistema-btn.enem:hover{border-color:rgba(167,139,250,0.35);background:rgba(124,58,237,0.06)}
+.s-icon{
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.s-icon.concursos{background:rgba(180,175,168,0.1);border:1px solid rgba(180,175,168,0.2)}
+.s-icon.medicina{background:rgba(37,99,235,0.1);border:1px solid rgba(59,130,246,0.2)}
+.s-icon.enem{background:rgba(124,58,237,0.1);border:1px solid rgba(167,139,250,0.2)}
+.s-info{flex:1;text-align:left}
+.s-nome{font-size:.9rem;font-weight:600;margin-bottom:2px}
+.s-desc{font-size:.72rem;color:var(--muted)}
+.s-arrow{color:var(--muted);font-size:.9rem}
+
+.spinner{width:16px;height:16px;border:2px solid rgba(0,0,0,.2);border-top-color:#0a0a0a;border-radius:50%;animation:spin .7s linear infinite;display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.step{display:none}
+.step.active{display:block}
+
+footer{padding:20px 40px;border-top:1px solid var(--border);text-align:center;font-size:.74rem;color:var(--muted2)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">VOFOR</a>
+  <a href="index.html" class="back-link">← Voltar</a>
+</nav>
+
+<main class="main">
+  <div class="card">
+    <span class="card-logo">VOFOR</span>
+
+    <!-- STEP 1: LOGIN -->
+    <div class="step active" id="step-login">
+      <h1 class="card-title">Bem-vindo<br><em>de volta.</em></h1>
+      <p class="card-sub">Entre com sua conta VOFOR para acessar seus estudos.</p>
+      <form id="form-login">
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="email" placeholder="seu@email.com" required>
+        </div>
+        <div class="field">
+          <label>Senha</label>
+          <div style="position:relative">
+            <input type="password" id="senha" placeholder="Sua senha" required style="padding-right:44px">
+            <button type="button" onclick="toggleSenha()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);padding:0" id="eye-btn">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="forgot"><a href="#">Esqueci minha senha</a></div>
+        <button type="submit" class="btn-submit" id="btn-submit">
+          <span id="btn-text">Entrar</span>
+          <div class="spinner" id="spinner"></div>
+        </button>
+        <div class="msg-error" id="msg-error"></div>
+      </form>
+      <div class="divider"><div class="divider-line"></div><span>não tem conta?</span><div class="divider-line"></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+        <a href="cadastro.html" style="display:block;padding:10px;border:1px solid var(--border);border-radius:9px;text-align:center;font-size:.75rem;color:var(--muted);transition:all .2s;background:var(--bg3)" onmouseover="this.style.borderColor='rgba(180,175,168,0.35)';this.style.color='#f5f5f5'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.color='#888'">⚖️ Concursos</a>
+        <a href="med-cadastro.html" style="display:block;padding:10px;border:1px solid var(--border);border-radius:9px;text-align:center;font-size:.75rem;color:var(--muted);transition:all .2s;background:var(--bg3)" onmouseover="this.style.borderColor='rgba(59,130,246,0.35)';this.style.color='#f5f5f5'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.color='#888'">🩺 Medicina</a>
+        <a href="enem-cadastro.html" style="display:block;padding:10px;border:1px solid var(--border);border-radius:9px;text-align:center;font-size:.75rem;color:var(--muted);transition:all .2s;background:var(--bg3)" onmouseover="this.style.borderColor='rgba(167,139,250,0.35)';this.style.color='#f5f5f5'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.color='#888'">📚 ENEM</a>
+      </div>
+    </div>
+
+    <!-- STEP 2: SELETOR DE SISTEMA -->
+    <div class="step" id="step-seletor">
+      <h1 class="card-title">Olá, <em id="nome-usuario">—</em></h1>
+      <p class="card-sub" style="margin-bottom:24px">Escolha onde quer estudar hoje.</p>
+      <div class="sistemas" id="sistemas-list"></div>
+    </div>
+
+  </div>
+</main>
+
+<footer>© 2025 VOFOR Educação · Estudo com método. Resultado de verdade.</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const sb=supabase.createClient('https://lklmzhunhiwqsbhnymaw.supabase.co','sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU');
+
+// Verifica se já está logado
+(async()=>{
+  const{data:{session}}=await sb.auth.getSession();
+  if(session)await redirecionarOuMostrarSeletor(session.user);
+})();
+
+document.getElementById('form-login').addEventListener('submit',async(e)=>{
+  e.preventDefault();
+  const email=document.getElementById('email').value.trim();
+  const senha=document.getElementById('senha').value;
+  const btn=document.getElementById('btn-submit');
+  const txt=document.getElementById('btn-text');
+  const spin=document.getElementById('spinner');
+  const errEl=document.getElementById('msg-error');
+  errEl.style.display='none';
+  btn.disabled=true;txt.textContent='Verificando...';spin.style.display='block';
+  const{data,error}=await sb.auth.signInWithPassword({email,password:senha});
+  if(error){
+    btn.disabled=false;txt.textContent='Entrar';spin.style.display='none';
+    errEl.textContent=traduzirErro(error.message);errEl.style.display='block';
+    return;
+  }
+  btn.disabled=false;txt.textContent='Entrar';spin.style.display='none';
+  await redirecionarOuMostrarSeletor(data.user);
+});
+
+async function redirecionarOuMostrarSeletor(user){
+  const nome=user.user_metadata?.full_name||user.user_metadata?.nome||user.email.split('@')[0];
+  
+  // Verifica em quais sistemas o usuário tem perfil
+  const[{data:perfConcursos},{data:perfMedicina},{data:perfEnem}]=await Promise.all([
+    sb.from('perfis').select('id,is_admin').eq('id',user.id).single(),
+    sb.from('medicina_perfis').select('id').eq('id',user.id).single(),
+    sb.from('enem_perfis').select('id').eq('id',user.id).single(),
+  ]);
+
+  const sistemas=[];
+  if(perfConcursos){
+    sistemas.push({
+      key:'concursos',
+      nome:'Concursos Públicos',
+      desc:'Questões, plano e desempenho por banca',
+      icon:'⚖️',
+      url: perfConcursos.is_admin ? 'admin.html' : 'painel.html',
+      classe:'concursos'
+    });
+  }
+  if(perfMedicina){
+    sistemas.push({
+      key:'medicina',
+      nome:'Vestibular de Medicina',
+      desc:'Questões, redação e plano por vestibular',
+      icon:'🩺',
+      url:'med-painel.html',
+      classe:'medicina'
+    });
+  }
+  if(perfEnem){
+    sistemas.push({
+      key:'enem',
+      nome:'ENEM & Vestibulares',
+      desc:'Questões por área, redação e simulados',
+      icon:'📚',
+      url:'enem-painel.html',
+      classe:'enem'
+    });
+  }
+
+  // Só 1 sistema → vai direto
+  if(sistemas.length===1){
+    window.location.href=sistemas[0].url;
+    return;
+  }
+
+  // Nenhum perfil → vai para concursos (cadastro novo)
+  if(sistemas.length===0){
+    window.location.href='painel.html';
+    return;
+  }
+
+  // 2+ sistemas → mostra seletor
+  document.getElementById('nome-usuario').textContent=nome.split(' ')[0];
+  const lista=document.getElementById('sistemas-list');
+  lista.innerHTML=sistemas.map(s=>`
+    <a href="${s.url}" class="sistema-btn ${s.classe}">
+      <div class="s-icon ${s.classe}">${s.icon}</div>
+      <div class="s-info">
+        <div class="s-nome">${s.nome}</div>
+        <div class="s-desc">${s.desc}</div>
+      </div>
+      <span class="s-arrow">→</span>
+    </a>`).join('');
+  document.getElementById('step-login').classList.remove('active');
+  document.getElementById('step-seletor').classList.add('active');
+}
+
+function toggleSenha(){
+  const input=document.getElementById('senha');
+  const show=input.type==='password';
+  input.type=show?'text':'password';
+  document.getElementById('eye-btn').innerHTML=show
+    ?'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
+    :'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+}
+
+function traduzirErro(msg){
+  if(msg.includes('Invalid login'))return'Email ou senha incorretos.';
+  if(msg.includes('Email not confirmed'))return'Confirme seu email antes de entrar.';
+  return'Erro ao entrar. Tente novamente.';
+}
+</script>
+</body>
+</html>
