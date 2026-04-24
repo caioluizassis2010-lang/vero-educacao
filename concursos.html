@@ -288,6 +288,22 @@ document.addEventListener('DOMContentLoaded',function(){
     el.classList.add('visible');
   });
 });
+async function csSubmit(page){
+  const input=document.getElementById('cs-email-'+page);
+  if(!input||!input.value.includes('@'))return;
+  const btn=input.nextElementSibling;
+  if(btn){btn.textContent='...';btn.disabled=true;}
+  try{
+    await fetch('/api/captura-email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email:input.value.trim(),origem:page})
+    });
+  }catch(e){}
+  input.parentElement.style.display='none';
+  const ok=document.getElementById('cs-ok-'+page);
+  if(ok){ok.style.display='inline-flex';}
+}
 </script>
 
 <nav id="nav">
@@ -566,16 +582,8 @@ window.addEventListener('scroll',()=>{
   }catch(e){}
 })();
 
-function csSubmitEmail(page){
-  const input=document.getElementById('cs-email-'+page);
-  if(!input||!input.value.includes('@'))return;
-  const success=document.getElementById('cs-success-'+page);
-  // Aqui integraria com Mailchimp/Resend/etc
-  console.log('Email capturado:',input.value,'página:',page);
-  input.parentElement.style.display='none';
-  if(success)success.style.display='block';
-}
-function csKeydown(e,page){if(e.key==='Enter')csSubmitEmail(page)}
+
+
 
 </script>
 </body>

@@ -474,7 +474,7 @@ document.addEventListener('DOMContentLoaded',function(){
 <!-- NAV -->
 <nav id="nav">
   <div class="brand" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-    <span style="font-family:'Jost',sans-serif;font-size:1.1rem;font-weight:300;letter-spacing:.45em;color:#ede8e2;text-transform:uppercase;padding-right:.45em">VOFOR</span>
+    <span style="font-family:'Jost',sans-serif;font-size:1.05rem;font-weight:300;letter-spacing:.45em;color:#ede8e2;text-transform:uppercase;padding-right:.45em">VOFOR</span>
   </div>
   <div class="nav-r">
     <div class="nav-user-pill" id="nav-pill" onclick="window.location.href='painel.html'">
@@ -692,7 +692,7 @@ document.addEventListener('DOMContentLoaded',function(){
   <div class="ft">
     <div class="ft-brand">
       <div style="display:flex;align-items:center;gap:10px">
-        <span style="font-family:'Jost',sans-serif;font-size:1.1rem;font-weight:300;letter-spacing:.45em;color:#ede8e2;text-transform:uppercase;padding-right:.45em">VOFOR</span>
+        <span style="font-family:'Jost',sans-serif;font-size:1.05rem;font-weight:300;letter-spacing:.45em;color:#ede8e2;text-transform:uppercase;padding-right:.45em">VOFOR</span>
       </div>
       <p>Inteligência artificial para quem quer estudar com método e chegar mais longe.</p>
     </div>
@@ -805,16 +805,8 @@ async function fazerLogout(){
   } catch(e){}
 }
 
-function csSubmitEmail(page){
-  const input=document.getElementById('cs-email-'+page);
-  if(!input||!input.value.includes('@'))return;
-  const success=document.getElementById('cs-success-'+page);
-  // Aqui integraria com Mailchimp/Resend/etc
-  console.log('Email capturado:',input.value,'página:',page);
-  input.parentElement.style.display='none';
-  if(success)success.style.display='block';
-}
-function csKeydown(e,page){if(e.key==='Enter')csSubmitEmail(page)}
+
+
 
 </script>
 </body>
