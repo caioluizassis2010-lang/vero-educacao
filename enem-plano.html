@@ -9,11 +9,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0f0d0b;--bg2:#1c1814;--bg3:#2e2520;--bg4:#080604;
-  --gold:#b4afa8;--gold2:#ccc8c2;--gold3:#8a8680;
-  --text:#ede8e2;--muted:#8a7d70;--muted2:rgba(200,188,175,0.28);
-  --border:rgba(180,175,168,0.15);--border2:rgba(180,175,168,0.35);
-  --green:#0fa968;--red:#e05454;--radius:10px;
+  --bg:#07050f;--bg2:#100c1e;--bg3:#171030;--bg4:#04030a;
+  --purple:#7c3aed;--purple2:#a78bfa;--purple3:#6d28d9;--purple4:#4c1d95;
+  --violet:#8b5cf6;--indigo:#6366f1;
+  --text:#f5f3ff;--muted:#8b7da8;--muted2:rgba(139,125,168,0.22);
+  --border:rgba(167,139,250,0.12);--border2:rgba(167,139,250,0.28);
+  --green:#10b981;--red:#ef4444;--gold:#f59e0b;
+  --radius:12px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg4);color:var(--text);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
@@ -187,11 +189,11 @@ nav{padding:0 28px;height:58px;border-bottom:1px solid var(--border);display:fle
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sb-section">Menu principal</div>
-    <div class="sb-item" onclick="window.location.href='painel.html'">
+    <div class="sb-item" onclick="window.location.href='enem-painel.html'">
       <div class="sb-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
       <span>Início</span>
     </div>
-    <div class="sb-item" onclick="window.location.href='questoes.html'">
+    <div class="sb-item" onclick="window.location.href='enem-questoes.html'">
       <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
       <span>Questões do dia</span>
     </div>
@@ -199,11 +201,11 @@ nav{padding:0 28px;height:58px;border-bottom:1px solid var(--border);display:fle
       <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
       <span>Meu plano de estudos</span>
     </div>
-    <div class="sb-item" onclick="window.location.href='desempenho.html'">
+    <div class="sb-item" onclick="window.location.href='enem-desempenho.html'">
       <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M8 21V10M12 21V3M16 21v-7M4 21v-4"/></svg></div>
       <span>Desempenho</span>
     </div>
-    <div class="sb-item" onclick="window.location.href='anotacoes.html'">
+    <div class="sb-item" onclick="window.location.href='enem-painel.html'">
       <div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
       <span>Anotações</span>
     </div>
@@ -295,19 +297,19 @@ nav{padding:0 28px;height:58px;border-bottom:1px solid var(--border);display:fle
 
 <!-- MOBILE NAV -->
 <div class="mobile-nav">
-  <div class="mn-item" onclick="window.location.href='painel.html'">
+  <div class="mn-item" onclick="window.location.href='enem-painel.html'">
     <svg class="mn-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
     <span class="mn-label">Início</span>
   </div>
-  <div class="mn-item" onclick="window.location.href='questoes.html'">
+  <div class="mn-item" onclick="window.location.href='enem-questoes.html'">
     <svg class="mn-icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
     <span class="mn-label">Questões</span>
   </div>
-  <div class="mn-item active" onclick="window.location.href='plano.html'">
+  <div class="mn-item active" onclick="window.location.href='enem-plano.html'">
     <svg class="mn-icon" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
     <span class="mn-label">Plano</span>
   </div>
-  <div class="mn-item" onclick="window.location.href='anotacoes.html'">
+  <div class="mn-item" onclick="window.location.href='enem-painel.html'">
     <svg class="mn-icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
     <span class="mn-label">Notas</span>
   </div>
@@ -328,7 +330,7 @@ let currentUser=null, userPerfil=null, planoData=[], semanaAtiva=1, totalSemanas
 
 async function init(){
   const{data:{session}}=await sb.auth.getSession();
-  if(!session){window.location.href='login.html';return;}
+  if(!session){window.location.href='enem-login.html';return;}
   currentUser=session.user;
   const nome=currentUser.user_metadata?.nome||currentUser.user_metadata?.full_name||currentUser.email.split('@')[0];
   document.getElementById('nav-avatar').textContent=nome.substring(0,2).toUpperCase();
@@ -338,9 +340,9 @@ async function init(){
 }
 
 async function carregarPerfil(){
-  const{data}=await sb.from('perfis').select('*').eq('id',currentUser.id).single();
+  const{data}=await sb.from('enem_perfis').select('*').eq('id',currentUser.id).single();
   userPerfil=data;
-  if(data?.concurso){
+  if(data?.universidade_alvo){
     const s=data.concurso.length>28?data.concurso.substring(0,28)+'...':data.concurso;
     document.getElementById('sb-concurso-label').textContent=s;
   }
@@ -348,7 +350,7 @@ async function carregarPerfil(){
 
 async function carregarPlano(){
   setSyncStatus('Carregando…',false);
-  const{data,error}=await sb.from('planos_estudo').select('*').eq('user_id',currentUser.id).order('semana').order('prioridade');
+  const{data,error}=await sb.from('enem_planos').select('*').eq('user_id',currentUser.id).order('semana').order('prioridade');
   if(!error&&data&&data.length>0){
     planoData=data;
     setSyncStatus('Sincronizado',true);
@@ -381,7 +383,7 @@ function renderPlano(){
   totalSemanas=Math.max(...planoData.map(i=>i.semana),1);
   const total=planoData.length, done=planoData.filter(i=>i.concluido).length;
   const pct=total>0?Math.round(done/total*100):0;
-  const concurso=planoData[0]?.concurso||(userPerfil?.concurso||'Seu Concurso');
+  const concurso=planoData[0]?.concurso||(userPerfil?.universidade_alvo||'ENEM');
   const nivel=userPerfil?.nivel||'intermediario';
 
   // Meta bar
@@ -466,7 +468,7 @@ async function toggleTask(id,checked){
   const item=planoData.find(i=>i.id==id);
   if(item)item.concluido=checked;
   setSyncStatus('Salvando…',false);
-  const{error}=await sb.from('planos_estudo').update({concluido:checked}).eq('id',id).eq('user_id',currentUser.id);
+  const{error}=await sb.from('enem_planos').update({concluido:checked}).eq('id',id).eq('user_id',currentUser.id);
   if(error){showToast('Erro ao salvar','error');setSyncStatus('Erro',false);return;}
   setSyncStatus('Sincronizado',true);
   renderWeekTabs();
@@ -493,14 +495,14 @@ async function gerarPlano(){
   document.getElementById('sync-status').style.display='inline-flex';
   const perfil=userPerfil||{};
   const prompt=`Você é um especialista em concursos públicos brasileiros.
-Crie um plano de estudos estruturado para:
-- Concurso: ${perfil.concurso||'Concurso Público Geral'}
-- Área: ${perfil.area||'Administrativa'}
+Crie um plano de estudos para o ENEM:
+- Nota alvo: ${perfil.nota_alvo||750}
+- Universidade alvo: ${perfil.universidade_alvo||'UFBA'}
 - Nível: ${perfil.nivel||'intermediario'}
-- Horas/dia: ${perfil.horas_dia||2}h
-- Estado: ${perfil.estado||'SP'}
+- Horas/dia: ${perfil.horas_dia||'2h'}
+Áreas: Linguagens, Matemática, Ciências da Natureza, Ciências Humanas, Redação.
 Retorne SOMENTE JSON válido sem markdown:
-{"concurso":"Nome","semanas":4,"itens":[{"semana":1,"disciplina":"Português","assunto":"Interpretação de Texto","meta_questoes":15,"prioridade":"alta","banca":"CESPE"}]}
+{"concurso":"ENEM","semanas":4,"itens":[{"semana":1,"disciplina":"Matemática","assunto":"Funções","meta_questoes":15,"prioridade":"alta","banca":"INEP"}]}
 Mínimo 20 itens. Prioridade: "alta","media" ou "baixa".`;
   try{
     const r=await fetch('/api/groq',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:prompt}],max_tokens:1500,temperature:0.4})});
@@ -521,7 +523,7 @@ Mínimo 20 itens. Prioridade: "alta","media" ou "baixa".`;
 
 async function regenerarPlano(){
   if(!confirm('Gerar um novo plano vai apagar o progresso atual. Continuar?'))return;
-  await sb.from('planos_estudo').delete().eq('user_id',currentUser.id);
+  await sb.from('enem_planos').delete().eq('user_id',currentUser.id);
   planoData=[];
   document.getElementById('plan-container').style.display='none';
   document.getElementById('btn-regen').style.display='none';
@@ -530,10 +532,10 @@ async function regenerarPlano(){
 }
 
 async function salvarPlanoSupabase(itens,isMigration=false){
-  if(!isMigration)await sb.from('planos_estudo').delete().eq('user_id',currentUser.id);
+  if(!isMigration)await sb.from('enem_planos').delete().eq('user_id',currentUser.id);
   const rows=itens.map(it=>({
     user_id:currentUser.id,
-    concurso:it.concurso||userPerfil?.concurso||'',
+    concurso:it.concurso||userPerfil?.universidade_alvo||'ENEM',
     semana:it.semana,
     disciplina:it.disciplina,
     assunto:it.assunto,
@@ -542,7 +544,7 @@ async function salvarPlanoSupabase(itens,isMigration=false){
     concluido:it.concluido||false,
     created_at:new Date().toISOString()
   }));
-  const{data,error}=await sb.from('planos_estudo').insert(rows).select();
+  const{data,error}=await sb.from('enem_planos').insert(rows).select();
   if(error){console.error('Erro ao salvar plano:',error);return;}
   planoData=data;
   localStorage.removeItem('vofor_plano_'+currentUser.id);
@@ -562,7 +564,7 @@ function showToast(msg,type='success'){
   setTimeout(()=>t.classList.remove('show'),3000);
 }
 
-async function sair(){await sb.auth.signOut();window.location.href='index.html';}
+async function sair(){await sb.auth.signOut();window.location.href='enem.html';}
 init();
 </script>
 </body>

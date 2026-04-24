@@ -9,11 +9,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Outfit:wght@300;400;500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0f0d0b;--bg2:#1c1814;--bg3:#2e2520;--bg4:#080604;
-  --gold:#b4afa8;--gold2:#ccc8c2;--gold3:#8a8680;
-  --text:#ede8e2;--muted:#8a7d70;--muted2:rgba(200,188,175,0.28);
-  --border:rgba(180,175,168,0.15);--border2:rgba(180,175,168,0.35);
-  --green:#0fa968;--red:#e05454;--blue:#378add;--radius:12px;
+  --bg:#060912;--bg2:#0d1425;--bg3:#131d35;--bg4:#0a0f1e;
+  --blue:#2563eb;--blue2:#3b82f6;--blue3:#1d4ed8;--blue4:#1e3a8a;
+  --cyan:#06b6d4;--cyan2:#22d3ee;
+  --text:#f0f4ff;--muted:#8896b3;--muted2:rgba(136,150,179,0.22);
+  --border:rgba(59,130,246,0.12);--border2:rgba(59,130,246,0.28);
+  --green:#10b981;--red:#ef4444;--gold:#f59e0b;
+  --radius:12px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg4);color:var(--text);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
@@ -149,11 +151,12 @@ canvas#evolucao-chart{width:100%;height:160px}
   .bar-label{width:110px}
 }
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <nav>
-  <div class="brand" onclick="window.location.href='index.html'">
+  <div class="brand" onclick="window.location.href='medicina.html'">
     <span style="font-family:'Jost',sans-serif;font-size:1.1rem;font-weight:300;letter-spacing:.45em;color:#ede8e2;text-transform:uppercase;padding-right:.45em">VOFOR</span>
   </div>
   <div class="nav-r">
@@ -169,11 +172,11 @@ canvas#evolucao-chart{width:100%;height:160px}
 <div class="layout">
   <aside class="sidebar">
     <div class="sb-section">Menu principal</div>
-    <div class="sb-item" onclick="location.href='painel.html'"><div class="sb-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>Início</div>
-    <div class="sb-item" onclick="location.href='questoes.html'"><div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>Questões do dia</div>
-    <div class="sb-item" onclick="location.href='plano.html'"><div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>Meu plano</div>
+    <div class="sb-item" onclick="location.href='med-painel.html'"><div class="sb-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>Início</div>
+    <div class="sb-item" onclick="location.href='med-questoes.html'"><div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>Questões do dia</div>
+    <div class="sb-item" onclick="location.href='med-plano.html'"><div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>Meu plano</div>
     <div class="sb-item active"><div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M8 21V10M12 21V3M16 21v-7M4 21v-4"/></svg></div>Desempenho</div>
-    <div class="sb-item" onclick="location.href='anotacoes.html'"><div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>Anotações</div>
+    <div class="sb-item" onclick="location.href='med-painel.html'"><div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>Anotações</div>
     <div class="sb-item" onclick="window.location.href='simulados.html'"><div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>Simulados</div>
     <div class="sb-divider"></div>
     <div class="sb-section">Minha jornada</div>
@@ -301,13 +304,13 @@ const{createClient}=supabase;
 const sb=createClient('https://lklmzhunhiwqsbhnymaw.supabase.co','sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU');
 
 const DISC_ICONS={'Direito Penal':'⚖️','Direito Processual Penal':'🔍','Direito Constitucional':'📜','Direito Administrativo':'🏛️','Raciocínio Lógico':'🧠','Português':'📝','Informática':'💻','Matemática':'➗','Legislação Especial':'📋','Legislação de Trânsito':'🚦','Primeiros Socorros':'🩺','Conhecimentos Gerais':'🌎','Contabilidade':'📊','Direito Tributário':'💼','Direito Civil':'⚖️','Mercado Financeiro':'📈'};
-const COLORS=['#b4afa8','#0fa968','#378add','#7B6FE8','#ccc8c2','#e05454','#0F6E56'];
+const COLORS=['#3b82f6','#0fa968','#378add','#7B6FE8','#ccc8c2','#e05454','#0F6E56'];
 
 let userId=null, todosQs=[], periodoDias=7;
 
 async function init(){
   const{data:{session}}=await sb.auth.getSession();
-  if(!session){window.location.href='login.html';return;}
+  if(!session){window.location.href='med-login.html';return;}
   userId=session.user.id;
   const nome=session.user.user_metadata?.full_name||session.user.email.split('@')[0]||'';
   document.getElementById('nav-user').textContent=nome;
@@ -315,11 +318,11 @@ async function init(){
   if(av)av.textContent=nome.substring(0,2).toUpperCase();
 
   // Concurso sidebar
-  const{data:p}=await sb.from('perfis').select('concurso').eq('id',userId).single();
+  const{data:p}=await sb.from('medicina_perfis').select('concurso').eq('id',userId).single();
   if(p?.concurso){const el=document.getElementById('sb-concurso');if(el)el.textContent=p.concurso.length>22?p.concurso.substring(0,22)+'...':p.concurso;}
 
   // Carrega todas as questões
-  const{data:qs}=await sb.from('questoes_respondidas').select('*').eq('user_id',userId).order('created_at',{ascending:false});
+  const{data:qs}=await sb.from('medicina_questoes').select('*').eq('user_id',userId).order('created_at',{ascending:false});
   todosQs=qs||[];
 
   renderTudo();
@@ -413,7 +416,7 @@ function renderBarras(qs){
 
   el.innerHTML=sorted.map(([disc,v],i)=>{
     const pct=Math.round(v.a/v.t*100);
-    const cor=pct>=80?'#0fa968':pct>=60?'#b4afa8':'#e05454';
+    const cor=pct>=80?'#0fa968':pct>=60?'#3b82f6':'#e05454';
     const short=disc.length>22?disc.substring(0,22)+'...':disc;
     return `<div class="bar-row">
       <div class="bar-label" title="${disc}">${short}</div>
@@ -486,7 +489,7 @@ function renderEvolucao(qs){
 
   // Area fill
   const grad=ctx.createLinearGradient(0,pad.t,0,H-pad.b);
-  grad.addColorStop(0,'rgba(180,175,168,0.22)');
+  grad.addColorStop(0,'rgba(59,130,246,0.2)');
   grad.addColorStop(1,'rgba(232,201,122,0)');
   ctx.beginPath();
   ctx.moveTo(pts[0].x,H-pad.b);
@@ -496,12 +499,12 @@ function renderEvolucao(qs){
 
   // Line stroke
   ctx.beginPath();pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
-  ctx.strokeStyle='#b4afa8';ctx.lineWidth=2;ctx.lineJoin='round';ctx.stroke();
+  ctx.strokeStyle='#3b82f6';ctx.lineWidth=2;ctx.lineJoin='round';ctx.stroke();
 
   // Points
   pts.forEach((p,i)=>{
     ctx.beginPath();ctx.arc(p.x,p.y,3.5,0,Math.PI*2);
-    ctx.fillStyle='#b4afa8';ctx.fill();
+    ctx.fillStyle='#3b82f6';ctx.fill();
     ctx.strokeStyle=COLORS[0]+'66';ctx.lineWidth=1;ctx.stroke();
   });
 
@@ -592,7 +595,7 @@ function renderHistorico(qs){
   }).join('');
 }
 
-async function sair(){await sb.auth.signOut();window.location.href='index.html';}
+async function sair(){await sb.auth.signOut();window.location.href='medicina.html';}
 init();
 </script>
 </body>
