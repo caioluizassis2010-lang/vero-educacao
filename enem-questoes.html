@@ -91,6 +91,34 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .btn-mais{padding:11px 24px;background:rgba(124,58,237,0.1);color:var(--purple2);border:1px solid rgba(167,139,250,0.25);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:.87rem;font-weight:600;cursor:pointer;transition:all .2s}
 .btn-mais:hover{background:rgba(124,58,237,0.18)}
 @media(max-width:768px){.sidebar{display:none}.main{margin-left:0}.content{padding:14px}}
+
+.q-text-base{
+  background:rgba(255,255,255,0.04);
+  border-left:3px solid var(--blue2,#a78bfa);
+  border-radius:0 8px 8px 0;
+  padding:14px 18px;
+  font-size:.88rem;
+  color:var(--muted);
+  line-height:1.75;
+  margin-bottom:16px;
+  font-style:italic;
+}
+.q-explicacao-didatica{
+  margin-top:14px;
+  padding:16px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:10px;
+}
+.q-did-title{
+  font-size:.78rem;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:10px;
+  opacity:.7;
+}
+.q-explicacao-didatica br+br{margin-top:8px;}
 </style>
 </head>
 <body>
@@ -239,6 +267,7 @@ function renderQuestao(q){
         <span style="font-size:.75rem;color:var(--muted);margin-left:auto">${q.assunto||''}</span>
       </div>
       <div class="q-card-body">
+        ${q.texto_base ? `<div class="q-text-base">${q.texto_base}</div>` : ''}
         <div class="q-text">${q.enunciado}</div>
         <div class="q-opts">
           ${q.opcoes.map((op,i)=>{
@@ -267,7 +296,14 @@ async function responder(letra){
   });
   const fb=document.getElementById('q-feedback');
   fb.className='q-feedback '+(acertou?'acerto':'erro');
-  fb.textContent=(acertou?'✓ Correto! ':'✗ Incorreto. ')+q.explicacao;
+  fb.innerHTML=(acertou?'<strong>✓ Correto!</strong> ':'<strong>✗ Incorreto.</strong> ')+(q.explicacao_curta||q.explicacao||'');
+    // Mostra explicação didática completa
+    if(q.explicacao_didatica){
+      const did=document.createElement('div');
+      did.className='q-explicacao-didatica';
+      did.innerHTML='<div class="q-did-title">📖 Entenda o conteúdo</div>'+q.explicacao_didatica.replace(/\n/g,'<br>');
+      fb.appendChild(did);
+    }
   fb.style.display='block';
   document.getElementById('btn-prox').style.display='block';
   hojeQtd++;if(acertou)hojeAcertos++;
