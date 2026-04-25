@@ -1,137 +1,308 @@
-// api/gerar-questao.js — v4 — simples e robusto
+// /api/gerar-questao.js
+// Lógica: 1) Busca no banco real (Supabase)
+//          2) Se não encontrar → gera via IA (Groq)
+//          3) Salva questão gerada pela IA no banco (ia_calibrada)
 
-const ESTILOS = {
-  'CESPE': 'CESPE/CEBRASPE: afirmativas longas, linguagem formal alta, pegadinhas nos distratores, baseado em legislação real.',
-  'FCC': 'FCC: 5 alternativas objetivas e formais, enunciado direto, distratores plausíveis.',
-  'FGV': 'FGV: texto de contextualização obrigatório, abordagem crítica, casos práticos reais.',
-  'VUNESP': 'VUNESP: texto base frequente, interpretação e aplicação prática, nível médio-alto.',
-  'CESGRANRIO': 'CESGRANRIO: contexto técnico (Petrobras/BB/Marinha), 5 alternativas, nível alto.',
-  'ESAF': 'ESAF: trecho de lei fiscal como base, questão sobre interpretação normativa, nível muito alto.',
-  'IADES': 'IADES: 5 alternativas, foco em saúde e educação, nível médio-alto.',
-  'QUADRIX': 'QUADRIX: estilo CESPE, foco em conselhos profissionais.',
-  'IBFC': 'IBFC: 5 alternativas diretas, nível médio.',
-  'AOCP': 'AOCP: 5 alternativas, nível médio.',
-  'IDECAN': 'IDECAN: 5 alternativas, nível médio.',
-  'FUNRIO': 'FUNRIO: 5 alternativas, saúde e educação.',
-  'CONSULPLAN': 'CONSULPLAN: 5 alternativas diretas.',
-  'OBJETIVA': 'OBJETIVA: 5 alternativas, municipal RS.',
-  'FEPESE': 'FEPESE: 5 alternativas, estadual SC.',
-  'FUNDATEC': 'FUNDATEC: 5 alternativas, municipal RS.',
-  'FUNIVERSA': 'FUNIVERSA: 5 alternativas, GDF.',
-  'UPENET': 'UPENET: 5 alternativas, nordeste.',
-  'FAURGS': 'FAURGS: 5 alternativas, nível médio-alto RS.',
-  'NUCEPE': 'NUCEPE: 5 alternativas, estadual PI.',
-  'FADESP': 'FADESP: 5 alternativas, estadual PA.',
-  'IBAM': 'IBAM: 5 alternativas, administração municipal.',
-  'IESES': 'IESES: 5 alternativas, estadual SC.',
-  'SOUSÂNDRADE': 'SOUSÂNDRADE: 5 alternativas, estadual MA.',
-  'FUVEST': 'FUVEST/USP: contexto científico obrigatório, nível muito alto, raciocínio profundo, interdisciplinar, nunca decoreba.',
-  'COMVEST': 'UNICAMP/COMVEST: 4 alternativas, dois textos combinados, abordagem crítica única, interdisciplinar.',
-  'FAMERP': 'FAMERP: contexto biológico/químico obrigatório, foco Bio+Quim, nível muito alto.',
-  'FCMSCSP': 'Santa Casa SP: biologia médica (histologia, anatomia, fisiologia), nível muito alto.',
-  'FMABC': 'Einstein: raciocínio clínico e ciências básicas, nível muito alto.',
-  'UNIFESP': 'UNIFESP: ciências da natureza profundas, nível muito alto.',
-  'UERJ': 'UERJ: 4 alternativas, interdisciplinar, realidade brasileira, pensamento crítico.',
-  'FAMEMA': 'FAMEMA: situação-problema clínica, competências médicas.',
-  'UEL': 'UEL: 5 alternativas, nível alto, vestibular PR.',
-  'ACAFE': 'ACAFE: 5 alternativas, nível médio-alto, SC.',
-  'BAHIANA': 'BAHIANA: 5 alternativas, ciências da saúde, BA.',
-  'UNIFOR': 'UNIFOR: 5 alternativas, nível médio-alto, CE.',
-  'INEP': 'ENEM/INEP: texto-base obrigatório (trecho literário, notícia, dado de pesquisa ou charge descrita com fonte), 5 alternativas, interdisciplinar, contexto social, competências e habilidades, nunca memorização pura.'
-};
+import { createClient } from '@supabase/supabase-js';
 
-const ASSUNTOS = {
-  linguagens:['Interpretação de texto narrativo — narrador e ponto de vista','Figuras de linguagem — metáfora e ironia','Variação linguística e preconceito','Gêneros textuais — crônica','Coesão e coerência — conectivos','Modernismo — Drummond e Bandeira','Romantismo — Alencar e identidade nacional','Realismo — Machado de Assis','Intertextualidade e paródia','Linguagem publicitária e persuasão'],
-  matematica:['Funções 1° grau — gráfico e situações reais','Funções 2° grau — máximo e mínimo','Geometria plana — áreas em projetos','Geometria espacial — volumes','Probabilidade — análise de risco','Estatística — gráficos e dados IBGE','Porcentagem — juros compostos','Progressão geométrica — crescimento exponencial','Trigonometria — topografia e engenharia','Combinatória — problemas cotidianos'],
-  natureza:['Ecologia — desmatamento e biodiversidade','Ciclo do carbono e aquecimento global','Genética — transgênicos e biotecnologia','Genética — heredograma e doenças','Evolução — seleção natural','Imunologia — vacinas e imunidade','Química orgânica — polímeros e meio ambiente','Reações de combustão e poluição','Termodinâmica e eficiência energética','Física — fontes renováveis e sustentabilidade'],
-  humanas:['República Velha — coronelismo','Era Vargas — populismo e trabalhismo','Ditadura Militar e AI-5','Constituição de 1988 e direitos','Imperialismo e partilha da África','Revolução Industrial e questão social','Segunda Guerra e Holocausto','Guerra Fria na América Latina','Urbanização brasileira e periferização','Desigualdade racial e políticas afirmativas'],
-  biologia:['Citologia — membrana e transporte celular','Divisão celular e câncer','DNA — replicação e síntese proteica','CRISPR e edição genômica','Sistema nervoso e neurotransmissores','Sistema endócrino e diabetes','Biomas brasileiros — Cerrado e Caatinga','Resistência bacteriana e antibióticos','Evolução — especiação','Aedes aegypti e saúde pública'],
-  quimica:['Isomeria óptica e fármacos','Reações orgânicas e polímeros','Eletroquímica — baterias de lítio','Equilíbrio químico — Le Chatelier','Termoquímica e biocombustíveis','Cinética — catalisadores industriais','Soluções e concentração farmacológica','pH — tampão biológico e chuva ácida','Radioatividade e medicina nuclear','Química ambiental — poluição hídrica'],
-  fisica:['Leis de Newton — acidentes de trânsito','Conservação de energia em esportes','Máquinas térmicas e rendimento','Óptica — lentes e correção visual','Efeito Doppler e ultrassom médico','Campo elétrico e descargas atmosféricas','Circuitos elétricos e consumo de energia','Indução eletromagnética e geradores','Efeito fotoelétrico e energia solar','Física nuclear — fissão e usinas'],
-  direito:['Remédios constitucionais — habeas corpus e mandado de segurança','Separação dos poderes','Princípios LIMPE e atos administrativos','Licitações — Lei 14.133/21','Responsabilidade civil objetiva','Crimes contra a administração pública','Direito tributário — impostos e taxas','FGTS — férias e jornada de trabalho','Lei de Improbidade Administrativa','LGPD — proteção de dados'],
-  portugues:['Inferência e pressuposição textual','Concordância verbal — casos especiais','Regência verbal — assistir e visar','Crase — obrigatória e proibida','Pontuação — vírgula em orações','Semântica — polissemia e homonímia','Coesão — pronomes anafóricos','Dissertativo-argumentativo — estrutura','Redação oficial — ofício e memorando','Ortografia — acordo ortográfico'],
-  administracao:['Taylor e Fayol — administração científica','Liderança situacional e motivação','Planejamento estratégico — SWOT','Orçamento público — LOA e LDO','Controle interno e auditoria','Processo administrativo — Lei 9.784','Reforma do Estado — gestão pública','Gestão por competências','Governança pública e transparência','Atendimento ao público e qualidade']
-};
+const SUPABASE_URL        = 'https://lklmzhunhiwqsbhnymaw.supabase.co';
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+const GROQ_API_KEY         = process.env.GROQ_API_KEY;
 
-function sortearAssunto(area, disciplina) {
-  let chave = (area||'').toLowerCase();
-  if (!chave && disciplina) {
-    const d = disciplina.toLowerCase();
-    if(d.includes('bio')) chave='biologia';
-    else if(d.includes('quim')) chave='quimica';
-    else if(d.includes('fis')) chave='fisica';
-    else if(d.includes('port')||d.includes('lingu')) chave='portugues';
-    else if(d.includes('dir')) chave='direito';
-    else if(d.includes('admin')) chave='administracao';
-    else if(d.includes('mat')) chave='matematica';
-    else if(d.includes('human')||d.includes('hist')||d.includes('geo')) chave='humanas';
-    else if(d.includes('natur')) chave='natureza';
-  }
-  const lista = ASSUNTOS[chave] || ASSUNTOS.portugues;
-  return lista[Math.floor(Math.random()*lista.length)];
+// ─── Supabase (service role para leitura/escrita sem RLS) ────────────────────
+function getSupabase() {
+  return createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 }
 
-module.exports = async function handler(req, res) {
-  if(req.method!=='POST') return res.status(405).json({error:'Method not allowed'});
+// ─── Bancas / estilos ────────────────────────────────────────────────────────
+const ESTILOS_BANCA = {
+  CESPE:        'Estilo CESPE/Cebraspe: assertivas curtas, verdadeiro ou falso implícito, linguagem direta e técnica.',
+  FCC:          'Estilo FCC: enunciado longo e detalhado, 5 alternativas completas, sem pegadinhas.',
+  FGV:          'Estilo FGV: texto-base interpretativo, questão contextualizada, alternativas plausíveis.',
+  VUNESP:       'Estilo VUNESP: enunciado objetivo, alternativas bem distintas, foco em aplicação prática.',
+  CESGRANRIO:   'Estilo CESGRANRIO: questões técnicas e específicas, linguagem formal, foco em conhecimento especializado.',
+  ESAF:         'Estilo ESAF: questões fiscais e tributárias, raciocínio lógico aplicado, alternativas com cálculos.',
+  IADES:        'Estilo IADES: questões diretas, com foco em legislação e normativas, alternativas curtas.',
+  IBFC:         'Estilo IBFC: enunciado objetivo, alternativas equilibradas, foco em conhecimentos gerais.',
+  AOCP:         'Estilo AOCP: questões regionais, linguagem acessível, alternativas bem distintas.',
+  QUADRIX:      'Estilo QUADRIX: questões de nível médio a superior, linguagem clara, alternativas objetivas.',
+  IDECAN:       'Estilo IDECAN: questões práticas, foco em conhecimentos específicos do cargo.',
+  FUNRIO:       'Estilo FUNRIO: questões técnicas para cargos específicos, linguagem formal.',
+  CONSULPLAN:   'Estilo CONSULPLAN: questões objetivas, alternativas curtas e precisas.',
+  OBJETIVA:     'Estilo OBJETIVA: questões de nível municipal, linguagem simples, foco em conhecimentos básicos.',
+  FEPESE:       'Estilo FEPESE: questões regionais do sul do Brasil, linguagem clara e direta.',
+  FUNDATEC:     'Estilo FUNDATEC: questões gaúchas, foco em legislação estadual e municipal.',
+  NUCEPE:       'Estilo NUCEPE: questões do Piauí, linguagem regional, conhecimentos locais.',
+  FUNIVERSA:    'Estilo FUNIVERSA: questões do DF, foco em legislação distrital, alternativas equilibradas.',
+  UPENET:       'Estilo UPENET: questões pernambucanas, linguagem técnica, foco em saúde e educação.',
+  'UECE-CEV':   'Estilo UECE-CEV: questões cearenses, alternativas com raciocínio crítico.',
+  'NOVA CONCURSOS': 'Estilo Nova Concursos: questões modernas, linguagem atualizada, alternativas bem elaboradas.',
+  // Medicina
+  FUVEST:       'Estilo FUVEST (USP): questões interdisciplinares com texto-base literário ou científico, exige interpretação e raciocínio.',
+  COMVEST:      'Estilo COMVEST (Unicamp): questões contextualizadas, criativas, exige argumentação.',
+  FAMERP:       'Estilo FAMERP: questões técnicas de ciências da saúde, foco em bioquímica e fisiologia.',
+  FCMSCSP:      'Estilo FCMSCSP: questões clínicas com casos práticos, linguagem médica técnica.',
+  FMABC:        'Estilo FMABC/Einstein: questões com casos clínicos, foco em raciocínio diagnóstico.',
+  UNIFESP:      'Estilo UNIFESP: questões interdisciplinares, textos científicos, foco em ciências básicas.',
+  UERJ:         'Estilo UERJ: questões contextualizadas, com textos-base variados, exige análise crítica.',
+  FAMEMA:       'Estilo FAMEMA: questões objetivas de ciências básicas, alternativas técnicas.',
+  FMJ:          'Estilo FMJ: questões diretas de conteúdo médico, alternativas bem distintas.',
+  UFRGS:        'Estilo UFRGS: questões com texto-base científico, foco em raciocínio e interpretação.',
+  UFMG:         'Estilo UFMG: questões interdisciplinares, texto-base variado, foco em análise.',
+  UFRJ:         'Estilo UFRJ: questões com contexto científico, foco em biologia e química.',
+  UFBA:         'Estilo UFBA: questões com texto-base regional, foco em saúde pública e ciências.',
+  UFC:          'Estilo UFC: questões contextualizadas do nordeste, foco em ciências da natureza.',
+  UFPE:         'Estilo UFPE: questões com raciocínio crítico, textos científicos adaptados.',
+  UPE:          'Estilo UPE: questões técnicas de medicina, foco em anatomia e fisiologia.',
+  BAHIANA:      'Estilo BAHIANA: questões clínicas com casos práticos, foco em saúde coletiva.',
+  UNIFOR:       'Estilo UNIFOR: questões objetivas, alternativas equilibradas, foco em ciências básicas.',
+  UNICHRISTUS:  'Estilo UNICHRISTUS: questões práticas, linguagem clara, foco em medicina clínica.',
+  'ENEM-SISU':  'Estilo ENEM/SISU: texto-base obrigatório (60-120 palavras), questão contextualizada, alternativas plausíveis, padrão INEP.',
+  // ENEM
+  INEP:         'Estilo ENEM/INEP: OBRIGATÓRIO incluir texto-base (60-120 palavras, com fonte "Adaptado de..."). Questão contextualizada e interdisciplinar. 5 alternativas plausíveis. Linguagem acessível mas exigente.',
+};
 
-  const { sistema='concursos', banca, vestibular, disciplina, area, nivel_aluno='intermediario' } = req.body||{};
+// ─── Assuntos por área ───────────────────────────────────────────────────────
+const ASSUNTOS = {
+  // Concursos
+  'Direito Constitucional':   ['Princípios Fundamentais','Direitos e Garantias Fundamentais','Organização do Estado','Poder Legislativo','Poder Executivo','Poder Judiciário','Controle de Constitucionalidade','Ordem Econômica e Social','Processo Legislativo','Repartição de Competências'],
+  'Direito Administrativo':   ['Princípios da Administração','Atos Administrativos','Licitações e Contratos','Servidores Públicos','Improbidade Administrativa','Controle da Administração','Responsabilidade Civil do Estado','Poder de Polícia','Serviços Públicos','Bens Públicos'],
+  'Direito Penal':            ['Teoria do Crime','Tipicidade','Ilicitude e Culpabilidade','Crimes contra a Pessoa','Crimes contra o Patrimônio','Penas e Medidas de Segurança','Extinção da Punibilidade','Lei de Drogas','Crimes Hediondos','Concurso de Crimes'],
+  'Direito Civil':            ['Pessoas Naturais e Jurídicas','Negócio Jurídico','Prescrição e Decadência','Contratos em Geral','Responsabilidade Civil','Família','Sucessões','Propriedade','Obrigações','Posse'],
+  'Português':                ['Interpretação de Texto','Coesão e Coerência','Sintaxe','Morfologia','Ortografia','Pontuação','Semântica','Figuras de Linguagem','Concordância','Regência'],
+  'Raciocínio Lógico':        ['Proposições e Conectivos','Tabela Verdade','Silogismo','Conjuntos','Sequências Numéricas','Porcentagem','Probabilidade','Geometria Plana','Progressões','Análise Combinatória'],
+  'Informática':              ['Windows e Linux','Pacote Office','Internet e Segurança','Redes de Computadores','Conceitos de Hardware','Banco de Dados','Algoritmos Básicos','Proteção de Dados (LGPD)','Cloud Computing','Backup e Armazenamento'],
+  // Medicina
+  'Biologia':                 ['Citologia','Genética Mendeliana','Genética Molecular','Evolução','Ecologia','Fisiologia Humana','Histologia','Embriologia','Botânica','Zoologia'],
+  'Química':                  ['Tabela Periódica','Ligações Químicas','Funções Orgânicas','Reações Orgânicas','Termoquímica','Cinética Química','Equilíbrio Químico','Eletroquímica','Soluções','Estequiometria'],
+  'Física':                   ['Mecânica Clássica','Termodinâmica','Óptica Geométrica','Eletrostática','Eletrodinâmica','Magnetismo','Ondas e Som','Relatividade Básica','Física Moderna','Gravitação'],
+  'Matemática':               ['Funções','Geometria Analítica','Trigonometria','Matrizes e Determinantes','Probabilidade e Estatística','Progressões','Logaritmos','Polinômios','Geometria Plana','Geometria Espacial'],
+  // ENEM
+  'Linguagens':               ['Interpretação Textual','Literatura Brasileira','Gramática e Norma Culta','Produção de Texto','Artes Visuais','Música e Cultura','Cinema e Mídia','Língua Estrangeira (Inglês)','Língua Estrangeira (Espanhol)','Semiótica'],
+  'Ciências Humanas':         ['História do Brasil','História Geral','Geografia do Brasil','Geopolítica','Filosofia','Sociologia','Atualidades','Direitos Humanos','Economia Básica','Cultura e Identidade'],
+  'Ciências da Natureza':     ['Física Aplicada','Química no Cotidiano','Biologia e Saúde','Ecologia e Meio Ambiente','Genética Aplicada','Biotecnologia','Astronomia Básica','Energia e Tecnologia','Evolução e Origens','Corpo Humano'],
+  'Matemática e Suas Tecnologias': ['Funções no Cotidiano','Geometrias','Estatística e Probabilidade','Progressões','Matrizes Aplicadas','Trigonometria','Financeiro e Porcentagem','Combinatória','Análise Gráfica','Razão e Proporção'],
+};
 
-  const bancaFinal = banca||vestibular||(sistema==='enem'?'INEP':sistema==='medicina'?'FUVEST':'CESPE');
-  const estilo = ESTILOS[bancaFinal]||ESTILOS[sistema==='enem'?'INEP':sistema==='medicina'?'FUVEST':'CESPE'];
-  const nAlt = (bancaFinal==='COMVEST'||bancaFinal==='UERJ') ? 4 : 5;
-  const assunto = sortearAssunto(area||null, disciplina||null);
-  const gabarito = ['A','B','C','D','E'][Math.floor(Math.random()*nAlt)];
-  const nivel = {iniciante:'fácil',basico:'básico',intermediario:'intermediário',avancado:'avançado',expert:'muito difícil'}[nivel_aluno]||'intermediário';
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+function sortear(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
 
-  const prompt = `Você cria questões de concurso e vestibular. Estilo: ${estilo}
+function gabarito_aleatorio() {
+  return sortear(['A','B','C','D','E']);
+}
 
-Crie uma questão sobre: "${assunto}"${disciplina?`, disciplina ${disciplina}`:''}. Dificuldade: ${nivel}.
-O gabarito DEVE ser a letra ${gabarito}.
+function escolher_assunto(disciplina) {
+  const lista = ASSUNTOS[disciplina];
+  if (!lista) return 'Conteúdo geral';
+  return sortear(lista);
+}
 
-FORMATO DE RESPOSTA — retorne APENAS este JSON preenchido, sem nenhum texto antes ou depois:
+// Normaliza vestibular_alvo que pode vir como "FUVEST, UERJ" ou "fuvest"
+function normalizar_banca(raw) {
+  if (!raw) return null;
+  const primeiro = raw.split(/[,;]/)[0].trim().toUpperCase();
+  return primeiro;
+}
 
-{"banca":"${bancaFinal}","disciplina":"${disciplina||assunto.split('—')[0].trim()}","assunto":"${assunto}","texto_base":"coloque aqui um texto de apoio de 60-120 palavras com fonte quando aplicável, ou deixe null","enunciado":"enunciado completo e claro da questão","opcoes":[{"letra":"A","texto":"alternativa A completa"},{"letra":"B","texto":"alternativa B completa"},{"letra":"C","texto":"alternativa C completa"},{"letra":"D","texto":"alternativa D completa"}${nAlt===5?',{"letra":"E","texto":"alternativa E completa"}':''}],"gabarito":"${gabarito}","explicacao_curta":"por que ${gabarito} está correta em 1 frase","explicacao_didatica":"parágrafo 1: por que ${gabarito} está correta com fundamentação. Parágrafo 2: por que cada outra está errada. Parágrafo 3: explicação do conteúdo como um professor ensinaria."}`;
-
+// ─── 1. Busca no banco real ──────────────────────────────────────────────────
+async function buscar_no_banco(supabase, { sistema, disciplina, assunto, dificuldade, banca }) {
   try {
-    const key = process.env.GROQ_API_KEY;
-    if(!key) return res.status(500).json({error:'GROQ_API_KEY não configurada'});
-
-    const r = await fetch('https://api.groq.com/openai/v1/chat/completions',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':`Bearer ${key}`},
-      body:JSON.stringify({
-        model:'llama-3.3-70b-versatile',
-        messages:[
-          {role:'system',content:'Você retorna APENAS JSON válido puro. NUNCA coloque texto, explicação ou markdown fora do JSON. O JSON deve ter os campos: banca, disciplina, assunto, texto_base, enunciado, opcoes, gabarito, explicacao_curta, explicacao_didatica.'},
-          {role:'user',content:prompt}
-        ],
-        max_tokens:1800,
-        temperature:0.8
-      })
+    const { data, error } = await supabase.rpc('buscar_questao_banco', {
+      p_sistema:     sistema,
+      p_disciplina:  disciplina  || null,
+      p_assunto:     assunto     || null,
+      p_dificuldade: dificuldade || null,
+      p_banca:       banca       || null,
+      p_excluir_ids: [],
     });
 
-    if(!r.ok){
-      const e=await r.text();
-      return res.status(500).json({error:`Groq ${r.status}: ${e.substring(0,200)}`});
+    if (error) {
+      console.error('[banco] erro RPC:', error.message);
+      return null;
     }
 
-    const data = await r.json();
-    let txt = data.choices?.[0]?.message?.content||'';
-    txt = txt.replace(/```json|```/g,'').trim();
-    const ji=txt.indexOf('{'), je=txt.lastIndexOf('}');
-    if(ji>=0&&je>ji) txt=txt.substring(ji,je+1);
+    if (!data || data.length === 0) return null;
 
-    const q = JSON.parse(txt);
-
-    // Validação flexível — aceita se tiver enunciado e opcoes
-    if(!q.enunciado) return res.status(500).json({error:'Campo enunciado ausente na resposta'});
-    if(!q.opcoes||!q.opcoes.length) return res.status(500).json({error:'Campo opcoes ausente na resposta'});
-    if(!q.gabarito) q.gabarito = gabarito;
-
-    return res.status(200).json({...q, fonte:'ia_calibrada', ok:true});
-
-  } catch(e) {
-    console.error('gerar-questao:',e.message);
-    return res.status(500).json({error:e.message});
+    const q = data[0];
+    return {
+      ...q,
+      _origem: 'banco',
+    };
+  } catch (e) {
+    console.error('[banco] exceção:', e.message);
+    return null;
   }
-};
+}
+
+// ─── 2. Gera via IA (Groq) ───────────────────────────────────────────────────
+async function gerar_via_ia({ sistema, banca, disciplina, assunto, dificuldade, nivel }) {
+  const estilo   = ESTILOS_BANCA[banca] || `Estilo ${banca}: questão objetiva com 5 alternativas A a E.`;
+  const gabarito = gabarito_aleatorio();
+  const diff_map = { facil: 'fácil', medio: 'médio', dificil: 'difícil' };
+  const diff_label = diff_map[dificuldade] || 'médio';
+
+  const prompt = `Você é um especialista em elaboração de questões para ${
+    sistema === 'concursos' ? `concursos públicos (banca ${banca})` :
+    sistema === 'medicina'  ? `vestibulares de medicina (${banca})` :
+    'ENEM (INEP)'
+  }.
+
+${estilo}
+
+Crie UMA questão de múltipla escolha sobre:
+- Disciplina: ${disciplina}
+- Assunto: ${assunto}
+- Dificuldade: ${diff_label}
+- Gabarito OBRIGATÓRIO: alternativa ${gabarito}
+
+REGRAS:
+1. A alternativa ${gabarito} DEVE ser a CORRETA
+2. As demais devem ser plausíveis mas incorretas
+3. Não indique qual é o gabarito no enunciado ou nas alternativas
+${sistema === 'enem' ? '4. texto_base OBRIGATÓRIO (60-120 palavras, termine com "Adaptado de [fonte realista]")' :
+  sistema === 'medicina' ? '4. Inclua texto_base clínico ou científico quando relevante (30-80 palavras)' :
+  '4. Inclua texto_base apenas se enriquecer a questão'}
+
+Responda APENAS com este JSON (sem markdown, sem explicação fora do JSON):
+{"texto_base":"[texto ou null]","enunciado":"[enunciado completo]","opcoes":[{"letra":"A","texto":"..."},{"letra":"B","texto":"..."},{"letra":"C","texto":"..."},{"letra":"D","texto":"..."},{"letra":"E","texto":"..."}],"gabarito":"${gabarito}","explicacao_curta":"[1 frase explicando a resposta correta]","explicacao_didatica":"[Parágrafo 1: por que ${gabarito} está correta. Parágrafo 2: por que as outras estão erradas. Parágrafo 3: resumo do conteúdo para fixação.]"}`;
+
+  const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type':  'application/json',
+      'Authorization': `Bearer ${GROQ_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model:       'llama-3.3-70b-versatile',
+      temperature: 0.8,
+      max_tokens:  1800,
+      messages:    [{ role: 'user', content: prompt }],
+    }),
+  });
+
+  if (!resp.ok) {
+    const err = await resp.text();
+    throw new Error(`Groq error ${resp.status}: ${err}`);
+  }
+
+  const data  = await resp.json();
+  const texto = data.choices?.[0]?.message?.content?.trim() || '';
+
+  // Parse JSON — remove possíveis ```json ... ``` do modelo
+  const clean = texto.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
+  const parsed = JSON.parse(clean);
+
+  // Validação mínima
+  if (!parsed.enunciado || !Array.isArray(parsed.opcoes) || parsed.opcoes.length < 4) {
+    throw new Error('Resposta da IA inválida: faltam campos obrigatórios');
+  }
+
+  return {
+    ...parsed,
+    gabarito: parsed.gabarito || gabarito,
+    _origem: 'ia',
+  };
+}
+
+// ─── 3. Salva questão IA no banco (para aprender) ────────────────────────────
+async function salvar_ia_no_banco(supabase, questao, { sistema, banca, disciplina, assunto, dificuldade }) {
+  try {
+    await supabase.from('questoes_banco').insert({
+      sistema,
+      banca:       sistema === 'concursos' ? banca : null,
+      vestibular:  sistema !== 'concursos' ? banca : null,
+      disciplina,
+      assunto,
+      dificuldade: dificuldade || 'medio',
+      tipo:        'multipla_escolha',
+      texto_base:  questao.texto_base   || null,
+      enunciado:   questao.enunciado,
+      opcoes:      questao.opcoes,
+      gabarito:    questao.gabarito,
+      explicacao:  questao.explicacao_didatica || questao.explicacao_curta || null,
+      fonte:       'ia_calibrada',
+      ativo:       true,
+    });
+  } catch (e) {
+    // Falha silenciosa — não impede a resposta ao usuário
+    console.warn('[salvar_ia] falhou:', e.message);
+  }
+}
+
+// ─── Handler principal ───────────────────────────────────────────────────────
+export default async function handler(req, res) {
+  // CORS
+  res.setHeader('Access-Control-Allow-Origin',  '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST')    return res.status(405).json({ error: 'Método não permitido' });
+
+  try {
+    const {
+      sistema      = 'concursos',
+      banca:        banca_raw,
+      vestibular:   vestibular_raw,
+      disciplina:   disc_raw,
+      assunto:      assunto_raw,
+      dificuldade   = 'medio',
+      nivel         = 'intermediario',
+      usar_banco    = true,   // cliente pode forçar sempre IA com usar_banco=false
+    } = req.body || {};
+
+    // Normaliza banca
+    const banca_origem = banca_raw || vestibular_raw || (sistema === 'enem' ? 'INEP' : 'CESPE');
+    const banca        = normalizar_banca(banca_origem);
+
+    // Disciplina e assunto
+    const disciplina = disc_raw    || (sistema === 'enem' ? 'Linguagens' : sistema === 'medicina' ? 'Biologia' : 'Português');
+    const assunto    = assunto_raw || escolher_assunto(disciplina);
+
+    const supabase = getSupabase();
+    let questao    = null;
+    let fonte      = 'ia';
+
+    // ── Etapa 1: tenta banco real ──
+    if (usar_banco && SUPABASE_SERVICE_KEY) {
+      questao = await buscar_no_banco(supabase, { sistema, disciplina, assunto, dificuldade, banca });
+      if (questao) {
+        fonte = 'banco';
+        console.log(`[gerar-questao] servido do banco: ${questao.id}`);
+      }
+    }
+
+    // ── Etapa 2: gera via IA ──
+    if (!questao) {
+      questao = await gerar_via_ia({ sistema, banca, disciplina, assunto, dificuldade, nivel });
+      console.log(`[gerar-questao] gerado via IA (${banca} / ${disciplina} / ${assunto})`);
+
+      // Salva no banco em background (sem aguardar)
+      if (SUPABASE_SERVICE_KEY) {
+        salvar_ia_no_banco(supabase, questao, { sistema, banca, disciplina, assunto, dificuldade });
+      }
+    }
+
+    // ── Resposta ──
+    return res.status(200).json({
+      ok:                  true,
+      fonte,                          // "banco" ou "ia"
+      sistema,
+      banca,
+      disciplina,
+      assunto,
+      dificuldade,
+      texto_base:          questao.texto_base          || null,
+      enunciado:           questao.enunciado,
+      opcoes:              questao.opcoes,
+      gabarito:            questao.gabarito,
+      explicacao_curta:    questao.explicacao_curta    || questao.explicacao?.split('\n')[0] || '',
+      explicacao_didatica: questao.explicacao_didatica || questao.explicacao                || '',
+    });
+
+  } catch (err) {
+    console.error('[gerar-questao] erro:', err.message);
+    return res.status(500).json({ ok: false, error: err.message });
+  }
+}
