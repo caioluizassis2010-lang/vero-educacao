@@ -520,7 +520,11 @@ async function gerarQuestao(){
         forcar_ia:false
       })
     });
-    const questaoAtual_raw=await r.json();
+    const respText=await r.text();
+    let questaoAtual_raw;
+    try{questaoAtual_raw=JSON.parse(respText);}
+    catch(e){throw new Error('API retornou resposta inválida ('+r.status+'). Tente novamente.');}
+    if(!r.ok)throw new Error(questaoAtual_raw?.error||'Erro '+r.status+' na API');
     if(!questaoAtual_raw.enunciado)throw new Error('Questão inválida retornada');
     questaoAtual=questaoAtual_raw;
     // Texto base antes do enunciado
