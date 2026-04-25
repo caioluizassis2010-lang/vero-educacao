@@ -1,373 +1,137 @@
-// api/gerar-questao.js — v3
-// Questões com contexto rico, perspectiva de prova real e explicação didática
+// api/gerar-questao.js — v4 — simples e robusto
 
-// ── PROMPTS CALIBRADOS POR BANCA ──
-const PROMPTS_BANCA = {
-
-  'CESPE': `Você é elaborador sênior de questões CESPE/CEBRASPE.
-ESTRUTURA OBRIGATÓRIA:
-1. TEXTO-BASE (obrigatório): trecho de lei, situação funcional real, caso administrativo ou normativo (3-6 linhas)
-2. ENUNCIADO: longo, com múltiplas informações técnicas, linguagem formal nível alto
-3. 5 ALTERNATIVAS (A-E): uma correta, quatro com erros sutis tecnicamente plausíveis
-4. Sempre baseado em legislação real, princípios constitucionais ou situações administrativas concretas
-5. Pegadinhas nos distratores — troca de palavras-chave, negações, exceções à regra`,
-
-  'FCC': `Você é elaborador sênior de questões FCC.
-ESTRUTURA OBRIGATÓRIA:
-1. TEXTO-BASE quando aplicável: lei, artigo normativo ou situação formal
-2. ENUNCIADO: direto, tecnicamente preciso, sem ambiguidade desnecessária
-3. 5 ALTERNATIVAS (A-E): formais, distratores que confundem quem não domina o conteúdo
-4. Linguagem formal e precisa, sem pegadinhas excessivas`,
-
-  'FGV': `Você é elaborador sênior de questões FGV.
-ESTRUTURA OBRIGATÓRIA:
-1. CONTEXTO RICO (obrigatório): caso empresarial real, situação de gestão, dados de mercado ou cenário político (4-8 linhas)
-2. ENUNCIADO: exige análise crítica do contexto, não decoreba
-3. 5 ALTERNATIVAS (A-E): envolvem tomada de decisão ou análise de cenário
-4. Nível alto — pensamento analítico e sistêmico`,
-
-  'VUNESP': `Você é elaborador sênior de questões VUNESP.
-ESTRUTURA OBRIGATÓRIA:
-1. TEXTO-BASE frequente: notícia, artigo, lei ou situação prática
-2. ENUNCIADO: interpretação e aplicação prática do texto
-3. 5 ALTERNATIVAS (A-E): equilibradas, nível médio-alto`,
-
-  'CESGRANRIO': `Você é elaborador sênior de questões CESGRANRIO.
-ESTRUTURA OBRIGATÓRIA:
-1. CONTEXTO TÉCNICO específico: setor de petróleo/gás, bancário ou naval quando aplicável
-2. ENUNCIADO: exige conhecimento especializado da área
-3. 5 ALTERNATIVAS (A-E): formais, técnicas, nível alto`,
-
-  'ESAF': `Você é elaborador sênior de questões ESAF (fiscal/tributário).
-ESTRUTURA OBRIGATÓRIA:
-1. TEXTO-BASE obrigatório: trecho literal de lei fiscal, regulamento ou portaria
-2. ENUNCIADO: pergunta sobre interpretação ou aplicação da norma citada
-3. 5 ALTERNATIVAS (A-E): exigem leitura cuidadosa da norma, nível muito alto`,
-
-  'IADES': `Você é elaborador sênior de questões IADES.
-ESTRUTURA: texto-base situacional quando aplicável, 5 alternativas, foco em saúde e educação, nível médio-alto.`,
-
-  'QUADRIX': `Você é elaborador sênior de questões QUADRIX (conselhos profissionais).
-ESTRUTURA: estilo misto CESPE, foco em regulação profissional e ética, 5 alternativas, nível médio-alto.`,
-
-  'IBFC': `Você é elaborador de questões IBFC. 5 alternativas diretas e objetivas, nível médio, texto-base quando pertinente.`,
-  'AOCP': `Você é elaborador de questões AOCP. 5 alternativas, nível médio, estilo direto.`,
-  'IDECAN': `Você é elaborador de questões IDECAN. 5 alternativas objetivas, nível médio.`,
-  'FUNRIO': `Você é elaborador de questões FUNRIO. 5 alternativas, foco em saúde e educação, nível médio-alto.`,
-  'CONSULPLAN': `Você é elaborador de questões CONSULPLAN. 5 alternativas diretas, nível médio.`,
-  'OBJETIVA': `Você é elaborador de questões OBJETIVA (RS). 5 alternativas, nível médio, foco municipal.`,
-  'FEPESE': `Você é elaborador de questões FEPESE (SC). 5 alternativas, nível médio.`,
-  'FUNDATEC': `Você é elaborador de questões FUNDATEC (RS). 5 alternativas, nível médio.`,
-  'FUNIVERSA': `Você é elaborador de questões FUNIVERSA (DF). 5 alternativas, nível médio-alto.`,
-  'UPENET': `Você é elaborador de questões UPENET (PE). 5 alternativas, nível médio.`,
-  'FAURGS': `Você é elaborador de questões FAURGS (RS). 5 alternativas, nível médio-alto.`,
-
-  'FUVEST': `Você é elaborador sênior de questões FUVEST/USP — uma das provas mais exigentes do Brasil.
-ESTRUTURA OBRIGATÓRIA:
-1. CONTEXTO CIENTÍFICO (obrigatório): experimento real, descoberta científica recente, dado de pesquisa ou situação biológica/química/física concreta (4-6 linhas)
-2. ENUNCIADO: exige raciocínio profundo, nunca memorização. Pode envolver interpretação de gráfico descrito, análise de resultado experimental ou aplicação de conceito em situação nova
-3. 5 ALTERNATIVAS (A-E): todas plausíveis para quem não domina, mas só uma correta para quem raciocina bem
-4. Interdisciplinaridade Bio+Quim ou Fis+Mat frequente
-5. Nível muito alto — próximo a vestibulares europeus`,
-
-  'COMVEST': `Você é elaborador sênior de questões UNICAMP/COMVEST.
-ESTRUTURA OBRIGATÓRIA:
-1. TEXTO COMPOSTO (obrigatório): combine 2 fontes diferentes (Ex: trecho literário + dado científico, ou artigo + charge descrita) — mínimo 6 linhas
-2. ENUNCIADO: exige síntese e análise crítica entre as fontes
-3. 4 ALTERNATIVAS (A-D): todas elaboradas, exige argumentação para eliminação
-4. Interdisciplinaridade marcante, temas contemporâneos e polêmicos
-5. Aborda questões de gênero, raça, meio ambiente, ciência e tecnologia`,
-
-  'FAMERP': `Você é elaborador sênior de questões FAMERP.
-ESTRUTURA OBRIGATÓRIA:
-1. CONTEXTO BIOLÓGICO/QUÍMICO (obrigatório): processo biológico real, reação química, mecanismo celular (4-6 linhas)
-2. ENUNCIADO: integra Biologia e Química, exige conhecimento profundo
-3. 5 ALTERNATIVAS (A-E): nível muito alto, próximo à FUVEST`,
-
-  'FCMSCSP': `Você é elaborador sênior de questões Santa Casa SP.
-ESTRUTURA: contexto biológico médico (histologia, anatomia, fisiologia), 5 alternativas, nível muito alto.`,
-
-  'UERJ': `Você é elaborador sênior de questões UERJ.
-ESTRUTURA OBRIGATÓRIA:
-1. TEXTO INTERDISCIPLINAR (obrigatório): conecta 2+ disciplinas com texto rico e referências culturais brasileiras (5-8 linhas)
-2. ENUNCIADO: pensamento crítico sobre a realidade brasileira
-3. 4 ALTERNATIVAS (A-D): exige visão sistêmica`,
-
-  'FAMEMA': `Você é elaborador sênior de questões FAMEMA.
-ESTRUTURA: situação-problema clínica ou biológica como contexto, 5 alternativas, competências médicas, metodologia ativa.`,
-
-  'UNIFESP': `Você é elaborador sênior de questões UNIFESP.
-ESTRUTURA: contexto científico obrigatório, 5 alternativas, ciências da natureza em profundidade, nível muito alto.`,
-
-  'INEP': `Você é elaborador sênior de questões ENEM/INEP com 20 anos de experiência.
-ESTRUTURA OBRIGATÓRIA — SIGA RIGOROSAMENTE:
-
-1. TEXTO-BASE (OBRIGATÓRIO, 80-150 palavras): Escolha UMA das opções:
-   a) Trecho literário com autor e obra: "NOME DO AUTOR. Título da obra. Ano." 
-   b) Notícia/artigo com fonte: "Adaptado de: VEÍCULO. Título. Data."
-   c) Dados de gráfico ou tabela descritos em prosa (descreva o gráfico com dados inventados mas realistas)
-   d) Charge descrita detalhadamente com legenda
-   e) Trecho histórico ou filosófico com contexto
-   f) Letra de música com: "ARTISTA. Título da música. Álbum, Ano."
-   g) Texto científico de divulgação com fonte
-
-2. ENUNCIADO: Deve referenciar o texto-base. Use: "Com base no texto", "A partir do trecho", "Considerando os dados apresentados"
-
-3. 5 ALTERNATIVAS (A-E): Completas (não use "apenas a), b) e c)" — escreva cada alternativa por extenso)
-
-4. INTERDISCIPLINARIDADE: Conecte disciplinas quando possível
-
-5. RELEVÂNCIA SOCIAL: Questão deve ter impacto na vida real do candidato`
+const ESTILOS = {
+  'CESPE': 'CESPE/CEBRASPE: afirmativas longas, linguagem formal alta, pegadinhas nos distratores, baseado em legislação real.',
+  'FCC': 'FCC: 5 alternativas objetivas e formais, enunciado direto, distratores plausíveis.',
+  'FGV': 'FGV: texto de contextualização obrigatório, abordagem crítica, casos práticos reais.',
+  'VUNESP': 'VUNESP: texto base frequente, interpretação e aplicação prática, nível médio-alto.',
+  'CESGRANRIO': 'CESGRANRIO: contexto técnico (Petrobras/BB/Marinha), 5 alternativas, nível alto.',
+  'ESAF': 'ESAF: trecho de lei fiscal como base, questão sobre interpretação normativa, nível muito alto.',
+  'IADES': 'IADES: 5 alternativas, foco em saúde e educação, nível médio-alto.',
+  'QUADRIX': 'QUADRIX: estilo CESPE, foco em conselhos profissionais.',
+  'IBFC': 'IBFC: 5 alternativas diretas, nível médio.',
+  'AOCP': 'AOCP: 5 alternativas, nível médio.',
+  'IDECAN': 'IDECAN: 5 alternativas, nível médio.',
+  'FUNRIO': 'FUNRIO: 5 alternativas, saúde e educação.',
+  'CONSULPLAN': 'CONSULPLAN: 5 alternativas diretas.',
+  'OBJETIVA': 'OBJETIVA: 5 alternativas, municipal RS.',
+  'FEPESE': 'FEPESE: 5 alternativas, estadual SC.',
+  'FUNDATEC': 'FUNDATEC: 5 alternativas, municipal RS.',
+  'FUNIVERSA': 'FUNIVERSA: 5 alternativas, GDF.',
+  'UPENET': 'UPENET: 5 alternativas, nordeste.',
+  'FAURGS': 'FAURGS: 5 alternativas, nível médio-alto RS.',
+  'NUCEPE': 'NUCEPE: 5 alternativas, estadual PI.',
+  'FADESP': 'FADESP: 5 alternativas, estadual PA.',
+  'IBAM': 'IBAM: 5 alternativas, administração municipal.',
+  'IESES': 'IESES: 5 alternativas, estadual SC.',
+  'SOUSÂNDRADE': 'SOUSÂNDRADE: 5 alternativas, estadual MA.',
+  'FUVEST': 'FUVEST/USP: contexto científico obrigatório, nível muito alto, raciocínio profundo, interdisciplinar, nunca decoreba.',
+  'COMVEST': 'UNICAMP/COMVEST: 4 alternativas, dois textos combinados, abordagem crítica única, interdisciplinar.',
+  'FAMERP': 'FAMERP: contexto biológico/químico obrigatório, foco Bio+Quim, nível muito alto.',
+  'FCMSCSP': 'Santa Casa SP: biologia médica (histologia, anatomia, fisiologia), nível muito alto.',
+  'FMABC': 'Einstein: raciocínio clínico e ciências básicas, nível muito alto.',
+  'UNIFESP': 'UNIFESP: ciências da natureza profundas, nível muito alto.',
+  'UERJ': 'UERJ: 4 alternativas, interdisciplinar, realidade brasileira, pensamento crítico.',
+  'FAMEMA': 'FAMEMA: situação-problema clínica, competências médicas.',
+  'UEL': 'UEL: 5 alternativas, nível alto, vestibular PR.',
+  'ACAFE': 'ACAFE: 5 alternativas, nível médio-alto, SC.',
+  'BAHIANA': 'BAHIANA: 5 alternativas, ciências da saúde, BA.',
+  'UNIFOR': 'UNIFOR: 5 alternativas, nível médio-alto, CE.',
+  'INEP': 'ENEM/INEP: texto-base obrigatório (trecho literário, notícia, dado de pesquisa ou charge descrita com fonte), 5 alternativas, interdisciplinar, contexto social, competências e habilidades, nunca memorização pura.'
 };
 
-// ── BANCO DE ASSUNTOS POR ÁREA ──
 const ASSUNTOS = {
-  linguagens: [
-    'Interpretação de texto narrativo — ponto de vista e narrador',
-    'Figuras de linguagem — metáfora, metonímia e ironia em publicidade',
-    'Variação linguística — preconceito linguístico e identidade cultural',
-    'Gêneros textuais — crônica jornalística e seus recursos expressivos',
-    'Coesão e coerência textual — conectivos e progressão temática',
-    'Modernismo brasileiro — Drummond, Bandeira e a poesia do cotidiano',
-    'Romantismo brasileiro — José de Alencar e a construção da identidade nacional',
-    'Realismo e Naturalismo — Machado de Assis e a crítica à sociedade',
-    'Intertextualidade — relações entre textos, paródia e pastiche',
-    'Linguagem publicitária — persuasão, argumentação e recursos retóricos',
-    'Literatura barroca — Gregório de Matos e o contexto colonial',
-    'Modernismo fase heroica — Semana de 22 e a ruptura estética',
-  ],
-  matematica: [
-    'Funções do 1° grau — interpretação gráfica e situações reais de custo',
-    'Funções do 2° grau — maximização de lucro e minimização de custos',
-    'Geometria plana — áreas em projetos arquitetônicos e terrenos',
-    'Geometria espacial — volume de embalagens e projetos industriais',
-    'Probabilidade — análise de risco em seguros e saúde pública',
-    'Estatística — análise de gráficos e dados do IBGE',
-    'Porcentagem — juros compostos e financiamentos imobiliários',
-    'Progressão geométrica — crescimento exponencial e epidemias',
-    'Trigonometria — aplicações em topografia e engenharia civil',
-    'Geometria analítica — distâncias entre pontos em GPS e cartografia',
-    'Combinatória — contagem em problemas de segurança digital',
-    'Razão e proporção — escala em mapas e modelos reduzidos',
-  ],
-  natureza: [
-    'Ecologia — impacto do desmatamento amazônico na biodiversidade global',
-    'Ecologia — ciclo do carbono e aquecimento global',
-    'Genética — biotecnologia, transgênicos e impactos na agricultura',
-    'Genética — heredograma e probabilidade de doenças hereditárias',
-    'Evolução — evidências evolutivas e ancestralidade comum',
-    'Fisiologia — sistema imunológico, vacinas e imunidade de rebanho',
-    'Fisiologia — nutrição, obesidade e doenças metabólicas',
-    'Química orgânica — polímeros, plásticos e impacto ambiental',
-    'Química — reações de combustão, poluição e qualidade do ar',
-    'Física — termodinâmica, eficiência energética e sustentabilidade',
-    'Física — ondas eletromagnéticas e comunicação por satélite',
-    'Física — eletricidade, fontes renováveis e matriz energética brasileira',
-  ],
-  humanas: [
-    'República Velha — coronelismo, voto de cabresto e exclusão política',
-    'Era Vargas — populismo, trabalhismo e modernização do Brasil',
-    'Ditadura Militar — repressão, resistência cultural e AI-5',
-    'Redemocratização — Constituição de 1988 e direitos fundamentais',
-    'Imperialismo — partilha da África e neocolonialismo',
-    'Revolução Industrial — transformações sociais e questão operária',
-    'Segunda Guerra Mundial — Holocausto, totalitarismo e direitos humanos',
-    'Guerra Fria — disputa ideológica e influência na América Latina',
-    'Urbanização brasileira — migração campo-cidade e periferização',
-    'Migração e refúgio — causas, fluxos e políticas internacionais',
-    'Filosofia Iluminista — contrato social e direitos naturais',
-    'Sociologia — desigualdade racial, racismo estrutural e políticas afirmativas',
-  ],
-  biologia: [
-    'Citologia — membrana plasmática, transporte e homeostase celular',
-    'Citologia — divisão celular, ciclo celular e câncer',
-    'Genética molecular — replicação do DNA, transcrição e tradução',
-    'Genética aplicada — CRISPR, edição genômica e ética',
-    'Fisiologia — sistema nervoso central, sinapses e neurotransmissores',
-    'Fisiologia — sistema endócrino, hormônios e diabetes mellitus',
-    'Ecologia de biomas — Cerrado, Caatinga e Mata Atlântica',
-    'Microbiologia — resistência bacteriana e uso de antibióticos',
-    'Embriologia — desenvolvimento embrionário e células-tronco',
-    'Evolução — especiação alopátrica e isolamento reprodutivo',
-    'Parasitologia — Aedes aegypti, dengue, zika e saúde pública',
-    'Botânica — fotossíntese, ciclo de Calvin e fixação de CO2',
-  ],
-  quimica: [
-    'Química orgânica — isomeria óptica, quiralidade e fármacos',
-    'Química orgânica — reações de adição em polímeros e plásticos',
-    'Eletroquímica — pilhas, baterias de lítio e veículos elétricos',
-    'Equilíbrio químico — princípio de Le Chatelier na indústria',
-    'Termoquímica — entalpia de combustão e biocombustíveis',
-    'Cinética química — catalisadores na indústria farmacêutica',
-    'Soluções — concentração, diluição e soluções intravenosas',
-    'Ácidos e bases — pH, tampão biológico e chuva ácida',
-    'Radioatividade — medicina nuclear, PET scan e radioterapia',
-    'Ligações químicas — propriedades dos materiais e nanotecnologia',
-    'Tabela periódica — metais de transição e baterias recarregáveis',
-    'Química ambiental — metais pesados, poluição hídrica e bioacumulação',
-  ],
-  fisica: [
-    'Mecânica — leis de Newton aplicadas a colisões em acidentes de trânsito',
-    'Mecânica — conservação de energia em esportes radicais',
-    'Termodinâmica — máquinas térmicas, rendimento e segunda lei',
-    'Óptica — lentes, miopia, hipermetropia e óculos corretivos',
-    'Ondulatória — efeito Doppler, ultrassom e diagnóstico médico',
-    'Eletrostática — campo elétrico, capacitores e descargas atmosféricas',
-    'Eletrodinâmica — circuitos, resistência elétrica e consumo de energia',
-    'Magnetismo — indução eletromagnética, geradores e transformadores',
-    'Física moderna — efeito fotoelétrico, fótons e energia solar',
-    'Física nuclear — fissão, fusão, usinas e Chernobyl',
-    'Relatividade — dilatação temporal, GPS e referencial inercial',
-    'Física de partículas — modelo padrão e o Bóson de Higgs',
-  ],
-  direito: [
-    'Direito Constitucional — remédios constitucionais habeas corpus, mandado de segurança, mandado de injunção',
-    'Direito Constitucional — separação dos poderes e sistema de freios e contrapesos',
-    'Direito Administrativo — princípios LIMPE e atos administrativos',
-    'Direito Administrativo — licitações Lei 14.133/21 e contratos administrativos',
-    'Direito Civil — responsabilidade civil objetiva e subjetiva',
-    'Direito Penal — crimes contra a administração pública e peculato',
-    'Direito Processual Civil — recursos e prazos processuais',
-    'Direito Tributário — impostos, taxas e contribuições de melhoria',
-    'Direito Trabalhista — jornada, férias, 13° salário e FGTS',
-    'Lei de Improbidade Administrativa — atos e sanções 8.429/92',
-    'Lei de Acesso à Informação — transparência, sigilo e prazos',
-    'LGPD — Lei Geral de Proteção de Dados — conceitos e obrigações',
-  ],
-  portugues: [
-    'Interpretação textual — inferência, pressuposição e implicatura',
-    'Concordância verbal — casos especiais com sujeito composto',
-    'Regência verbal — verbos assistir, visar, aspirar e seus complementos',
-    'Crase — casos obrigatórios, facultativos e proibidos',
-    'Pontuação — vírgula em orações subordinadas adjetivas e adverbiais',
-    'Semântica — polissemia, homonímia e ambiguidade em textos legais',
-    'Coesão textual — pronomes anafóricos e catafóricos',
-    'Tipologia textual — dissertativo-argumentativo e sua estrutura',
-    'Redação oficial — manual de redação da Presidência — ofício e memorando',
-    'Ortografia — acordo ortográfico de 2009 e casos polêmicos',
-  ],
-  administracao: [
-    'Teorias clássicas — Taylor, Fayol e administração científica',
-    'Gestão de pessoas — liderança situacional e modelos de motivação',
-    'Planejamento estratégico — análise SWOT e balanced scorecard',
-    'Orçamento público — LOA, LDO, PPA e ciclo orçamentário',
-    'Controle interno — auditoria, CGU e accountability',
-    'Processo administrativo federal — Lei 9.784/99',
-    'Nova gestão pública — reforma Bresser-Pereira e agências reguladoras',
-    'Atendimento ao público — qualidade, acessibilidade e cidadania',
-    'Governança pública — transparência e controle social',
-    'Gestão por competências — avaliação de desempenho no setor público',
-  ],
+  linguagens:['Interpretação de texto narrativo — narrador e ponto de vista','Figuras de linguagem — metáfora e ironia','Variação linguística e preconceito','Gêneros textuais — crônica','Coesão e coerência — conectivos','Modernismo — Drummond e Bandeira','Romantismo — Alencar e identidade nacional','Realismo — Machado de Assis','Intertextualidade e paródia','Linguagem publicitária e persuasão'],
+  matematica:['Funções 1° grau — gráfico e situações reais','Funções 2° grau — máximo e mínimo','Geometria plana — áreas em projetos','Geometria espacial — volumes','Probabilidade — análise de risco','Estatística — gráficos e dados IBGE','Porcentagem — juros compostos','Progressão geométrica — crescimento exponencial','Trigonometria — topografia e engenharia','Combinatória — problemas cotidianos'],
+  natureza:['Ecologia — desmatamento e biodiversidade','Ciclo do carbono e aquecimento global','Genética — transgênicos e biotecnologia','Genética — heredograma e doenças','Evolução — seleção natural','Imunologia — vacinas e imunidade','Química orgânica — polímeros e meio ambiente','Reações de combustão e poluição','Termodinâmica e eficiência energética','Física — fontes renováveis e sustentabilidade'],
+  humanas:['República Velha — coronelismo','Era Vargas — populismo e trabalhismo','Ditadura Militar e AI-5','Constituição de 1988 e direitos','Imperialismo e partilha da África','Revolução Industrial e questão social','Segunda Guerra e Holocausto','Guerra Fria na América Latina','Urbanização brasileira e periferização','Desigualdade racial e políticas afirmativas'],
+  biologia:['Citologia — membrana e transporte celular','Divisão celular e câncer','DNA — replicação e síntese proteica','CRISPR e edição genômica','Sistema nervoso e neurotransmissores','Sistema endócrino e diabetes','Biomas brasileiros — Cerrado e Caatinga','Resistência bacteriana e antibióticos','Evolução — especiação','Aedes aegypti e saúde pública'],
+  quimica:['Isomeria óptica e fármacos','Reações orgânicas e polímeros','Eletroquímica — baterias de lítio','Equilíbrio químico — Le Chatelier','Termoquímica e biocombustíveis','Cinética — catalisadores industriais','Soluções e concentração farmacológica','pH — tampão biológico e chuva ácida','Radioatividade e medicina nuclear','Química ambiental — poluição hídrica'],
+  fisica:['Leis de Newton — acidentes de trânsito','Conservação de energia em esportes','Máquinas térmicas e rendimento','Óptica — lentes e correção visual','Efeito Doppler e ultrassom médico','Campo elétrico e descargas atmosféricas','Circuitos elétricos e consumo de energia','Indução eletromagnética e geradores','Efeito fotoelétrico e energia solar','Física nuclear — fissão e usinas'],
+  direito:['Remédios constitucionais — habeas corpus e mandado de segurança','Separação dos poderes','Princípios LIMPE e atos administrativos','Licitações — Lei 14.133/21','Responsabilidade civil objetiva','Crimes contra a administração pública','Direito tributário — impostos e taxas','FGTS — férias e jornada de trabalho','Lei de Improbidade Administrativa','LGPD — proteção de dados'],
+  portugues:['Inferência e pressuposição textual','Concordância verbal — casos especiais','Regência verbal — assistir e visar','Crase — obrigatória e proibida','Pontuação — vírgula em orações','Semântica — polissemia e homonímia','Coesão — pronomes anafóricos','Dissertativo-argumentativo — estrutura','Redação oficial — ofício e memorando','Ortografia — acordo ortográfico'],
+  administracao:['Taylor e Fayol — administração científica','Liderança situacional e motivação','Planejamento estratégico — SWOT','Orçamento público — LOA e LDO','Controle interno e auditoria','Processo administrativo — Lei 9.784','Reforma do Estado — gestão pública','Gestão por competências','Governança pública e transparência','Atendimento ao público e qualidade']
 };
 
-function getAssunto(area, disciplina) {
-  let chave = (area || '').toLowerCase();
+function sortearAssunto(area, disciplina) {
+  let chave = (area||'').toLowerCase();
   if (!chave && disciplina) {
     const d = disciplina.toLowerCase();
-    if (d.includes('bio')) chave = 'biologia';
-    else if (d.includes('quim')) chave = 'quimica';
-    else if (d.includes('fis') && !d.includes('fisi')) chave = 'fisica';
-    else if (d.includes('port') || d.includes('lingu') || d.includes('lit')) chave = 'portugues';
-    else if (d.includes('dir')) chave = 'direito';
-    else if (d.includes('admin') || d.includes('gest')) chave = 'administracao';
-    else if (d.includes('mat')) chave = 'matematica';
-    else if (d.includes('human') || d.includes('hist') || d.includes('geo')) chave = 'humanas';
-    else if (d.includes('natur') || d.includes('cienc')) chave = 'natureza';
+    if(d.includes('bio')) chave='biologia';
+    else if(d.includes('quim')) chave='quimica';
+    else if(d.includes('fis')) chave='fisica';
+    else if(d.includes('port')||d.includes('lingu')) chave='portugues';
+    else if(d.includes('dir')) chave='direito';
+    else if(d.includes('admin')) chave='administracao';
+    else if(d.includes('mat')) chave='matematica';
+    else if(d.includes('human')||d.includes('hist')||d.includes('geo')) chave='humanas';
+    else if(d.includes('natur')) chave='natureza';
   }
-  const lista = ASSUNTOS[chave] || ASSUNTOS['portugues'];
-  return lista[Math.floor(Math.random() * lista.length)];
+  const lista = ASSUNTOS[chave] || ASSUNTOS.portugues;
+  return lista[Math.floor(Math.random()*lista.length)];
 }
 
 module.exports = async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  if(req.method!=='POST') return res.status(405).json({error:'Method not allowed'});
 
-  const {
-    sistema = 'concursos',
-    banca, vestibular, disciplina, assunto, area,
-    nivel_aluno = 'intermediario',
-  } = req.body || {};
+  const { sistema='concursos', banca, vestibular, disciplina, area, nivel_aluno='intermediario' } = req.body||{};
 
-  const bancaFinal = banca || vestibular || (sistema === 'enem' ? 'INEP' : sistema === 'medicina' ? 'FUVEST' : 'CESPE');
-  const promptBase = PROMPTS_BANCA[bancaFinal] || PROMPTS_BANCA[sistema === 'enem' ? 'INEP' : sistema === 'medicina' ? 'FUVEST' : 'CESPE'];
+  const bancaFinal = banca||vestibular||(sistema==='enem'?'INEP':sistema==='medicina'?'FUVEST':'CESPE');
+  const estilo = ESTILOS[bancaFinal]||ESTILOS[sistema==='enem'?'INEP':sistema==='medicina'?'FUVEST':'CESPE'];
+  const nAlt = (bancaFinal==='COMVEST'||bancaFinal==='UERJ') ? 4 : 5;
+  const assunto = sortearAssunto(area||null, disciplina||null);
+  const gabarito = ['A','B','C','D','E'][Math.floor(Math.random()*nAlt)];
+  const nivel = {iniciante:'fácil',basico:'básico',intermediario:'intermediário',avancado:'avançado',expert:'muito difícil'}[nivel_aluno]||'intermediário';
 
-  const nivelMap = { iniciante:'fácil', basico:'básico', intermediario:'intermediário', avancado:'avançado', expert:'muito difícil (nível máximo)' };
-  const nivelTxt = nivelMap[nivel_aluno] || 'intermediário';
+  const prompt = `Você cria questões de concurso e vestibular. Estilo: ${estilo}
 
-  const areaFinal = area || null;
-  const assuntoFinal = assunto || getAssunto(areaFinal, disciplina);
-  const gabaritoSugerido = ['A','B','C','D','E'][Math.floor(Math.random() * 5)];
+Crie uma questão sobre: "${assunto}"${disciplina?`, disciplina ${disciplina}`:''}. Dificuldade: ${nivel}.
+O gabarito DEVE ser a letra ${gabarito}.
 
-  const alternativasNum = (bancaFinal === 'COMVEST' || bancaFinal === 'UERJ') ? 4 : 5;
-  const letras = ['A','B','C','D','E'].slice(0, alternativasNum);
+FORMATO DE RESPOSTA — retorne APENAS este JSON preenchido, sem nenhum texto antes ou depois:
 
-  const prompt = `${promptBase}
-
-ASSUNTO DESTA QUESTÃO: "${assuntoFinal}"
-${disciplina ? `DISCIPLINA: ${disciplina}` : ''}
-${areaFinal ? `ÁREA: ${areaFinal}` : ''}
-DIFICULDADE: ${nivelTxt}
-GABARITO CORRETO: alternativa ${gabaritoSugerido} — construa a questão de forma que ${gabaritoSugerido} seja a ÚNICA resposta correta.
-
-EXPLICAÇÃO DIDÁTICA OBRIGATÓRIA: Após o gabarito, escreva uma explicação de 3-5 parágrafos que:
-1. Explique por que a alternativa ${gabaritoSugerido} está correta, com fundamento teórico
-2. Explique por que cada uma das outras alternativas está incorreta (cite o erro específico)
-3. Ensine o conteúdo por trás da questão — como se fosse um professor explicando para o aluno
-4. Se aplicável, cite a lei, artigo, conceito científico ou dado real que fundamenta a resposta
-
-Retorne SOMENTE JSON válido puro, sem markdown:
-{
-  "banca": "${bancaFinal}",
-  "area": "${areaFinal || ''}",
-  "disciplina": "nome da disciplina",
-  "assunto": "${assuntoFinal}",
-  "dificuldade": 3,
-  "tipo": "multipla_escolha",
-  "texto_base": "texto de apoio OBRIGATÓRIO para ENEM e quando aplicável para outras bancas — mínimo 80 palavras com fonte indicada, ou null para questões sem texto",
-  "enunciado": "enunciado completo e específico que referencia o texto quando houver",
-  "opcoes": ${JSON.stringify(letras.map(l => ({ letra: l, texto: `alternativa ${l} completa e bem elaborada` })))},
-  "gabarito": "${gabaritoSugerido}",
-  "explicacao_curta": "feedback imediato — 1 frase dizendo que ${gabaritoSugerido} está correta e por quê",
-  "explicacao_didatica": "Explicação completa em 3-5 parágrafos: (1) por que ${gabaritoSugerido} está correta com fundamento teórico, (2) por que cada outra alternativa está errada com o erro específico, (3) ensine o conteúdo como um professor — conceitos, leis, referências"
-}`;
+{"banca":"${bancaFinal}","disciplina":"${disciplina||assunto.split('—')[0].trim()}","assunto":"${assunto}","texto_base":"coloque aqui um texto de apoio de 60-120 palavras com fonte quando aplicável, ou deixe null","enunciado":"enunciado completo e claro da questão","opcoes":[{"letra":"A","texto":"alternativa A completa"},{"letra":"B","texto":"alternativa B completa"},{"letra":"C","texto":"alternativa C completa"},{"letra":"D","texto":"alternativa D completa"}${nAlt===5?',{"letra":"E","texto":"alternativa E completa"}':''}],"gabarito":"${gabarito}","explicacao_curta":"por que ${gabarito} está correta em 1 frase","explicacao_didatica":"parágrafo 1: por que ${gabarito} está correta com fundamentação. Parágrafo 2: por que cada outra está errada. Parágrafo 3: explicação do conteúdo como um professor ensinaria."}`;
 
   try {
-    const groqKey = process.env.GROQ_API_KEY;
-    if (!groqKey) return res.status(500).json({ error: 'GROQ_API_KEY não configurada no Vercel' });
+    const key = process.env.GROQ_API_KEY;
+    if(!key) return res.status(500).json({error:'GROQ_API_KEY não configurada'});
 
-    const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${groqKey}` },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages: [
-          { role: 'system', content: 'Você é elaborador de questões de concurso e vestibular. Retorne APENAS JSON válido puro sem markdown, sem texto antes ou depois. Varie sempre o gabarito conforme solicitado. Crie questões inéditas e originais com contexto rico.' },
-          { role: 'user', content: prompt }
+    const r = await fetch('https://api.groq.com/openai/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${key}`},
+      body:JSON.stringify({
+        model:'llama-3.3-70b-versatile',
+        messages:[
+          {role:'system',content:'Você retorna APENAS JSON válido puro. NUNCA coloque texto, explicação ou markdown fora do JSON. O JSON deve ter os campos: banca, disciplina, assunto, texto_base, enunciado, opcoes, gabarito, explicacao_curta, explicacao_didatica.'},
+          {role:'user',content:prompt}
         ],
-        max_tokens: 2000,
-        temperature: 0.85
+        max_tokens:1800,
+        temperature:0.8
       })
     });
 
-    if (!groqRes.ok) {
-      const errText = await groqRes.text();
-      return res.status(500).json({ error: `Groq ${groqRes.status}: ${errText.substring(0, 300)}` });
+    if(!r.ok){
+      const e=await r.text();
+      return res.status(500).json({error:`Groq ${r.status}: ${e.substring(0,200)}`});
     }
 
-    const groqData = await groqRes.json();
-    let txt = groqData.choices?.[0]?.message?.content || '';
-    txt = txt.replace(/```json|```/g, '').trim();
-    const ji = txt.indexOf('{'), je = txt.lastIndexOf('}');
-    if (ji >= 0 && je > ji) txt = txt.substring(ji, je + 1);
+    const data = await r.json();
+    let txt = data.choices?.[0]?.message?.content||'';
+    txt = txt.replace(/```json|```/g,'').trim();
+    const ji=txt.indexOf('{'), je=txt.lastIndexOf('}');
+    if(ji>=0&&je>ji) txt=txt.substring(ji,je+1);
 
-    const questao = JSON.parse(txt);
-    if (!questao.enunciado || !questao.gabarito || !questao.opcoes) {
-      return res.status(500).json({ error: 'Questão inválida gerada pelo modelo' });
-    }
+    const q = JSON.parse(txt);
 
-    return res.status(200).json({ ...questao, fonte: 'ia_calibrada', ok: true });
+    // Validação flexível — aceita se tiver enunciado e opcoes
+    if(!q.enunciado) return res.status(500).json({error:'Campo enunciado ausente na resposta'});
+    if(!q.opcoes||!q.opcoes.length) return res.status(500).json({error:'Campo opcoes ausente na resposta'});
+    if(!q.gabarito) q.gabarito = gabarito;
 
-  } catch (e) {
-    console.error('gerar-questao error:', e.message);
-    return res.status(500).json({ error: e.message });
+    return res.status(200).json({...q, fonte:'ia_calibrada', ok:true});
+
+  } catch(e) {
+    console.error('gerar-questao:',e.message);
+    return res.status(500).json({error:e.message});
   }
 };
