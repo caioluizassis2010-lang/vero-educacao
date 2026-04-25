@@ -209,10 +209,9 @@ async function gerarQuestao(){
       body:JSON.stringify({
         sistema:'enem',
         banca:'INEP',
+        area:areaSelecionada||null,
         disciplina:disc||null,
-        assunto:areaSelecionada||null,
-        nivel_aluno:perfil?.nivel||'intermediario',
-        forcar_ia:false
+        nivel_aluno:perfil?.nivel||'intermediario'
       })
     });
     const json=await r.json();
@@ -235,7 +234,7 @@ function renderQuestao(q){
   document.getElementById('q-container').innerHTML=`
     <div class="q-card">
       <div class="q-card-head">
-        <span class="q-area-badge" style="background:${cor}20;color:${cor};border-color:${cor}40">${AREA_LABELS[q.area]||q.area}</span>
+        <span class="q-area-badge" style="background:${cor}20;color:${cor};border-color:${cor}40">${AREA_LABELS[q.area]||q.area||"ENEM"}</span>
         <span class="q-disc-badge">${q.disciplina||''}</span>
         <span style="font-size:.75rem;color:var(--muted);margin-left:auto">${q.assunto||''}</span>
       </div>
