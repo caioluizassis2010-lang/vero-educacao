@@ -1,152 +1,50 @@
 // api/gerar-questao.js
-// Gera questão calibrada pela banca: primeiro tenta banco real, depois IA calibrada
-const { createClient } = require('@supabase/supabase-js');
+// Gera questão calibrada pela banca — robusto com fallback total
 
 const PROMPTS_BANCA = {
-  // ── CONCURSOS ──
-  'CESPE': `Você é especialista em provas CESPE/CEBRASPE.
-Características obrigatórias:
-- Afirmativas longas e complexas com análise crítica
-- Linguagem técnica e formal, nível alto
-- Quando certo/errado: frases que parecem corretas mas têm sutileza
-- Quando múltipla escolha: 5 alternativas (A-E), pegadinhas nos distratores
-- Sempre contextualizado com legislação ou situação prática
-- Gabarito: letra da correta (A-E) ou C/E`,
+  // CONCURSOS
+  'CESPE': 'Você é especialista em provas CESPE/CEBRASPE. Crie questões com afirmativas longas e complexas, linguagem técnica e formal nível alto. Múltipla escolha com 5 alternativas (A-E) ou certo/errado. Pegadinhas nos distratores, sempre contextualizado com legislação ou situação prática.',
+  'FCC': 'Você é especialista em provas FCC. Crie questões com 5 alternativas objetivas e formais, enunciado direto sem ambiguidades, foco em conhecimento técnico e legislação específica, distratores plausíveis mas claramente incorretos.',
+  'FGV': 'Você é especialista em provas FGV. Crie questões com 5 alternativas, sempre com texto de contextualização, abordagem crítica e analítica, casos práticos e situações reais, nível alto de complexidade.',
+  'VUNESP': 'Você é especialista em provas VUNESP. Crie questões com 5 alternativas, texto base frequente, foco em interpretação e aplicação prática, linguagem acessível mas técnica.',
+  'CESGRANRIO': 'Você é especialista em provas CESGRANRIO (Petrobras, BB, Marinha). Crie questões com 5 alternativas formais e técnicas, foco em conhecimentos específicos da área, nível alto.',
+  'ESAF': 'Você é especialista em provas ESAF (Receita Federal, fiscal). Crie questões com 5 alternativas sobre legislação fiscal e tributária, interpretação de artigos de lei, nível muito alto.',
+  'IADES': 'Você é especialista em provas IADES. Crie questões com 5 alternativas, foco em saúde e educação, linguagem médio-alto.',
+  'QUADRIX': 'Você é especialista em provas QUADRIX (conselhos profissionais CRM, CRF). Crie questões com estilo misto CESPE, foco em regulação e saúde.',
+  'IBFC': 'Você é especialista em provas IBFC. Crie questões com 5 alternativas diretas e objetivas, nível médio.',
+  'AOCP': 'Você é especialista em provas AOCP. Crie questões com 5 alternativas, nível médio, estilo direto.',
+  'IDECAN': 'Você é especialista em provas IDECAN. Crie questões com 5 alternativas objetivas, nível médio.',
+  'FUNRIO': 'Você é especialista em provas FUNRIO. Crie questões com 5 alternativas, foco em saúde e educação, nível médio-alto.',
+  'CONSULPLAN': 'Você é especialista em provas CONSULPLAN. Crie questões com 5 alternativas diretas, nível médio.',
+  'OBJETIVA': 'Você é especialista em provas OBJETIVA (RS). Crie questões com 5 alternativas, nível médio, foco municipal.',
+  'FEPESE': 'Você é especialista em provas FEPESE (SC). Crie questões com 5 alternativas, nível médio, foco estadual SC.',
+  'FUNDATEC': 'Você é especialista em provas FUNDATEC (RS). Crie questões com 5 alternativas, nível médio, foco municipal RS.',
+  'FUNIVERSA': 'Você é especialista em provas FUNIVERSA (DF/GDF). Crie questões com 5 alternativas, nível médio-alto.',
+  'UPENET': 'Você é especialista em provas UPENET/IAUPE (PE). Crie questões com 5 alternativas, nível médio, foco nordeste.',
+  'FAURGS': 'Você é especialista em provas FAURGS (RS). Crie questões com 5 alternativas, nível médio-alto.',
+  'NUCEPE': 'Você é especialista em provas NUCEPE (PI). Crie questões com 5 alternativas, nível médio.',
+  'FADESP': 'Você é especialista em provas FADESP (PA). Crie questões com 5 alternativas, nível médio.',
+  'IBAM': 'Você é especialista em provas IBAM (municipal). Crie questões com 5 alternativas, foco em administração municipal.',
+  'IESES': 'Você é especialista em provas IESES (SC). Crie questões com 5 alternativas, nível médio.',
+  'SOUSÂNDRADE': 'Você é especialista em provas Sousândrade (MA). Crie questões com 5 alternativas, nível médio.',
 
-  'FCC': `Você é especialista em provas FCC (Fundação Carlos Chagas).
-Características obrigatórias:
-- 5 alternativas objetivas e formais
-- Enunciado direto sem ambiguidades propositais
-- Foco em conhecimento técnico e legislação específica
-- Distratores plausíveis mas claramente incorretos
-- Linguagem formal e precisa`,
+  // MEDICINA
+  'FUVEST': 'Você é especialista em provas FUVEST (USP) — uma das mais difíceis do Brasil. Crie questões de altíssimo nível com 5 alternativas (A-E). Biologia: citologia, genética, ecologia em profundidade. Química orgânica avançada. Física: eletromagnetismo, ótica. Interdisciplinaridade frequente. Contextualização científica moderna. Nunca decoreba — exige raciocínio profundo.',
+  'COMVEST': 'Você é especialista em provas UNICAMP (COMVEST). Crie questões com 4 alternativas (A-D), abordagem crítica e interdisciplinar única, textos longos com múltiplas fontes, forte componente de interpretação e argumentação, foge do padrão de outras bancas.',
+  'FAMERP': 'Você é especialista em provas FAMERP. Crie questões com 5 alternativas, foco intenso em Biologia e Química (70% da prova), nível muito alto em ciências da natureza.',
+  'FCMSCSP': 'Você é especialista em provas Santa Casa SP. Crie questões com 5 alternativas, Biologia médica em profundidade (histologia, anatomia, fisiologia), nível muito alto.',
+  'FMABC': 'Você é especialista em provas Einstein (FMABC). Crie questões com 5 alternativas, nível muito alto, foco em raciocínio clínico e ciências básicas.',
+  'UERJ': 'Você é especialista em provas UERJ. Crie questões com 4 alternativas (A-D), fortemente interdisciplinar, abordagem crítica da realidade brasileira, duas fases.',
+  'FAMEMA': 'Você é especialista em provas FAMEMA. Crie questões com 5 alternativas e situações-problema, foco em competências médicas, metodologia ativa.',
+  'UNIFESP': 'Você é especialista em vestibular UNIFESP. Crie questões com 5 alternativas, nível muito alto, ciências da natureza em profundidade.',
+  'UEL': 'Você é especialista em vestibular UEL (Londrina). Crie questões com 5 alternativas, nível alto, padrão regional PR.',
+  'ACAFE': 'Você é especialista em vestibular ACAFE (SC). Crie questões com 5 alternativas, nível médio-alto, foco regional SC.',
+  'BAHIANA': 'Você é especialista em vestibular BAHIANA. Crie questões com 5 alternativas, nível alto, foco em ciências da saúde.',
+  'UNIFOR': 'Você é especialista em vestibular UNIFOR. Crie questões com 5 alternativas, nível médio-alto, foco nordeste.',
 
-  'FGV': `Você é especialista em provas FGV (Fundação Getulio Vargas).
-Características obrigatórias:
-- 5 alternativas com texto de contextualização obrigatório
-- Abordagem crítica e analítica
-- Questões que exigem raciocínio, não memorização
-- Frequentemente usa casos práticos e situações reais
-- Nível alto de complexidade`,
-
-  'VUNESP': `Você é especialista em provas VUNESP.
-Características obrigatórias:
-- 5 alternativas com texto base frequente
-- Foco em interpretação e aplicação prática
-- Linguagem acessível mas técnica
-- Equilíbrio entre teoria e prática`,
-
-  'CESGRANRIO': `Você é especialista em provas CESGRANRIO.
-Características obrigatórias:
-- 5 alternativas formais e técnicas
-- Muito usado para Petrobras, BB, Marinha
-- Foco em conhecimentos específicos da área
-- Nível alto, questões elaboradas`,
-
-  'ESAF': `Você é especialista em provas ESAF (fiscal/tributário).
-Características obrigatórias:
-- 5 alternativas com foco em legislação fiscal e tributária
-- Questões sobre Receita Federal, Auditoria, Contabilidade
-- Nível muito alto de complexidade técnica
-- Interpretação de artigos de lei frequente`,
-
-  'IADES': `Você é especialista em provas IADES.
-Características obrigatórias:
-- 5 alternativas, mistura de estilos
-- Foco em saúde e educação frequentemente
-- Linguagem médio-alto
-- Pegadinhas moderadas`,
-
-  'QUADRIX': `Você é especialista em provas QUADRIX.
-Características obrigatórias:
-- Mistura de certo/errado (estilo CESPE) com múltipla escolha
-- Foco em conselhos profissionais (CRM, CRF, etc.)
-- Linguagem técnica da área de saúde/regulação`,
-
-  'DEFAULT_CONCURSOS': `Você é especialista em concursos públicos brasileiros.
-Características obrigatórias:
-- 5 alternativas (A-E) objetivas
-- Enunciado claro e técnico
-- Distratores plausíveis
-- Baseado em legislação e conhecimentos da área`,
-
-  // ── MEDICINA / VESTIBULARES ──
-  'FUVEST': `Você é especialista em provas FUVEST (USP).
-Características obrigatórias:
-- Questões de altíssimo nível — uma das provas mais difíceis do Brasil
-- Biologia: citologia, genética, ecologia, fisiologia em profundidade
-- Química: orgânica, equilíbrio químico, eletroquímica
-- Física: ótica, eletromagnetismo, mecânica avançada
-- Matemática: funções, geometria analítica, probabilidade
-- Interdisciplinaridade frequente
-- 5 alternativas (A-E), sem pegadinhas, mas exige raciocínio profundo
-- Contextualização científica moderna (artigos, descobertas)`,
-
-  'COMVEST': `Você é especialista em provas UNICAMP (COMVEST).
-Características obrigatórias:
-- Abordagem crítica e interdisciplinar — questões únicas no Brasil
-- Exige capacidade analítica e síntese
-- 4 alternativas (A-D)
-- Textos longos com múltiplas fontes
-- Questões que fogem do padrão de outras bancas
-- Forte componente de interpretação e argumentação`,
-
-  'FAMERP': `Você é especialista em provas FAMERP.
-Características obrigatórias:
-- Foco intenso em Biologia e Química (70% da prova)
-- 5 alternativas objetivas
-- Nível muito alto em ciências da natureza
-- Questões diretas mas exigentes`,
-
-  'FCMSCSP': `Você é especialista em provas Santa Casa de São Paulo.
-Características obrigatórias:
-- Biologia médica em profundidade (histologia, anatomia)
-- 5 alternativas objetivas
-- Nível muito alto
-- Foco em ciências biológicas aplicadas à medicina`,
-
-  'UERJ': `Você é especialista em provas UERJ.
-Características obrigatórias:
-- 4 alternativas (A-D)
-- Fortemente interdisciplinar — mistura disciplinas
-- Questões conceituais e analíticas
-- Duas fases: específica e discursiva
-- Abordagem crítica da realidade brasileira`,
-
-  'DEFAULT_MEDICINA': `Você é especialista em vestibulares de medicina brasileiros.
-Características obrigatórias:
-- Nível muito alto em Biologia e Química
-- 5 alternativas (A-E)
-- Foco em ciências da natureza aplicadas
-- Contextualização científica
-- Distratores tecnicamente elaborados`,
-
-  // ── ENEM ──
-  'INEP': `Você é especialista em provas ENEM (INEP).
-Características OBRIGATÓRIAS — o ENEM tem padrão único:
-- SEMPRE começa com texto(s) de apoio: pode ser literário, jornalístico, científico, charge, gráfico
-- Avalia COMPETÊNCIAS e HABILIDADES, não memorização
-- 5 alternativas (A-E) — nunca C/E
-- Interdisciplinaridade: uma questão pode envolver 2+ disciplinas
-- Contexto social, ambiental, cultural sempre presente
-- Linguagem acessível mas o raciocínio é complexo
-- Áreas: Linguagens, Matemática, Ciências da Natureza, Ciências Humanas
-- Questões de Matemática: sempre aplicação prática, nunca cálculo puro
-- Questões de Natureza: Bio+Física+Química integradas
-- Questões de Humanas: História+Geografia+Filosofia+Sociologia integradas
-- Redação: dissertativo-argumentativo, proposta de intervenção obrigatória`
+  // ENEM
+  'INEP': 'Você é especialista em provas ENEM (INEP). Regras OBRIGATÓRIAS: SEMPRE inclua texto(s) de apoio (literário, jornalístico, científico, charge ou dados). Avalie COMPETÊNCIAS e HABILIDADES, nunca memorização. 5 alternativas (A-E), nunca certo/errado. Interdisciplinaridade obrigatória. Contexto social, ambiental ou cultural sempre presente. Linguagem acessível mas raciocínio complexo. Matemática: sempre aplicação prática. Natureza: Bio+Física+Química integradas quando possível. Humanas: História+Geografia+Filosofia+Sociologia integradas.'
 };
-
-async function buscarDoBanco(sb, sistema, banca, disciplina, dificuldade, excluirIds) {
-  const params = { p_sistema: sistema };
-  if (banca) params.p_banca = banca;
-  if (disciplina) params.p_disciplina = disciplina;
-  if (dificuldade) params.p_dificuldade = dificuldade;
-  if (excluirIds?.length) params.p_excluir_ids = excluirIds;
-
-  const { data } = await sb.rpc('buscar_questao_banco', params);
-  return data?.[0] || null;
-}
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -157,139 +55,84 @@ module.exports = async function handler(req, res) {
     vestibular,
     disciplina,
     assunto,
-    dificuldade,
     nivel_aluno = 'intermediario',
-    excluir_ids = [],
-    forcar_ia = false
-  } = req.body;
+  } = req.body || {};
 
-  const sb = createClient(
-    'https://lklmzhunhiwqsbhnymaw.supabase.co',
-    process.env.SUPABASE_SERVICE_KEY || 'sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU'
-  );
-
-  const bancaFinal = banca || vestibular;
-
-  // 1. Tenta buscar questão real do banco
-  if (!forcar_ia && bancaFinal) {
-    try {
-      const questaoReal = await buscarDoBanco(sb, sistema, bancaFinal, disciplina, dificuldade, excluir_ids);
-      if (questaoReal) {
-        return res.status(200).json({
-          ...questaoReal,
-          fonte: 'banco_real',
-          ok: true
-        });
-      }
-    } catch (e) {
-      console.error('Erro ao buscar do banco:', e.message);
-    }
-  }
-
-  // 2. Gera via IA calibrada pelo padrão da banca
-  const promptBase = PROMPTS_BANCA[bancaFinal] ||
-    (sistema === 'enem' ? PROMPTS_BANCA['INEP'] :
-     sistema === 'medicina' ? PROMPTS_BANCA['DEFAULT_MEDICINA'] :
-     PROMPTS_BANCA['DEFAULT_CONCURSOS']);
+  const bancaFinal = banca || vestibular || (sistema === 'enem' ? 'INEP' : 'CESPE');
+  const promptBase = PROMPTS_BANCA[bancaFinal] || PROMPTS_BANCA[
+    sistema === 'enem' ? 'INEP' :
+    sistema === 'medicina' ? 'FUVEST' : 'CESPE'
+  ];
 
   const nivelMap = {
-    iniciante: 'fácil (nível 1-2)',
-    basico: 'básico (nível 2)',
-    intermediario: 'intermediário (nível 3)',
-    avancado: 'avançado (nível 4)',
-    expert: 'muito difícil (nível 5)'
+    iniciante: 'fácil',
+    basico: 'básico',
+    intermediario: 'intermediário',
+    avancado: 'avançado',
+    expert: 'muito difícil'
   };
 
   const disciplinaInstr = disciplina ? `Disciplina: ${disciplina}.` : '';
-  const assuntoInstr = assunto ? `Assunto específico: ${assunto}.` : '';
+  const assuntoInstr = assunto ? `Assunto: ${assunto}.` : '';
   const nivelInstr = `Dificuldade: ${nivelMap[nivel_aluno] || 'intermediário'}.`;
 
   const prompt = `${promptBase}
 
 ${disciplinaInstr} ${assuntoInstr} ${nivelInstr}
 
-Crie UMA questão seguindo EXATAMENTE o padrão descrito acima.
+Crie UMA questão seguindo EXATAMENTE o padrão descrito.
 
-Retorne SOMENTE JSON válido sem markdown:
-{
-  "banca": "${bancaFinal || 'GERAL'}",
-  "disciplina": "nome da disciplina",
-  "assunto": "subtópico específico",
-  "dificuldade": 3,
-  "tipo": "multipla_escolha",
-  "texto_base": "texto de apoio se necessário ou null",
-  "enunciado": "enunciado completo da questão",
-  "opcoes": [
-    {"letra": "A", "texto": "alternativa A"},
-    {"letra": "B", "texto": "alternativa B"},
-    {"letra": "C", "texto": "alternativa C"},
-    {"letra": "D", "texto": "alternativa D"},
-    {"letra": "E", "texto": "alternativa E"}
-  ],
-  "gabarito": "C",
-  "explicacao": "Explicação detalhada de por que a resposta é correta e por que as outras são incorretas"
-}`;
+Retorne SOMENTE JSON válido, sem markdown, sem explicação antes ou depois:
+{"banca":"${bancaFinal}","disciplina":"nome da disciplina","assunto":"subtópico específico","dificuldade":3,"tipo":"multipla_escolha","texto_base":"texto de apoio obrigatório para ENEM ou null","enunciado":"enunciado completo da questão","opcoes":[{"letra":"A","texto":"alternativa A"},{"letra":"B","texto":"alternativa B"},{"letra":"C","texto":"alternativa C"},{"letra":"D","texto":"alternativa D"},{"letra":"E","texto":"alternativa E"}],"gabarito":"C","explicacao":"Explicação detalhada de por que C é correto e por que as outras são incorretas"}`;
 
   try {
-    // Tenta Groq direto primeiro, fallback via proxy /api/groq
-    let txt = '';
-    try {
-      const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.GROQ_API_KEY}`
-        },
-        body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
-          messages: [{ role: 'user', content: prompt }],
-          max_tokens: 1000,
-          temperature: 0.4
-        })
-      });
-      const groqData = await groqRes.json();
-      txt = groqData.choices?.[0]?.message?.content || '';
-    } catch(groqErr) {
-      // Fallback: chama proxy interno
-      const baseUrl = process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : 'http://localhost:3000';
-      const proxyRes = await fetch(`${baseUrl}/api/groq`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: [{ role: 'user', content: prompt }],
-          max_tokens: 1000,
-          temperature: 0.4
-        })
-      });
-      const proxyData = await proxyRes.json();
-      txt = proxyData.choices?.[0]?.message?.content || '';
+    const groqKey = process.env.GROQ_API_KEY;
+    if (!groqKey) throw new Error('GROQ_API_KEY não configurada');
+
+    const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${groqKey}`
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [
+          { role: 'system', content: 'Você retorna APENAS JSON válido puro, sem markdown, sem texto antes ou depois.' },
+          { role: 'user', content: prompt }
+        ],
+        max_tokens: 1200,
+        temperature: 0.4
+      })
+    });
+
+    if (!groqRes.ok) {
+      const errText = await groqRes.text();
+      throw new Error(`Groq error ${groqRes.status}: ${errText}`);
     }
 
-    if (!txt) throw new Error('Resposta vazia do modelo');
+    const groqData = await groqRes.json();
+    let txt = groqData.choices?.[0]?.message?.content || '';
     txt = txt.replace(/```json|```/g, '').trim();
+
     // Garante que pega só o JSON
-    const ji = txt.indexOf('{'), je = txt.lastIndexOf('}');
+    const ji = txt.indexOf('{');
+    const je = txt.lastIndexOf('}');
     if (ji >= 0 && je > ji) txt = txt.substring(ji, je + 1);
+
     const questao = JSON.parse(txt);
 
-    // Salva no banco como ia_calibrada para aprendizado futuro
-    try {
-      await sb.from('questoes_banco').insert({
-        sistema, banca: bancaFinal, disciplina: questao.disciplina,
-        assunto: questao.assunto, dificuldade: questao.dificuldade || 3,
-        tipo: questao.tipo || 'multipla_escolha',
-        texto_base: questao.texto_base || null,
-        enunciado: questao.enunciado, opcoes: questao.opcoes,
-        gabarito: questao.gabarito, explicacao: questao.explicacao,
-        fonte: 'ia_calibrada', ativo: true
-      });
-    } catch (e) { /* não crítico */ }
+    if (!questao.enunciado || !questao.gabarito) {
+      throw new Error('Questão inválida gerada');
+    }
 
     return res.status(200).json({ ...questao, fonte: 'ia_calibrada', ok: true });
 
   } catch (e) {
-    return res.status(500).json({ error: 'Erro ao gerar questão: ' + e.message });
+    console.error('gerar-questao error:', e.message);
+    return res.status(500).json({
+      error: e.message,
+      dica: 'Verifique se GROQ_API_KEY está configurada no Vercel'
+    });
   }
 };
