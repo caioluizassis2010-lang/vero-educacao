@@ -396,11 +396,16 @@ nav{
             Gerando questão com IA...
           </div>
           <div id="q-content" style="display:none">
+            <div id="q-texto-base" style="display:none;background:rgba(255,255,255,0.04);border-left:3px solid var(--gold,#b4afa8);border-radius:0 8px 8px 0;padding:14px 18px;font-size:.87rem;color:var(--muted);line-height:1.75;margin-bottom:14px;font-style:italic"></div>
             <p class="q-text" id="q-text"></p>
             <div class="opcoes" id="opcoes"></div>
             <div class="gabarito" id="gabarito">
               <div class="gab-label">Explicação da IA</div>
               <p class="gab-text" id="gab-text"></p>
+              <div id="gab-didatica" style="display:none;margin-top:14px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px">
+                <div style="font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">📖 Entenda o conteúdo</div>
+                <div id="gab-didatica-text" style="font-size:.87rem;color:var(--muted);line-height:1.8"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -518,6 +523,11 @@ async function gerarQuestao(){
     const questaoAtual_raw=await r.json();
     if(!questaoAtual_raw.enunciado)throw new Error('Questão inválida retornada');
     questaoAtual=questaoAtual_raw;
+    // Texto base antes do enunciado
+    const tbEl=document.getElementById('q-texto-base');
+    if(questaoAtual.texto_base){tbEl.textContent=questaoAtual.texto_base;tbEl.style.display='block';}
+    else{tbEl.style.display='none';}
+    document.getElementById('gab-didatica').style.display='none';
     document.getElementById('q-text').textContent=questaoAtual.enunciado;
     const el=document.getElementById('opcoes');
     el.innerHTML='';
@@ -554,7 +564,18 @@ function responder(el,letra){
       if(o.querySelector('.opcao-letra').textContent===questaoAtual.gabarito)o.classList.add('certa');
     });
   }
-  document.getElementById('gab-text').textContent=questaoAtual.explicacao;
+  document.getElementById('gab-text').textContent=questaoAtual.explicacao_curta||questaoAtual.explicacao||'';
+  // Texto base
+  const tbEl=document.getElementById('q-texto-base');
+  if(questaoAtual.texto_base){tbEl.textContent=questaoAtual.texto_base;tbEl.style.display='block';}
+  else{tbEl.style.display='none';}
+  // Explicação didática
+  const didEl=document.getElementById('gab-didatica');
+  const didTxt=document.getElementById('gab-didatica-text');
+  if(questaoAtual.explicacao_didatica){
+    didTxt.innerHTML=questaoAtual.explicacao_didatica.replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+    didEl.style.display='block';
+  }else{didEl.style.display='none';}
   document.getElementById('gabarito').style.display='block';
 
   if(userId&&questaoAtual){

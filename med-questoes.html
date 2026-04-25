@@ -222,7 +222,16 @@ async function carregarHoje(){
 async function gerarQuestao(){
   if(hojeQtd>=MAX){mostrarSessaoConcluida();return;}
   const disc=document.getElementById('f-disciplina').value||['Biologia','Química','Física','Matemática','Português','História','Geografia'][Math.floor(Math.random()*7)];
-  const vest=document.getElementById('f-vestibular').value||perfil.vestibular_alvo||'FUVEST';
+  // Normaliza vestibular — pode ter múltiplos separados por vírgula
+  const vestRaw=document.getElementById('f-vestibular').value||perfil.vestibular_alvo||'FUVEST';
+  const vestList=['FUVEST','COMVEST','FAMERP','FCMSCSP','FMABC','UNIFESP','UERJ','FAMEMA','UEL','ACAFE','BAHIANA','UNIFOR','UFMG','UFRJ','UFBA','UFC','UFPE'];
+  // Se tem múltiplos, pega o primeiro que reconhecemos, senão FUVEST
+  let vest='FUVEST';
+  const partes=vestRaw.toUpperCase().split(/[,\s]+/);
+  for(const p of partes){
+    const match=vestList.find(v=>p.includes(v)||v.includes(p));
+    if(match){vest=match;break;}
+  }
   const btn=document.getElementById('btn-gerar');
   btn.disabled=true;
   document.getElementById('q-container').innerHTML=`<div class="loading-card"><div class="loading-anim">🧬</div><div class="loading-txt">Gerando questão de ${disc} — estilo ${vest}...</div></div>`;
