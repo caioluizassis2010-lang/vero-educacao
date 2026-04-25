@@ -210,11 +210,9 @@ Características ENEM: contexto, interdisciplinaridade, interpretação crítica
 Retorne SOMENTE JSON sem markdown:
 {"area":"${areaSelecionada||'linguagens'}","disciplina":"Português","assunto":"subtópico","enunciado":"texto completo","opcoes":["A) texto","B) texto","C) texto","D) texto","E) texto"],"gabarito":"C","explicacao":"Explicação detalhada da resposta correta"}`;
   try{
-    const r=await fetch('/api/groq',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:prompt}],max_tokens:700,temperature:0.4})});
+    const r=await fetch('/api/gerar-questao',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sistema:'enem',banca:'INEP',disciplina:document.getElementById('f-disciplina')?.value||null,nivel_aluno:perfil?.nivel||'intermediario',forcar_ia:false})});
     const json=await r.json();
-    let txt=json.choices?.[0]?.message?.content||'';
-    txt=txt.replace(/```json|```/g,'').trim();
-    qAtual=JSON.parse(txt);
+    qAtual=json;
     renderQuestao(qAtual);
   }catch(e){
     document.getElementById('q-container').innerHTML=`<div class="loading-card"><div style="color:var(--red);font-size:.9rem">Erro ao gerar questão. Tente novamente.</div></div>`;

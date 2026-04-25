@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Importar Questões</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f3f8;--bg2:#fff;--bg3:#f0eff6;--bg4:#eae9f2;--text:#1a1828;--muted:#6b6a8a;--muted2:rgba(107,106,138,0.2);--border:rgba(107,106,138,0.15);--border2:rgba(107,106,138,0.3);--purple:#7c3aed;--purple2:#a78bfa;--blue:#2563eb;--green:#10b981;--red:#ef4444;--gold:#f59e0b;--radius:10px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;-webkit-font-smoothing:antialiased}
+.sidebar{width:230px;min-height:100vh;background:#1a1828;border-right:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:100}
+.sb-head{padding:20px 16px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between}
+.sb-logo{font-family:'Jost',sans-serif;font-size:.95rem;font-weight:300;letter-spacing:.4em;color:#fff;text-transform:uppercase}
+.sb-badge{font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.25);letter-spacing:.06em;text-transform:uppercase}
+.sb-sec{font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);padding:0 16px;margin:16px 0 6px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 12px;margin:1px 6px;border-radius:8px;font-size:.82rem;font-weight:500;color:rgba(255,255,255,0.55);cursor:pointer;transition:all .15s;text-decoration:none}
+.sb-item:hover{background:rgba(255,255,255,0.08);color:#fff}
+.sb-item.active{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.15)}
+.sb-icon{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px}
+.sb-user{padding:12px 6px;border-top:1px solid rgba(255,255,255,0.08);margin-top:auto}
+.nup{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:8px;cursor:pointer}
+.nup:hover{background:rgba(255,255,255,0.08)}
+.nup-av{width:28px;height:28px;border-radius:50%;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.25);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#ef4444;flex-shrink:0}
+.nup-name{font-size:.8rem;font-weight:500;color:#fff}
+.nup-sub{font-size:.65rem;color:rgba(255,255,255,0.4)}
+.main{flex:1;margin-left:230px;display:flex;flex-direction:column;min-height:100vh}
+.topbar{height:58px;padding:0 26px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;background:rgba(244,243,248,0.95);position:sticky;top:0;z-index:50}
+.topbar-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600}
+.topbar-title em{font-style:italic;color:var(--purple)}
+.content{padding:24px 26px;max-width:960px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px}
+.card-title{font-size:.95rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.card-sub{font-size:.8rem;color:var(--muted);margin-bottom:20px;font-weight:300;line-height:1.6}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-label{font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.form-select,.form-input{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:.85rem;font-family:'DM Sans',sans-serif;color:var(--text);outline:none;transition:border-color .15s;appearance:none}
+.form-select:focus,.form-input:focus{border-color:var(--border2)}
+
+/* Drop zone */
+.drop-zone{border:2px dashed var(--border2);border-radius:10px;padding:40px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg3)}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--purple);background:rgba(124,58,237,0.04)}
+.drop-icon{font-size:2.5rem;margin-bottom:12px}
+.drop-title{font-size:.95rem;font-weight:600;margin-bottom:6px}
+.drop-sub{font-size:.8rem;color:var(--muted)}
+.drop-btn{margin-top:14px;padding:9px 20px;background:var(--purple);color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:600;cursor:pointer}
+input[type=file]{display:none}
+
+/* Preview */
+.preview-wrap{display:none;margin-top:16px}
+.preview-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.preview-count{font-size:.85rem;font-weight:600}
+.preview-table-wrap{max-height:280px;overflow-y:auto;border:1px solid var(--border);border-radius:8px}
+table{width:100%;border-collapse:collapse;font-size:.78rem}
+thead th{padding:9px 12px;background:var(--bg3);font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:left;border-bottom:1px solid var(--border);position:sticky;top:0}
+tbody td{padding:8px 12px;border-bottom:1px solid var(--border)}
+tbody tr:last-child td{border:none}
+tbody tr:hover{background:var(--bg3)}
+.badge{display:inline-flex;padding:2px 7px;border-radius:100px;font-size:.65rem;font-weight:700;text-transform:uppercase}
+.badge-ok{background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.2)}
+.badge-err{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+
+.btn-importar{width:100%;padding:13px;background:linear-gradient(135deg,#6d28d9,var(--purple));color:#fff;border:none;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:.92rem;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(124,58,237,0.25);margin-top:14px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-importar:hover{transform:translateY(-1px)}
+.btn-importar:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Resultado */
+.resultado{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:16px;margin-top:14px;display:none}
+.res-nums{display:flex;gap:24px;margin-bottom:12px}
+.res-n{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;line-height:1}
+.res-l{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+
+/* Modelo JSON */
+.code-block{background:#1a1828;color:#e2e8f0;border-radius:9px;padding:16px;font-family:monospace;font-size:.78rem;line-height:1.7;overflow-x:auto;white-space:pre}
+.hl-key{color:#a78bfa}
+.hl-str{color:#34d399}
+.hl-num{color:#60a5fa}
+
+/* Stats banco */
+.stats-banco{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.sb-stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
+.sb-stat-n{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;color:var(--purple);line-height:1;margin-bottom:4px}
+.sb-stat-l{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+
+/* Histórico importações */
+.hist-item{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--border)}
+.hist-item:last-child{border:none}
+.hist-status{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.hist-info{flex:1}
+.hist-nome{font-size:.83rem;font-weight:500}
+.hist-meta{font-size:.72rem;color:var(--muted)}
+
+@media(max-width:900px){.sidebar{display:none}.main{margin-left:0}.form-row{grid-template-columns:1fr}.stats-banco{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sb-head">
+    <span class="sb-logo">VOFOR</span>
+    <span class="sb-badge">Admin</span>
+  </div>
+  <nav style="flex:1;overflow-y:auto;padding:8px 0">
+    <div class="sb-sec">Visão geral</div>
+    <a href="admin.html" class="sb-item"><div class="sb-icon">📊</div>Dashboard</a>
+    <a href="admin.html" class="sb-item"><div class="sb-icon">👥</div>Usuários</a>
+    <div class="sb-sec">Banco de Questões</div>
+    <a href="admin-questoes-banco.html" class="sb-item active"><div class="sb-icon">📥</div>Importar Questões</a>
+    <a href="admin-questoes-banco.html#banco" class="sb-item"><div class="sb-icon">📋</div>Ver Banco</a>
+    <div class="sb-sec">Métricas</div>
+    <a href="admin.html#metricas" class="sb-item"><div class="sb-icon">📈</div>Por sistema</a>
+    <div class="sb-sec">Configurações</div>
+    <a href="admin.html#config" class="sb-item"><div class="sb-icon">⚙️</div>Dificuldade IA</a>
+    <div class="sb-sec">Testar site</div>
+    <a href="painel.html" target="_blank" class="sb-item"><div class="sb-icon">⚖️</div>Concursos</a>
+    <a href="med-painel.html" target="_blank" class="sb-item"><div class="sb-icon">🩺</div>Medicina</a>
+    <a href="enem-painel.html" target="_blank" class="sb-item"><div class="sb-icon">📚</div>ENEM</a>
+  </nav>
+  <div class="sb-user">
+    <div class="nup" onclick="sair()">
+      <div class="nup-av" id="nav-avatar">?</div>
+      <div><div class="nup-name" id="nav-user">—</div><div class="nup-sub">Sair</div></div>
+    </div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title">Banco de <em>Questões</em></div>
+    <a href="admin.html" style="margin-left:auto;font-size:.75rem;color:var(--muted);padding:6px 14px;border:1px solid var(--border);border-radius:7px;text-decoration:none">← Admin</a>
+  </div>
+  <div class="content">
+
+    <!-- STATS DO BANCO -->
+    <div class="stats-banco">
+      <div class="sb-stat"><div class="sb-stat-n" id="st-total">—</div><div class="sb-stat-l">Total questões</div></div>
+      <div class="sb-stat"><div class="sb-stat-n" id="st-reais">—</div><div class="sb-stat-l">Reais importadas</div></div>
+      <div class="sb-stat"><div class="sb-stat-n" id="st-ia">—</div><div class="sb-stat-l">Geradas por IA</div></div>
+      <div class="sb-stat"><div class="sb-stat-n" id="st-bancas">—</div><div class="sb-stat-l">Bancas cobertas</div></div>
+    </div>
+
+    <!-- IMPORTAR -->
+    <div class="card">
+      <div class="card-title">📥 Importar questões reais</div>
+      <div class="card-sub">
+        Importe questões de provas anteriores em formato JSON ou CSV. As questões são armazenadas no banco e usadas prioritariamente antes de gerar via IA.
+        A IA aprende o padrão de cada banca com base nas questões importadas.
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Sistema</label>
+          <select class="form-select" id="imp-sistema" onchange="atualizarBancas()">
+            <option value="concursos">Concursos Públicos</option>
+            <option value="medicina">Medicina / Vestibulares</option>
+            <option value="enem">ENEM</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Banca / Vestibular</label>
+          <select class="form-select" id="imp-banca"></select>
+        </div>
+      </div>
+
+      <!-- Drop zone -->
+      <div class="drop-zone" id="drop-zone"
+           ondragover="ev.preventDefault();this.classList.add('drag')"
+           ondragleave="this.classList.remove('drag')"
+           ondrop="onDrop(event)">
+        <div class="drop-icon">📂</div>
+        <div class="drop-title">Arraste o arquivo aqui</div>
+        <div class="drop-sub">Aceita JSON ou CSV — veja o modelo abaixo</div>
+        <button class="drop-btn" onclick="document.getElementById('file-input').click()">Escolher arquivo</button>
+        <input type="file" id="file-input" accept=".json,.csv" onchange="lerArquivo(this.files[0])">
+      </div>
+
+      <!-- Preview -->
+      <div class="preview-wrap" id="preview-wrap">
+        <div class="preview-head">
+          <span class="preview-count" id="preview-count">0 questões carregadas</span>
+          <button onclick="limpar()" style="font-size:.75rem;color:var(--muted);background:none;border:none;cursor:pointer">Limpar</button>
+        </div>
+        <div class="preview-table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Disciplina</th><th>Assunto</th><th>Tipo</th><th>Dificuldade</th><th>Status</th></tr></thead>
+            <tbody id="preview-tbody"></tbody>
+          </table>
+        </div>
+        <button class="btn-importar" id="btn-importar" onclick="importar()">
+          <div class="spinner" id="spinner"></div>
+          <span id="btn-txt">Importar para o banco</span>
+        </button>
+        <div class="resultado" id="resultado">
+          <div class="res-nums">
+            <div><div class="res-n" id="res-ok" style="color:var(--green)">0</div><div class="res-l">Importadas</div></div>
+            <div><div class="res-n" id="res-err" style="color:var(--red)">0</div><div class="res-l">Erros</div></div>
+            <div><div class="res-n" id="res-total-r">0</div><div class="res-l">Total</div></div>
+          </div>
+          <div id="res-msg" style="font-size:.82rem;color:var(--muted)"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODELO JSON -->
+    <div class="card">
+      <div class="card-title">📄 Modelo de importação JSON</div>
+      <div class="card-sub">Cada questão deve seguir este formato. Campos obrigatórios: disciplina, enunciado, gabarito.</div>
+      <div class="code-block">[
+  {
+    <span class="hl-key">"sistema"</span>: <span class="hl-str">"concursos"</span>,          <span style="color:#64748b">// concursos | medicina | enem</span>
+    <span class="hl-key">"banca"</span>: <span class="hl-str">"CESPE"</span>,               <span style="color:#64748b">// nome da banca/vestibular</span>
+    <span class="hl-key">"ano"</span>: <span class="hl-num">2023</span>,                    <span style="color:#64748b">// ano da prova</span>
+    <span class="hl-key">"cargo"</span>: <span class="hl-str">"Analista Judiciário"</span>,  <span style="color:#64748b">// cargo (concursos)</span>
+    <span class="hl-key">"orgao"</span>: <span class="hl-str">"STJ"</span>,                  <span style="color:#64748b">// órgão (concursos)</span>
+    <span class="hl-key">"vestibular"</span>: <span class="hl-str">"FUVEST"</span>,        <span style="color:#64748b">// vestibular (medicina)</span>
+    <span class="hl-key">"disciplina"</span>: <span class="hl-str">"Direito Constitucional"</span>,
+    <span class="hl-key">"assunto"</span>: <span class="hl-str">"Direitos Fundamentais"</span>,
+    <span class="hl-key">"subassunto"</span>: <span class="hl-str">"Remédios Constitucionais"</span>,
+    <span class="hl-key">"dificuldade"</span>: <span class="hl-num">3</span>,              <span style="color:#64748b">// 1(fácil) a 5(muito difícil)</span>
+    <span class="hl-key">"tipo"</span>: <span class="hl-str">"multipla_escolha"</span>,     <span style="color:#64748b">// multipla_escolha | certo_errado</span>
+    <span class="hl-key">"texto_base"</span>: <span class="hl-str">"Texto de apoio..."</span>, <span style="color:#64748b">// opcional</span>
+    <span class="hl-key">"enunciado"</span>: <span class="hl-str">"Texto da questão..."</span>,
+    <span class="hl-key">"opcoes"</span>: [
+      <span class="hl-str">"Alternativa A"</span>,
+      <span class="hl-str">"Alternativa B"</span>,
+      <span class="hl-str">"Alternativa C"</span>,
+      <span class="hl-str">"Alternativa D"</span>,
+      <span class="hl-str">"Alternativa E"</span>
+    ],
+    <span class="hl-key">"gabarito"</span>: <span class="hl-str">"C"</span>,              <span style="color:#64748b">// letra correta ou C/E</span>
+    <span class="hl-key">"explicacao"</span>: <span class="hl-str">"Explicação..."</span>,  <span style="color:#64748b">// opcional mas recomendado</span>
+    <span class="hl-key">"tags"</span>: [<span class="hl-str">"constitucional"</span>, <span class="hl-str">"direitos"</span>]
+  }
+]</div>
+      <button onclick="baixarModelo()" style="margin-top:12px;padding:8px 18px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer;font-weight:600">⬇ Baixar modelo JSON</button>
+    </div>
+
+    <!-- HISTÓRICO -->
+    <div class="card">
+      <div class="card-title">📋 Histórico de importações</div>
+      <div id="historico-list" style="margin-top:12px">
+        <div style="font-size:.82rem;color:var(--muted);text-align:center;padding:20px">Carregando...</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const sb = supabase.createClient('https://lklmzhunhiwqsbhnymaw.supabase.co','sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU');
+let userId = null, questoesCarregadas = [];
+
+const BANCAS = {
+  concursos: ['CESPE','FCC','FGV','VUNESP','CESGRANRIO','ESAF','IADES','IBFC','AOCP','QUADRIX','IDECAN','FUNRIO','CONSULPLAN','OBJETIVA','FEPESE','FUNDATEC','NUCEPE','FUNIVERSA','UPENET','UECE-CEV','COPEVE-UFAL','FADESP','FAURGS','NCE-UFRJ','BIO-RIO','FAFIPA','IBAM','IESES','ITEP','SOUSÂNDRADE','UFG','MOVENS','LEGALLE','PRAXIS','NOVA CONCURSOS','FDRH','FUMARC','CEPERJ','CONPASS','CEPS-UFT','OUTRA'],
+  medicina: ['FUVEST','COMVEST (UNICAMP)','FAMERP','FCMSCSP (Santa Casa)','FMABC (Einstein)','UNIFESP','UERJ','FAMEMA','FMJ','ACAFE','UEL','UFRGS','BAHIANA','UNIFOR','UNICHRISTUS','UFMG','UFRJ','UFBA','UFC','UFPE','UPE','PUCRS','UFPR','PUC-PR','ENEM-SISU','OUTRA'],
+  enem: ['INEP']
+};
+
+async function init(){
+  const{data:{session}}=await sb.auth.getSession();
+  if(!session){window.location.href='vofor-login.html';return;}
+  userId=session.user.id;
+  const{data:p}=await sb.from('perfis').select('is_admin').eq('id',userId).single();
+  if(!p?.is_admin){window.location.href='painel.html';return;}
+  const nome=session.user.user_metadata?.full_name||session.user.email.split('@')[0];
+  document.getElementById('nav-avatar').textContent=nome.substring(0,2).toUpperCase();
+  document.getElementById('nav-user').textContent=nome;
+  atualizarBancas();
+  carregarStats();
+  carregarHistorico();
+}
+
+function atualizarBancas(){
+  const sistema=document.getElementById('imp-sistema').value;
+  const sel=document.getElementById('imp-banca');
+  sel.innerHTML=BANCAS[sistema].map(b=>`<option value="${b}">${b}</option>`).join('');
+}
+
+async function carregarStats(){
+  const[{count:total},{count:reais},{count:ia}]=await Promise.all([
+    sb.from('questoes_banco').select('*',{count:'exact',head:true}),
+    sb.from('questoes_banco').select('*',{count:'exact',head:true}).eq('fonte','importada'),
+    sb.from('questoes_banco').select('*',{count:'exact',head:true}).eq('fonte','ia_calibrada'),
+  ]);
+  const{data:bancas}=await sb.from('questoes_banco').select('banca').neq('banca',null);
+  const setBancas=new Set(bancas?.map(b=>b.banca)||[]);
+  document.getElementById('st-total').textContent=total||0;
+  document.getElementById('st-reais').textContent=reais||0;
+  document.getElementById('st-ia').textContent=ia||0;
+  document.getElementById('st-bancas').textContent=setBancas.size||0;
+}
+
+function lerArquivo(file){
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      let data;
+      if(file.name.endsWith('.json')){
+        data=JSON.parse(e.target.result);
+        if(!Array.isArray(data))data=[data];
+      } else {
+        // CSV simples
+        const lines=e.target.result.split('\n').filter(l=>l.trim());
+        const headers=lines[0].split(',').map(h=>h.trim().replace(/"/g,''));
+        data=lines.slice(1).map(line=>{
+          const vals=line.split(',').map(v=>v.trim().replace(/"/g,''));
+          const obj={};
+          headers.forEach((h,i)=>obj[h]=vals[i]||'');
+          return obj;
+        });
+      }
+      questoesCarregadas=data;
+      renderPreview(data);
+    }catch(err){alert('Erro ao ler arquivo: '+err.message);}
+  };
+  reader.readAsText(file);
+}
+
+function onDrop(ev){
+  ev.preventDefault();
+  document.getElementById('drop-zone').classList.remove('drag');
+  const file=ev.dataTransfer.files[0];
+  if(file)lerArquivo(file);
+}
+
+function renderPreview(data){
+  document.getElementById('preview-count').textContent=data.length+' questões carregadas';
+  const tbody=document.getElementById('preview-tbody');
+  tbody.innerHTML=data.slice(0,50).map((q,i)=>{
+    const ok=q.disciplina&&q.enunciado&&q.gabarito;
+    return`<tr>
+      <td style="color:var(--muted)">${i+1}</td>
+      <td>${q.disciplina||'—'}</td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${q.assunto||'—'}</td>
+      <td>${q.tipo||'múlt. escolha'}</td>
+      <td>${q.dificuldade||3}</td>
+      <td><span class="badge ${ok?'badge-ok':'badge-err'}">${ok?'OK':'Incompleto'}</span></td>
+    </tr>`;
+  }).join('');
+  if(data.length>50)tbody.innerHTML+=`<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:10px">...e mais ${data.length-50} questões</td></tr>`;
+  document.getElementById('preview-wrap').style.display='block';
+  document.getElementById('resultado').style.display='none';
+}
+
+async function importar(){
+  if(!questoesCarregadas.length)return;
+  const btn=document.getElementById('btn-importar');
+  btn.disabled=true;document.getElementById('spinner').style.display='block';
+  document.getElementById('btn-txt').textContent='Importando...';
+  const sistema=document.getElementById('imp-sistema').value;
+  const banca=document.getElementById('imp-banca').value;
+  try{
+    const r=await fetch('/api/admin-import-questoes',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({admin_id:userId,questoes:questoesCarregadas,sistema,banca})
+    });
+    const d=await r.json();
+    document.getElementById('res-ok').textContent=d.importadas||0;
+    document.getElementById('res-err').textContent=d.erros||0;
+    document.getElementById('res-total-r').textContent=d.total||0;
+    document.getElementById('res-msg').textContent=d.erros>0?`${d.erros} questões com erro — verifique o formato`:'Importação concluída com sucesso!';
+    document.getElementById('resultado').style.display='block';
+    carregarStats();carregarHistorico();
+  }catch(e){alert('Erro na importação: '+e.message);}
+  btn.disabled=false;document.getElementById('spinner').style.display='none';
+  document.getElementById('btn-txt').textContent='Importar para o banco';
+}
+
+function limpar(){
+  questoesCarregadas=[];
+  document.getElementById('preview-wrap').style.display='none';
+  document.getElementById('file-input').value='';
+}
+
+async function carregarHistorico(){
+  const{data}=await sb.from('questoes_importacoes').select('*').order('created_at',{ascending:false}).limit(10);
+  const el=document.getElementById('historico-list');
+  if(!data?.length){el.innerHTML='<div style="font-size:.82rem;color:var(--muted);text-align:center;padding:16px">Nenhuma importação ainda</div>';return;}
+  el.innerHTML=data.map(i=>{
+    const dt=new Date(i.created_at).toLocaleString('pt-BR');
+    const cor=i.status==='concluida'?'var(--green)':i.status==='erro'?'var(--red)':'var(--gold)';
+    return`<div class="hist-item">
+      <div class="hist-status" style="background:${cor}"></div>
+      <div class="hist-info">
+        <div class="hist-nome">${i.banca||'?'} — ${i.sistema||'?'} — ${i.importadas||0}/${i.total_questoes||0} importadas</div>
+        <div class="hist-meta">${dt} · ${i.status}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function baixarModelo(){
+  const modelo=[{sistema:'concursos',banca:'CESPE',ano:2023,cargo:'Analista',orgao:'STJ',disciplina:'Direito Constitucional',assunto:'Direitos Fundamentais',dificuldade:3,tipo:'multipla_escolha',texto_base:null,enunciado:'A respeito dos direitos e garantias fundamentais...',opcoes:['Opção A','Opção B','Opção C','Opção D','Opção E'],gabarito:'C',explicacao:'A resposta correta é C porque...'}];
+  const blob=new Blob([JSON.stringify(modelo,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='modelo_questoes.json';a.click();
+}
+
+async function sair(){await sb.auth.signOut();window.location.href='vofor-login.html';}
+init();
+</script>
+</body>
+</html>
