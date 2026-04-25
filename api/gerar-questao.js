@@ -231,23 +231,47 @@ Retorne SOMENTE JSON válido sem markdown:
 }`;
 
   try {
-    const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages: [{ role: 'user', content: prompt }],
-        max_tokens: 1000,
-        temperature: 0.4
-      })
-    });
+    // Tenta Groq direto primeiro, fallback via proxy /api/groq
+    let txt = '';
+    try {
+      const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.GROQ_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: 'llama-3.3-70b-versatile',
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 1000,
+          temperature: 0.4
+        })
+      });
+      const groqData = await groqRes.json();
+      txt = groqData.choices?.[0]?.message?.content || '';
+    } catch(groqErr) {
+      // Fallback: chama proxy interno
+      const baseUrl = process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : 'http://localhost:3000';
+      const proxyRes = await fetch(`${baseUrl}/api/groq`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 1000,
+          temperature: 0.4
+        })
+      });
+      const proxyData = await proxyRes.json();
+      txt = proxyData.choices?.[0]?.message?.content || '';
+    }
 
-    const groqData = await groqRes.json();
-    let txt = groqData.choices?.[0]?.message?.content || '';
+    if (!txt) throw new Error('Resposta vazia do modelo');
     txt = txt.replace(/```json|```/g, '').trim();
+    // Garante que pega só o JSON
+    const ji = txt.indexOf('{'), je = txt.lastIndexOf('}');
+    if (ji >= 0 && je > ji) txt = txt.substring(ji, je + 1);
     const questao = JSON.parse(txt);
 
     // Salva no banco como ia_calibrada para aprendizado futuro
