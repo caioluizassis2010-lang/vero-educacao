@@ -3,15 +3,24 @@
 //          2) Se não encontrar → gera via IA (Groq)
 //          3) Salva questão gerada pela IA no banco (ia_calibrada)
 
-import { createClient } from '@supabase/supabase-js';
-
-const SUPABASE_URL        = 'https://lklmzhunhiwqsbhnymaw.supabase.co';
+const SUPABASE_URL         = 'https://lklmzhunhiwqsbhnymaw.supabase.co';
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 const GROQ_API_KEY         = process.env.GROQ_API_KEY;
 
-// ─── Supabase (service role para leitura/escrita sem RLS) ────────────────────
-function getSupabase() {
-  return createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+// ─── Supabase opcional ──────────────────────────────────────────────────────────────────────────────────
+// Se SUPABASE_SERVICE_KEY nao existir, pula banco e vai direto pra IA
+let _sb = null;
+async function getSupabase() {
+  if (!SUPABASE_SERVICE_KEY) return null;
+  if (_sb) return _sb;
+  try {
+    const { createClient } = await import('@supabase/supabase-js');
+    _sb = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+    return _sb;
+  } catch (e) {
+    console.warn('[supabase] nao disponivel:', e.message);
+    return null;
+  }
 }
 
 // ─── Bancas / estilos ────────────────────────────────────────────────────────
@@ -108,6 +117,7 @@ function normalizar_banca(raw) {
 
 // ─── 1. Busca no banco real ──────────────────────────────────────────────────
 async function buscar_no_banco(supabase, { sistema, disciplina, assunto, dificuldade, banca }) {
+  if (!supabase) return null;
   try {
     const { data, error } = await supabase.rpc('buscar_questao_banco', {
       p_sistema:     sistema,
@@ -242,6 +252,7 @@ Responda APENAS com este JSON (sem markdown, sem explicação fora do JSON):
 
 // ─── 3. Salva questão IA no banco (para aprender) ────────────────────────────
 async function salvar_ia_no_banco(supabase, questao, { sistema, banca, disciplina, assunto, dificuldade }) {
+  if (!supabase) return;
   try {
     await supabase.from('questoes_banco').insert({
       sistema,
@@ -294,7 +305,7 @@ export default async function handler(req, res) {
     const disciplina = disc_raw    || (sistema === 'enem' ? 'Linguagens' : sistema === 'medicina' ? 'Biologia' : 'Português');
     const assunto    = assunto_raw || escolher_assunto(disciplina);
 
-    const supabase = getSupabase();
+    const supabase = await getSupabase();
     let questao    = null;
     let fonte      = 'ia';
 
