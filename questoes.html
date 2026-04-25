@@ -476,37 +476,31 @@ async function gerarQuestao(){
   document.getElementById('q-disciplina').textContent=disciplinaAtual;
 
   try{
-    // Chama Groq diretamente — evita timeout do Vercel
-    const prompt='Crie uma questão de múltipla escolha de '+disciplinaAtual+
-      (perfilAluno?.concurso?' para o concurso "'+perfilAluno.concurso+'"':'')+
-      ' no estilo da banca '+bancaAtual+' em nível '+(perfilAluno?.nivel||'intermediario')+'.'+
-      ' Responda APENAS JSON: {"enunciado":"texto","opcoes":["A) ...","B) ...","C) ...","D) ...","E) ..."],"gabarito":"A","explicacao":"explicação","assunto":"assunto"}';
-
-    const groqR=await fetch('/api/groq',{
+    const r=await fetch('/api/gerar-questao',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        messages:[
-          {role:'system',content:'Especialista em concursos públicos brasileiros. Responda APENAS JSON puro válido sem markdown.'},
-          {role:'user',content:prompt}
-        ],
-        temperature:0.6,max_tokens:700
+        sistema:'concursos',
+        banca:bancaAtual||'CESPE',
+        disciplina:disciplinaAtual||null,
+        nivel_aluno:perfilAluno?.nivel||'intermediario',
+        forcar_ia:false
       })
     });
-    const groqData=await groqR.json();
-    if(groqData.error)throw new Error(groqData.error.message||JSON.stringify(groqData.error));
-    let txt=groqData.choices[0].message.content.replace(/```json|```/g,'').trim();
-    const ji=txt.indexOf('{'),je=txt.lastIndexOf('}');
-    if(ji>=0&&je>ji)txt=txt.substring(ji,je+1);
-    questaoAtual=JSON.parse(txt);
+    const questaoAtual_raw=await r.json();
+    if(!questaoAtual_raw.enunciado)throw new Error('Questão inválida retornada');
+    questaoAtual=questaoAtual_raw;
     document.getElementById('q-text').textContent=questaoAtual.enunciado;
     const el=document.getElementById('opcoes');
     el.innerHTML='';
-    questaoAtual.opcoes.forEach(op=>{
-      const letra=op.charAt(0);
+    // Suporta tanto opcoes como array de strings quanto array de objetos {letra, texto}
+    const opcoes=questaoAtual.opcoes||[];
+    opcoes.forEach((op,i)=>{
+      const letra=typeof op==='object'?op.letra:op.charAt(0);
+      const texto=typeof op==='object'?op.texto:op.substring(3);
       const div=document.createElement('div');
       div.className='opcao';
-      div.innerHTML=`<span class="opcao-letra">${letra}</span><span>${op.substring(3)}</span>`;
+      div.innerHTML=`<span class="opcao-letra">${letra}</span><span>${texto}</span>`;
       div.onclick=()=>responder(div,letra);
       el.appendChild(div);
     });

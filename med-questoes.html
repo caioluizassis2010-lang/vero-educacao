@@ -198,13 +198,24 @@ async function gerarQuestao(){
   const btn=document.getElementById('btn-gerar');
   btn.disabled=true;
   document.getElementById('q-container').innerHTML=`<div class="loading-card"><div class="loading-anim">🧬</div><div class="loading-txt">Gerando questão de ${disc} — estilo ${vest}...</div></div>`;
-  const prompt=`Você é especialista em vestibulares de medicina brasileiros.
-Crie UMA questão de ${disc} no estilo ${vest}, nível ${perfil.nivel||'intermediario'}.
-Retorne SOMENTE JSON sem markdown:
-{"disciplina":"${disc}","assunto":"subtópico específico","vestibular":"${vest}","enunciado":"texto completo da questão","opcoes":["A) texto","B) texto","C) texto","D) texto","E) texto"],"gabarito":"B","explicacao":"Explicação detalhada da resposta correta"}`;
   try{
-    const r=await fetch('/api/gerar-questao',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sistema:'medicina',vestibular:document.getElementById('f-vestibular')?.value||perfil?.vestibular_alvo||'FUVEST',disciplina:document.getElementById('f-disciplina')?.value||null,nivel_aluno:perfil?.nivel||'intermediario',forcar_ia:false})});
+    const r=await fetch('/api/gerar-questao',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        sistema:'medicina',
+        vestibular:vest,
+        disciplina:disc||null,
+        nivel_aluno:perfil?.nivel||'intermediario',
+        forcar_ia:false
+      })
+    });
     const json=await r.json();
+    if(!json.enunciado)throw new Error('Questão inválida');
+    // Normaliza opções
+    if(json.opcoes&&typeof json.opcoes[0]==='string'){
+      json.opcoes=json.opcoes.map((op,i)=>({letra:['A','B','C','D','E'][i],texto:op.replace(/^[A-E]\)\s*/,'')}));
+    }
     qAtual=json;
     renderQuestao(qAtual);
   }catch(e){
@@ -225,11 +236,14 @@ function renderQuestao(q){
       <div class="q-card-body">
         <div class="q-text">${q.enunciado}</div>
         <div class="q-opts">
-          ${q.opcoes.map((op,i)=>`
-            <button class="q-opt" onclick="responder('${letras[i]}')">
-              <div class="opt-letter">${letras[i]}</div>
-              <span>${op.replace(/^[A-E]\)\s*/,'')}</span>
-            </button>`).join('')}
+          ${q.opcoes.map((op,i)=>{
+            const letraOp=typeof op==='object'?op.letra:letras[i];
+            const textoOp=typeof op==='object'?op.texto:op.replace(/^[A-E]\)\s*/,'');
+            return `<button class="q-opt" onclick="responder('${letraOp}')">
+              <div class="opt-letter">${letraOp}</div>
+              <span>${textoOp}</span>
+            </button>`;
+          }).join('')}
         </div>
         <div class="q-feedback" id="q-feedback"></div>
         <button class="btn-prox" id="btn-prox" onclick="gerarQuestao()">Próxima questão →</button>
