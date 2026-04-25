@@ -182,17 +182,51 @@ Responda APENAS com este JSON (sem markdown, sem explicação fora do JSON):
     }),
   });
 
+  // Lê o body sempre como texto primeiro — evita crash em erros inesperados
+  const respText = await resp.text();
+
   if (!resp.ok) {
-    const err = await resp.text();
-    throw new Error(`Groq error ${resp.status}: ${err}`);
+    throw new Error(`Groq error ${resp.status}: ${respText.slice(0, 200)}`);
   }
 
-  const data  = await resp.json();
-  const texto = data.choices?.[0]?.message?.content?.trim() || '';
+  // Tenta parsear o envelope da API do Groq
+  let groqData;
+  try {
+    groqData = JSON.parse(respText);
+  } catch {
+    throw new Error(`Groq retornou resposta inválida: ${respText.slice(0, 200)}`);
+  }
 
-  // Parse JSON — remove possíveis ```json ... ``` do modelo
-  const clean = texto.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
-  const parsed = JSON.parse(clean);
+  // Verifica se veio erro embutido no envelope (status 200 mas com error field)
+  if (groqData.error) {
+    throw new Error(`Groq error: ${groqData.error.message || JSON.stringify(groqData.error)}`);
+  }
+
+  const texto = groqData.choices?.[0]?.message?.content?.trim() || '';
+  if (!texto) {
+    throw new Error('Groq retornou resposta vazia');
+  }
+
+  // Extrai o JSON da resposta — remove ```json ... ``` e qualquer texto fora do objeto
+  let clean = texto
+    .replace(/^```json\s*/i, '')
+    .replace(/```\s*$/i, '')
+    .trim();
+
+  // Se o modelo escreveu texto antes do {, pega só a partir do primeiro {
+  const jsonStart = clean.indexOf('{');
+  const jsonEnd   = clean.lastIndexOf('}');
+  if (jsonStart === -1 || jsonEnd === -1) {
+    throw new Error(`IA não retornou JSON válido. Resposta: ${clean.slice(0, 200)}`);
+  }
+  clean = clean.slice(jsonStart, jsonEnd + 1);
+
+  let parsed;
+  try {
+    parsed = JSON.parse(clean);
+  } catch (e) {
+    throw new Error(`Erro ao parsear JSON da IA: ${e.message}. Trecho: ${clean.slice(0, 200)}`);
+  }
 
   // Validação mínima
   if (!parsed.enunciado || !Array.isArray(parsed.opcoes) || parsed.opcoes.length < 4) {
