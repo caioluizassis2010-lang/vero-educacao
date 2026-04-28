@@ -242,16 +242,32 @@ async function gerarQuestao(){
   // Disciplinas ponderadas — peso real nos vestibulares de medicina
   // Bio/Quím/Fís = 60%, Mat = 15%, Port/Lit = 10%, Humanas = 10%, Inglês/Esp = 5%
   const DISC_MED_POOL = [
-    'Biologia','Biologia','Biologia','Biologia','Biologia',  // peso 5
-    'Química','Química','Química','Química',                  // peso 4
-    'Física','Física','Física',                               // peso 3
-    'Matemática','Matemática',                                // peso 2
-    'Português','Literatura Brasileira',                      // peso 1 cada
-    'História','Geografia',                                   // peso 1 cada
-    'Filosofia','Inglês',                                     // peso 1 cada
+    'Biologia','Biologia','Biologia','Biologia','Biologia',
+    'Química','Química','Química','Química',
+    'Física','Física','Física',
+    'Matemática','Matemática',
+    'Português','Literatura Brasileira',
+    'História','Geografia',
+    'Filosofia','Inglês',
   ];
+  // Assuntos por disciplina — sorteia diferente a cada chamada para evitar repetição
+  const ASSUNTOS_MED = {
+    'Biologia':['Citologia','Genética Mendeliana','Genética Molecular','Evolução','Ecologia','Fisiologia Humana','Histologia','Embriologia','Botânica','Zoologia','Microbiologia','Imunologia','Bioquímica Celular','Biotecnologia','Vírus e Bactérias'],
+    'Química':['Tabela Periódica','Ligações Químicas','Funções Orgânicas','Reações Orgânicas','Termoquímica','Cinética Química','Equilíbrio Químico','Eletroquímica','Soluções','Estequiometria','Radioatividade','Polímeros','Isomeria','Oxidação e Redução'],
+    'Física':['Mecânica Clássica','Leis de Newton','Energia e Trabalho','Termodinâmica','Óptica Geométrica','Eletrostática','Eletrodinâmica','Magnetismo','Ondas','Física Moderna','Radioatividade','Gravitação','Hidrostática','Acústica'],
+    'Matemática':['Funções','Geometria Analítica','Trigonometria','Matrizes','Probabilidade','Progressões','Logaritmos','Polinômios','Geometria Plana','Geometria Espacial','Estatística','Combinatória','Números Complexos','Sequências'],
+    'Português':['Interpretação de Texto Científico','Coesão e Coerência','Sintaxe','Morfologia','Ortografia','Pontuação','Semântica','Figuras de Linguagem','Concordância','Regência'],
+    'Literatura Brasileira':['Modernismo','Realismo','Naturalismo','Romantismo','Barroco','Arcadismo','Simbolismo','Parnasianismo','Pré-Modernismo','Literatura Contemporânea'],
+    'História':['Gripe Espanhola 1918','Revolução Industrial e Saúde','História da Medicina','Epidemias Históricas','Oswaldo Cruz e Saúde Pública','História do SUS','Ditadura e Saúde','República Velha e Saúde','Segunda Guerra e Medicina','Descobertas Científicas'],
+    'Geografia':['Epidemiologia Regional','Biomas e Saúde','Distribuição de Doenças','Saneamento e Saúde','Urbanização e Saúde','Clima e Doenças','Saúde em Regiões Brasileiras','Geopolítica da Saúde','Desigualdade Regional e Saúde'],
+    'Filosofia':['Bioética','Ética Médica','Filosofia da Ciência','Dilemas Morais na Medicina','Utilitarismo e Saúde','Kant e Ética Profissional','Direitos do Paciente'],
+    'Inglês':['Abstract Científico','Vocabulário Médico em Inglês','Leitura de Artigo Científico','Terminologia Médica','False Cognates Médicos'],
+  };
   const disc = document.getElementById('f-disciplina').value ||
     DISC_MED_POOL[Math.floor(Math.random()*DISC_MED_POOL.length)];
+  // Sorteia assunto diferente a cada chamada
+  const assuntosDisc = ASSUNTOS_MED[disc] || ['Conteúdo geral'];
+  const assunto = assuntosDisc[Math.floor(Math.random()*assuntosDisc.length)];
   // Normaliza vestibular — pode ter múltiplos separados por vírgula
   const vestRaw=document.getElementById('f-vestibular').value||perfil.vestibular_alvo||'FUVEST';
   const vestList=['FUVEST','COMVEST','FAMERP','FCMSCSP','FMABC','UNIFESP','UERJ','FAMEMA','UEL','ACAFE','BAHIANA','UNIFOR','UFMG','UFRJ','UFBA','UFC','UFPE'];
@@ -273,8 +289,9 @@ async function gerarQuestao(){
         sistema:'medicina',
         vestibular:vest,
         disciplina:disc||null,
+        assunto:assunto||null,
         nivel_aluno:perfil?.nivel||'intermediario',
-        usar_banco:false  // sempre gera nova via IA para evitar repetição
+        usar_banco:false
       })
     });
     const respText=await r.text();
@@ -283,6 +300,14 @@ async function gerarQuestao(){
     catch(e){throw new Error('API retornou resposta inválida ('+r.status+'). Tente novamente.');}
     if(!r.ok)throw new Error(json?.error||'Erro '+r.status+' na API');
     if(!json.enunciado)throw new Error('Questão inválida');
+    // Anti-repetição — descarta se já foi vista nesta sessão
+    const _key = json.enunciado.substring(0,80);
+    if(questoesVistas.has(_key)){
+      btn.disabled=false;
+      setTimeout(gerarQuestao, 100); // pede nova automaticamente
+      return;
+    }
+    questoesVistas.add(_key);
     // Normaliza opções
     if(json.opcoes&&typeof json.opcoes[0]==='string'){
       json.opcoes=json.opcoes.map((op,i)=>({letra:['A','B','C','D','E'][i],texto:op.replace(/^[A-E]\)\s*/,'')}));

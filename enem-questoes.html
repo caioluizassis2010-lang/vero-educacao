@@ -269,6 +269,30 @@ async function gerarQuestao(){
   const discPool = DISC_ENEM[areaSelecionada] || DISC_ENEM[''];
   const disc = document.getElementById('f-disciplina').value ||
     discPool[Math.floor(Math.random()*discPool.length)];
+  // Assuntos ENEM por disciplina
+  const ASSUNTOS_ENEM = {
+    'Português':['Interpretação Textual','Coesão e Coerência','Sintaxe','Morfologia','Semântica','Figuras de Linguagem','Concordância','Intertextualidade','Gêneros Textuais','Argumentação'],
+    'Literatura Brasileira':['Modernismo','Realismo','Romantismo','Barroco','Arcadismo','Simbolismo','Contemporâneo','Análise de Obras','Intertextualidade Literária','Contexto Histórico-Literário'],
+    'Inglês':['Leitura e Interpretação','Vocabulário Contextual','Gramática em Uso','False Cognates','Textos de Divulgação','Música e Cultura','Tecnologia em Inglês'],
+    'Espanhol':['Leitura e Compreensão','Vocabulário','Textos Culturais','Gramática Básica','Cultura Hispânica'],
+    'Funções e Gráficos':['Funções do 1º grau','Funções do 2º grau','Funções exponenciais','Funções logarítmicas','Análise de gráficos','Domínio e imagem'],
+    'Geometria Plana':['Áreas e Perímetros','Semelhança de triângulos','Teorema de Pitágoras','Círculo e circunferência','Polígonos regulares'],
+    'Geometria Espacial':['Volume de sólidos','Área de sólidos','Prismas e pirâmides','Cilindro, cone e esfera','Planificação'],
+    'Estatística e Probabilidade':['Medidas de tendência central','Desvio padrão','Probabilidade simples','Probabilidade condicional','Análise de dados e tabelas'],
+    'Matemática Financeira':['Porcentagem e juros','Juros simples e compostos','Descontos','Financiamentos','Inflação'],
+    'Física':['Cinemática','Dinâmica e Leis de Newton','Energia e Trabalho','Termologia','Óptica','Eletricidade','Ondas','Física Moderna','Gravitação','Hidrostática'],
+    'Química':['Tabela Periódica','Reações Químicas','Termoquímica','Eletroquímica','Soluções','Química Orgânica','Estequiometria','Cinética','Radioatividade','Polímeros'],
+    'Biologia':['Ecologia e Biomas','Genética','Evolução','Citologia','Fisiologia Humana','Botânica','Zoologia','Microbiologia','Biotecnologia','Saúde Pública'],
+    'História do Brasil':['República Velha','Era Vargas','Ditadura Militar','Redemocratização','Imperialismo no Brasil','Período Colonial','Abolição e República','Brasil Contemporâneo'],
+    'História Geral':['Guerras Mundiais','Guerra Fria','Descolonização','Revolução Francesa','Revolução Industrial','Nazismo e Fascismo','Globalização','Século XXI'],
+    'Geografia do Brasil':['Biomas Brasileiros','Regiões do Brasil','Urbanização','Agropecuária','Industrialização','Recursos Hídricos','Clima e Relevo','Desigualdades Regionais'],
+    'Geopolítica':['Conflitos Atuais','Blocos Econômicos','Globalização','Refugiados','Terrorismo','Recursos Naturais e Disputas','Organizações Internacionais'],
+    'Filosofia':['Ética e Moral','Política e Democracia','Filosofia da Ciência','Existencialismo','Empirismo e Racionalismo','Direitos Humanos','Identidade e Diversidade'],
+    'Sociologia':['Trabalho e Sociedade','Movimentos Sociais','Desigualdade Social','Globalização e Cultura','Mídia e Sociedade','Gênero e Diversidade','Violência e Criminalidade'],
+    'Direitos Humanos e Cidadania':['Constituição e Direitos','Diversidade e Inclusão','Sustentabilidade','Democracia','Racismo e Preconceito','Direitos da Mulher','ECA'],
+  };
+  const assuntosEnemPool = ASSUNTOS_ENEM[disc] || ['Conteúdo geral'];
+  const assuntoEnem = assuntosEnemPool[Math.floor(Math.random()*assuntosEnemPool.length)];
   const areaLabel=AREA_LABELS[areaSelecionada]||'ENEM';
   const btn=document.getElementById('btn-gerar');
   btn.disabled=true;
@@ -282,6 +306,7 @@ async function gerarQuestao(){
         banca:'INEP',
         area:areaSelecionada||null,
         disciplina:disc||null,
+        assunto:assuntoEnem||null,
         nivel_aluno:perfil?.nivel||'intermediario',
         usar_banco:false
       })

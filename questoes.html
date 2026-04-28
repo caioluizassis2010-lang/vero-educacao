@@ -553,6 +553,19 @@ async function gerarQuestao(){
 
   disciplinaAtual = document.getElementById('sel-disciplina').value || discPool[Math.floor(Math.random()*discPool.length)];
   bancaAtual = document.getElementById('sel-banca').value || (perfilAluno?.banca ? perfilAluno.banca.toUpperCase() : bancaPool[Math.floor(Math.random()*bancaPool.length)]);
+  // Assuntos por disciplina para variar a cada questão
+  const ASSUNTOS_CONC = {
+    'Direito Constitucional':['Princípios Fundamentais','Direitos Fundamentais','Poder Legislativo','Poder Executivo','Poder Judiciário','Controle de Constitucionalidade','Repartição de Competências','Processo Legislativo','Ordem Econômica','Defesa do Estado'],
+    'Direito Administrativo':['Princípios da Administração','Atos Administrativos','Licitações (Lei 14.133/21)','Servidores Públicos','Improbidade Administrativa','Responsabilidade Civil do Estado','Poder de Polícia','Serviços Públicos','Controle da Administração','Bens Públicos'],
+    'Direito Penal':['Teoria do Crime','Tipicidade','Ilicitude','Culpabilidade','Crimes contra a Pessoa','Crimes contra o Patrimônio','Penas','Lei de Drogas','Crimes Hediondos','Concurso de Crimes'],
+    'Direito Processual Penal':['Inquérito Policial','Ação Penal','Prisões Cautelares','Provas','Habeas Corpus','Nulidades','Procedimentos','Recursos','Medidas Cautelares','Execução Penal'],
+    'Português':['Interpretação de Texto','Coesão e Coerência','Sintaxe','Morfologia','Ortografia','Pontuação','Semântica','Figuras de Linguagem','Concordância','Regência'],
+    'Raciocínio Lógico':['Proposições','Tabela Verdade','Silogismo','Conjuntos','Sequências Numéricas','Porcentagem','Probabilidade','Geometria Plana','Progressões','Combinatória'],
+    'Informática':['Windows e Linux','Pacote Office','Internet e Segurança','Redes','LGPD','Cloud Computing','Banco de Dados','Backup','Hardware','Algoritmos'],
+    'Matemática':['Funções','Geometria','Trigonometria','Probabilidade','Progressões','Logaritmos','Estatística','Porcentagem','Combinatória','Matrizes'],
+  };
+  const assuntosPool = ASSUNTOS_CONC[disciplinaAtual] || ['Conteúdo geral'];
+  const assuntoAtual = assuntosPool[Math.floor(Math.random()*assuntosPool.length)];
   document.getElementById('q-banca').textContent=bancaAtual;
   document.getElementById('q-disciplina').textContent=disciplinaAtual;
 
@@ -564,6 +577,7 @@ async function gerarQuestao(){
         sistema:'concursos',
         banca:bancaAtual||'CESPE',
         disciplina:disciplinaAtual||null,
+        assunto:assuntoAtual||null,
         nivel_aluno:perfilAluno?.nivel||'intermediario',
         usar_banco:false
       })
