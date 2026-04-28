@@ -249,6 +249,8 @@ function selArea(el, area){
   areaSelecionada=area;
 }
 
+const questoesVistas = new Set();
+
 async function gerarQuestao(){
   if(hojeQtd>=MAX){mostrarSessaoConcluida();return;}
   // Disciplinas por área — ponderadas pelo peso real no ENEM
@@ -280,7 +282,8 @@ async function gerarQuestao(){
         banca:'INEP',
         area:areaSelecionada||null,
         disciplina:disc||null,
-        nivel_aluno:perfil?.nivel||'intermediario'
+        nivel_aluno:perfil?.nivel||'intermediario',
+        usar_banco:false
       })
     });
     const respText=await r.text();
@@ -289,6 +292,9 @@ async function gerarQuestao(){
     catch(e){throw new Error('API retornou resposta inválida ('+r.status+'). Tente novamente.');}
     if(!r.ok)throw new Error(json?.error||'Erro '+r.status+' na API');
     if(!json.enunciado)throw new Error('Questão inválida');
+    const enuncKey = (questaoAtual_raw||json).enunciado.substring(0,60);
+    if(questoesVistas.has(enuncKey)){btn.disabled=false;gerarQuestao();return;}
+    questoesVistas.add(enuncKey);
     // Normaliza opções
     if(json.opcoes&&typeof json.opcoes[0]==='string'){
       json.opcoes=json.opcoes.map((op,i)=>({letra:['A','B','C','D','E'][i],texto:op.replace(/^[A-E]\)\s*/,'')}));

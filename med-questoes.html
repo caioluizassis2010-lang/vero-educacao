@@ -234,6 +234,9 @@ async function carregarHoje(){
   if(hojeQtd>=MAX)mostrarSessaoConcluida();
 }
 
+// Rastreia enunciados já vistos para evitar repetição
+const questoesVistas = new Set();
+
 async function gerarQuestao(){
   if(hojeQtd>=MAX){mostrarSessaoConcluida();return;}
   // Disciplinas ponderadas — peso real nos vestibulares de medicina
@@ -271,7 +274,7 @@ async function gerarQuestao(){
         vestibular:vest,
         disciplina:disc||null,
         nivel_aluno:perfil?.nivel||'intermediario',
-        forcar_ia:false
+        usar_banco:false  // sempre gera nova via IA para evitar repetição
       })
     });
     const respText=await r.text();
