@@ -35,29 +35,28 @@ nav{padding:0 28px;height:58px;border-bottom:1px solid var(--border);display:fle
 .btn-sair:hover{color:var(--gold);border-color:var(--border2)}
 
 /* LAYOUT */
-.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 58px)}
+
 
 /* SIDEBAR */
-.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:20px 12px;display:flex;flex-direction:column;gap:2px}
+
 .sb-section{font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted2);padding:0 12px;margin:18px 0 7px}
 .sb-section:first-child{margin-top:0}
-.sb-item{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .18s;border:1px solid transparent;margin-bottom:2px}
-.sb-item:hover{background:rgba(200,188,175,0.05);color:var(--text)}
-.sb-item.active{background:rgba(180,175,168,0.08);color:var(--gold);border-color:rgba(180,175,168,0.18)}
-.sb-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;background:rgba(200,188,175,0.05);flex-shrink:0}
-.sb-item.active .sb-icon{background:rgba(180,175,168,0.1);border:1px solid rgba(180,175,168,0.22)}
-.sb-icon svg{width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-.sb-item.active .sb-icon svg,.sb-item:hover .sb-icon svg{stroke:var(--gold)}
-.sb-divider{height:1px;background:var(--border);margin:10px 4px}
-.sb-spacer{flex:1}
-.sb-plan{padding:14px;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;margin-bottom:4px}
-.sb-plan-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
-.sb-plan-label{font-size:9px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-weight:600}
-.sb-plan-badge{font-size:9px;font-weight:700;padding:2px 7px;background:rgba(180,175,168,0.15);color:var(--gold);border-radius:100px;border:1px solid rgba(180,175,168,0.28)}
-.sb-plan-name{font-size:13px;font-weight:600;margin-bottom:3px}
-.sb-plan-desc{font-size:11px;color:var(--muted2);margin-bottom:10px}
-.sb-plan-btn{width:100%;padding:8px;background:var(--gold);color:#1c1814;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;border:none;font-family:'Outfit',sans-serif;transition:all .15s}
-.sb-plan-btn:hover{background:var(--gold2)}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* MAIN */
 .main{padding:26px 28px;overflow-y:auto}
@@ -141,7 +140,7 @@ canvas#evolucao-chart{width:100%;height:160px}
 @keyframes pulse-op{0%,100%{opacity:.4}50%{opacity:.9}}
 
 @media(max-width:900px){
-  .layout{grid-template-columns:1fr}
+  
   .sidebar{display:none}
   .stats-row{grid-template-columns:1fr 1fr}
   .charts-grid{grid-template-columns:1fr}
@@ -222,27 +221,7 @@ canvas#evolucao-chart{width:100%;height:160px}
 
 
 <div class="layout">
-  <aside class="sidebar">
-    <div class="sb-section">Menu principal</div>
-    <div class="sb-item" onclick="location.href='painel.html'"><div class="sb-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>Início</div>
-    <div class="sb-item" onclick="location.href='questoes.html'"><div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>Questões do dia</div>
-    <div class="sb-item" onclick="location.href='plano.html'"><div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>Meu plano</div>
-    <div class="sb-item active"><div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M8 21V10M12 21V3M16 21v-7M4 21v-4"/></svg></div>Desempenho</div>
-    <div class="sb-item" onclick="location.href='anotacoes.html'"><div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>Anotações</div>
-    <div class="sb-item" onclick="window.location.href='simulados.html'"><div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>Simulados</div>
-    <div class="sb-divider"></div>
-    <div class="sb-section">Minha jornada</div>
-    <div class="sb-item"><div class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><span id="sb-concurso">—</span></div>
-    <div class="sb-spacer"></div>
-    <div class="sb-plan">
-      <div class="sb-plan-row"><div class="sb-plan-label">Plano</div><div class="sb-plan-badge">Grátis</div></div>
-      <div class="sb-plan-name">Plano Gratuito</div>
-      <div class="sb-plan-desc">20 questões por dia.</div>
-      <button class="sb-plan-btn" onclick="alert('Em breve!')">Upgrade →</button>
-    </div>
-  </aside>
-
-  <main class="main">
+<main class="main">
     <div class="page-hd">
       <h1 class="page-title">Meu <em>desempenho</em></h1>
       <p class="page-sub" id="page-sub">Carregando seus dados...</p>
