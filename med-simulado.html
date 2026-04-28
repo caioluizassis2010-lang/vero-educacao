@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VOFOR Medicina — Simulados</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --bg:#060912;--bg2:#0d1425;--bg3:#131d35;--bg4:#0a0f1e;
+  --accent:#2563eb;--accent2:#3b82f6;--accent3:#1d4ed8;
+  --text:#f0f4ff;--muted:#8896b3;
+  --border:rgba(59,130,246,0.12);--border2:rgba(59,130,246,0.28);
+  --green:#10b981;--red:#ef4444;--gold:#f59e0b;--radius:12px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+a{text-decoration:none;color:inherit}
+
+
+.sidebar{width:240px;min-height:100vh;background:linear-gradient(180deg,#0a0f1e 0%,#080c1a 100%);border-right:1px solid rgba(59,130,246,0.12);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:100;transition:transform .25s}
+.sidebar-header{padding:22px 18px;border-bottom:1px solid rgba(59,130,246,0.12);display:flex;align-items:center;gap:12px;cursor:pointer;}
+.sb-section{font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(136,150,179,0.4);padding:0 18px;margin:20px 0 7px;}
+.nav-item{display:flex;align-items:center;gap:11px;padding:9px 14px;margin:1px 8px;border-radius:9px;color:#8896b3;text-decoration:none;font-size:.85rem;font-weight:500;transition:all .15s;cursor:pointer;position:relative;}
+.nav-item:hover{background:rgba(59,130,246,0.07);color:#f0f4ff}
+.nav-item.active{background:rgba(37,99,235,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.2);}
+.nav-item.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;border-radius:0 3px 3px 0;background:linear-gradient(180deg,#06b6d4,#3b82f6);}
+.nav-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(59,130,246,0.08);flex-shrink:0;}
+.nav-item.active .nav-icon{background:rgba(37,99,235,0.2)}
+.nav-icon svg{stroke:#8896b3;transition:stroke .15s}
+.nav-item.active .nav-icon svg,.nav-item:hover .nav-icon svg{stroke:#3b82f6}
+.nav-label{flex:1;white-space:nowrap;overflow:hidden}
+.nav-badge{font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:20px;background:rgba(37,99,235,0.2);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);}
+.sidebar-footer{padding:12px 8px;border-top:1px solid rgba(59,130,246,0.12);margin-top:auto}
+.nup-sb{display:flex;align-items:center;gap:10px;padding:10px;border-radius:9px;cursor:pointer;transition:background .15s}
+.nup-sb:hover{background:rgba(59,130,246,0.07)}
+.nup-avatar-sb{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#1e3a8a,#1d4ed8);border:1px solid rgba(59,130,246,0.35);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:600;color:#fff;flex-shrink:0;}
+.nup-info-sb{overflow:hidden}
+.nup-name-sb{font-size:.82rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nup-sub-sb{font-size:.68rem;color:#8896b3}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none}
+.overlay.show{display:block}
+.mobile-topbar-btn{display:none;background:none;border:none;color:#f0f4ff;cursor:pointer;padding:4px}
+.main-with-sidebar{margin-left:240px;min-height:100vh}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main-with-sidebar{margin-left:0}
+  .mobile-topbar-btn{display:flex!important}
+}
+/* Reset nav global dentro da sidebar */
+.sidebar nav{height:auto!important;padding:8px 0!important;border:none!important;background:none!important;position:static!important;display:flex!important;flex-direction:column!important;flex:1!important;overflow-y:auto!important;backdrop-filter:none!important;justify-content:flex-start!important;align-items:stretch!important;gap:0!important;}
+
+
+/* ══ CONTEÚDO ══ */
+.content{padding:26px 28px}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;line-height:1.1;margin-bottom:4px}
+.page-title em{font-style:italic;color:var(--accent2)}
+.page-sub{font-size:.82rem;color:var(--muted);font-weight:300;margin-bottom:24px}
+
+/* CONFIG GRID */
+.config-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:800px;margin-bottom:24px}
+.config-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.config-card.wide{grid-column:1/-1}
+.cc-title{font-size:.82rem;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:var(--text)}
+
+/* Qty */
+.qty-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.qty-btn{padding:10px;border-radius:9px;border:1.5px solid var(--border);background:var(--bg3);color:var(--muted);font-size:.88rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;text-align:center}
+.qty-btn:hover{border-color:var(--border2);color:var(--text)}
+.qty-btn.sel{border-color:var(--accent2);background:rgba(59,130,246,0.1);color:var(--accent2)}
+
+/* Timer */
+.timer-opts{display:flex;gap:8px;flex-wrap:wrap}
+.timer-btn{padding:8px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg3);color:var(--muted);font-size:.82rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.timer-btn:hover{border-color:var(--border2);color:var(--text)}
+.timer-btn.sel{border-color:var(--accent2);background:rgba(59,130,246,0.1);color:var(--accent2)}
+
+/* Disciplinas */
+.disc-checks{display:flex;flex-direction:column;gap:7px;max-height:200px;overflow-y:auto;padding-right:4px}
+.disc-checks::-webkit-scrollbar{width:3px}
+.disc-checks::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.dci{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg3);border-radius:8px;border:1px solid var(--border);cursor:pointer;transition:all .18s}
+.dci:hover{border-color:var(--border2)}
+.dci.checked{border-color:var(--border2);background:rgba(59,130,246,0.07)}
+.dci-box{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s}
+.dci.checked .dci-box{background:var(--accent2);border-color:var(--accent2)}
+.dci-box svg{width:9px;height:9px;stroke:var(--bg);fill:none;stroke-width:2.5;stroke-linecap:round;display:none}
+.dci.checked .dci-box svg{display:block}
+.dci-name{font-size:.82rem;font-weight:500;flex:1}
+
+/* Btn start */
+.btn-start{width:100%;padding:14px;background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;border:none;border-radius:10px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 18px rgba(37,99,235,0.3)}
+.btn-start:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(37,99,235,0.3)}
+.btn-start:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* Histórico */
+.hist-section{max-width:800px;margin-bottom:24px}
+.hist-title{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.sim-hist-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:14px;margin-bottom:8px;transition:border-color .2s}
+.sim-hist-item:hover{border-color:var(--border2)}
+.shi-score{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;flex-shrink:0;min-width:52px}
+.shi-info{flex:1}
+.shi-name{font-size:.85rem;font-weight:500}
+.shi-meta{font-size:.72rem;color:var(--muted);margin-top:2px}
+.shi-badge{font-size:.72rem;padding:3px 10px;border-radius:100px;font-weight:700}
+
+/* Tela simulado */
+.sim-header{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;position:sticky;top:58px;z-index:40;gap:12px}
+.sim-prog{font-size:.82rem;color:var(--muted)}
+.sim-prog strong{color:var(--text)}
+.sim-timer{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:var(--accent2);min-width:60px;text-align:center}
+.sim-timer.alerta{color:var(--red);animation:blink .8s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.btn-entregar{padding:8px 16px;background:none;color:var(--muted);border:1px solid var(--border);border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.btn-entregar:hover{color:var(--red);border-color:rgba(239,68,68,.3)}
+.sim-prog-bar{height:3px;background:rgba(255,255,255,0.05);border-radius:10px;margin-bottom:18px;overflow:hidden}
+.sim-prog-fill{height:100%;background:linear-gradient(135deg,#1d4ed8,#2563eb);border-radius:10px;transition:width .3s}
+.q-indicators{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px}
+.qi{width:28px;height:28px;border-radius:6px;border:1.5px solid var(--border);background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:600;cursor:pointer;transition:all .18s;color:var(--muted)}
+.qi:hover{border-color:var(--border2)}
+.qi.atual{border-color:var(--accent2);color:var(--accent2)}
+.qi.respondida{background:rgba(59,130,246,0.12);border-color:var(--border2);color:var(--accent2)}
+
+/* Questão */
+.questao-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:14px}
+.q-header{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.q-num{font-size:.72rem;font-weight:700;padding:4px 10px;background:rgba(59,130,246,0.12);color:var(--accent2);border:1px solid var(--border2);border-radius:100px}
+.q-disc{font-size:.72rem;color:var(--muted);padding:4px 10px;background:var(--bg3);border-radius:100px;border:1px solid var(--border)}
+.q-texto{font-size:.95rem;line-height:1.85;color:var(--text);margin-bottom:20px;font-weight:300}
+.q-texto-base{background:rgba(255,255,255,0.03);border-left:3px solid var(--accent2);border-radius:0 8px 8px 0;padding:12px 16px;font-size:.88rem;color:var(--muted);line-height:1.75;margin-bottom:16px;font-style:italic}
+.opcoes{display:flex;flex-direction:column;gap:8px}
+.opcao{display:flex;align-items:flex-start;gap:12px;padding:12px 15px;background:var(--bg3);border:1.5px solid var(--border);border-radius:9px;cursor:pointer;transition:all .2s}
+.opcao:hover{border-color:var(--border2);background:rgba(59,130,246,0.04)}
+.opcao.selecionada{border-color:var(--accent2);background:rgba(59,130,246,0.08)}
+.opcao.correta{border-color:var(--green);background:rgba(16,185,129,.08)}
+.opcao.errada{border-color:var(--red);background:rgba(239,68,68,.07)}
+.opcao-letra{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0;transition:all .2s}
+.opcao.selecionada .opcao-letra{background:var(--accent2);border-color:var(--accent2);color:var(--bg)}
+.opcao.correta .opcao-letra{background:var(--green);border-color:var(--green);color:#fff}
+.opcao.errada .opcao-letra{background:var(--red);border-color:var(--red);color:#fff}
+.opcao-texto{font-size:.88rem;line-height:1.6;padding-top:2px}
+.q-nav{display:flex;align-items:center;justify-content:space-between;margin-top:14px;gap:10px}
+.btn-nav{padding:10px 22px;border-radius:9px;font-size:.85rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;border:none}
+.btn-prev{background:none;color:var(--muted);border:1px solid var(--border)!important}
+.btn-prev:hover{color:var(--text);border-color:var(--border2)!important}
+.btn-next{background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;box-shadow:0 3px 12px rgba(37,99,235,0.3)}
+.btn-next:hover{transform:translateY(-1px)}
+.btn-next:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+/* Resultado */
+.resultado-hero{text-align:center;padding:36px 20px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px}
+.rh-nota{font-family:'Cormorant Garamond',serif;font-size:4rem;font-weight:700;line-height:1;margin-bottom:6px}
+.rh-label{font-size:.82rem;color:var(--muted);margin-bottom:4px}
+.rh-sub{font-size:.88rem;color:var(--muted);font-weight:300}
+.rh-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px;max-width:360px;margin-left:auto;margin-right:auto}
+.rhs{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:12px}
+.rhs-num{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;line-height:1;margin-bottom:3px}
+.rhs-label{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.resultado-discs{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:14px}
+.rd-title{font-size:.85rem;font-weight:600;margin-bottom:12px}
+.rd-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.rd-label{font-size:.78rem;color:var(--muted);width:140px;flex-shrink:0;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rd-track{flex:1;height:7px;background:rgba(255,255,255,0.05);border-radius:10px;overflow:hidden}
+.rd-fill{height:100%;border-radius:10px}
+.rd-pct{font-size:.72rem;font-weight:700;width:32px;text-align:right;flex-shrink:0}
+.gabarito-list{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:14px}
+.gab-title{font-size:.85rem;font-weight:600;margin-bottom:12px}
+.gab-item{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:13px 15px;margin-bottom:8px}
+.gab-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.gab-num{font-size:.72rem;font-weight:700;padding:2px 8px;background:rgba(255,255,255,.05);border-radius:100px;color:var(--muted)}
+.gab-disc{font-size:.7rem;color:var(--muted)}
+.gab-result{margin-left:auto;font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:100px}
+.gab-ok{background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.2)}
+.gab-err{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.gab-enunciado{font-size:.82rem;color:var(--muted);line-height:1.65;margin-bottom:8px}
+.gab-resposta{font-size:.8rem;font-weight:500;margin-bottom:6px}
+.gab-explicacao{font-size:.78rem;color:var(--muted);line-height:1.7;padding:8px 12px;background:rgba(255,255,255,.03);border-left:2px solid var(--accent2);border-radius:0 6px 6px 0}
+.resultado-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px}
+.btn-novo{flex:1;padding:12px;background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;border:none;border-radius:9px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;min-width:140px;box-shadow:0 3px 12px rgba(37,99,235,0.3)}
+.btn-novo:hover{transform:translateY(-1px)}
+.btn-erros{flex:1;padding:12px;background:none;color:var(--text);border:1px solid var(--border);border-radius:9px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;min-width:140px}
+.btn-erros:hover{border-color:var(--border2)}
+
+/* Loading */
+.loading-sim{text-align:center;padding:60px 20px}
+.ls-spinner{width:38px;height:38px;border:3px solid var(--border2);border-top-color:var(--accent2);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ls-txt{font-size:.9rem;color:var(--muted);font-weight:300}
+.ls-sub{font-size:.78rem;color:var(--muted);opacity:.6;margin-top:4px}
+
+@media(max-width:768px){
+  .config-grid{grid-template-columns:1fr}
+  .content{padding:16px}
+  .sim-header{top:58px;flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header" onclick="window.location.href='medicina.html'">
+    <span style="font-family:'Jost',sans-serif;font-size:1.05rem;font-weight:300;letter-spacing:.45em;text-transform:uppercase;padding-right:.45em">VOFOR</span>
+    <span style="display:block;font-size:.48rem;letter-spacing:.22em;opacity:.45;font-family:'DM Sans',sans-serif;font-weight:400;text-transform:uppercase;margin-top:3px">medicina</span>
+  </div>
+  <nav style="flex:1;overflow-y:auto;padding:8px 0">
+    <div class="sb-section">Estudos</div>
+<a href="med-painel.html" class="nav-item ">
+      <div class="nav-icon"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+      <span class="nav-label">Painel</span>
+    </a>
+<a href="med-questoes.html" class="nav-item ">
+      <div class="nav-icon"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div>
+      <span class="nav-label">Questões</span><span class="nav-badge">20</span>
+    </a>
+<a href="med-redacao.html" class="nav-item ">
+      <div class="nav-icon"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+      <span class="nav-label">Redação</span>
+    </a>
+<a href="med-plano.html" class="nav-item ">
+      <div class="nav-icon"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+      <span class="nav-label">Plano de Estudos</span>
+    </a>
+<a href="med-simulado.html" class="nav-item active">
+      <div class="nav-icon"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <span class="nav-label">Simulados</span>
+    </a>
+<div class="sb-section">Análise</div>
+<a href="med-desempenho.html" class="nav-item ">
+      <div class="nav-icon"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <span class="nav-label">Desempenho</span>
+    </a>
+<div class="sb-section">Perfil</div>
+<a href="med-perfil.html" class="nav-item ">
+      <div class="nav-icon"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+      <span class="nav-label">Meu Vestibular</span>
+    </a>
+
+  </nav>
+  <div class="sidebar-footer">
+    <div class="nup-sb" onclick="sair()">
+      <div class="nup-avatar-sb" id="nav-avatar-sb">?</div>
+      <div class="nup-info-sb">
+        <div class="nup-name-sb" id="nav-user-sb">—</div>
+        <div class="nup-sub-sb">Sair</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="overlay" id="overlay-sb"></div>
+
+<div class="main-with-sidebar">
+<div style="background:var(--bg);border-bottom:1px solid var(--border);padding:0 24px;height:58px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;backdrop-filter:blur(20px)">
+  <button class="mobile-topbar-btn" id="mobile-topbar-btn" style="margin-right:8px"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+  <span style="font-size:.9rem;font-weight:500;opacity:.8" id="topbar-nome"></span>
+  <span style="margin-left:auto;font-size:.75rem;opacity:.5" id="topbar-date"></span>
+</div>
+<div class="content">
+
+  <!-- ══ CONFIG ══ -->
+  <div id="tela-config">
+    <h1 class="page-title">Simul<em>ados</em></h1>
+    <p class="page-sub">Configure e inicie um simulado personalizado para seu objetivo.</p>
+
+    <div class="config-grid">
+      <div class="config-card">
+        <div class="cc-title">🔢 Quantidade de questões</div>
+        <div class="qty-grid">
+          <div class="qty-btn sel" onclick="setQty(10,this)">10</div>
+          <div class="qty-btn" onclick="setQty(20,this)">20</div>
+          <div class="qty-btn" onclick="setQty(30,this)">30</div>
+          <div class="qty-btn" onclick="setQty('custom',this)">✏️ Outro</div>
+        </div>
+        <input id="custom-qty" type="number" min="1" max="60" placeholder="Quantidade" style="display:none;margin-top:10px;width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:7px;padding:8px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;color-scheme:dark" oninput="cfg.qtd=parseInt(this.value)||10">
+      </div>
+      <div class="config-card">
+        <div class="cc-title">⏱️ Tempo limite</div>
+        <div class="timer-opts">
+          <div class="timer-btn sel" onclick="setTimer(0,this)">Sem limite</div>
+          <div class="timer-btn" onclick="setTimer(30,this)">30 min</div>
+          <div class="timer-btn" onclick="setTimer(60,this)">1 hora</div>
+          <div class="timer-btn" onclick="setTimer(120,this)">2 horas</div>
+          <div class="timer-btn" onclick="setTimer(180,this)">3 horas</div>
+        </div>
+      </div>
+      <div class="config-card wide">
+        <div class="cc-title" style="justify-content:space-between">
+          <span>📚 Disciplinas / Áreas</span>
+          <button onclick="toggleTodas()" style="font-size:.72rem;color:var(--accent2);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600">Selecionar todas</button>
+        </div>
+        <div class="disc-checks" id="disc-checks"></div>
+      </div>
+      <div class="config-card wide" style="padding:14px">
+        <button class="btn-start" id="btn-start" onclick="iniciar()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Iniciar simulado
+        </button>
+      </div>
+    </div>
+
+    <div id="hist-section" class="hist-section" style="display:none">
+      <div class="hist-title">Simulados anteriores</div>
+      <div id="hist-list"></div>
+    </div>
+  </div>
+
+  <!-- ══ SIMULADO ══ -->
+  <div id="tela-simulado" style="display:none">
+    <div class="sim-header">
+      <span class="sim-prog">Questão <strong id="q-num-atual">1</strong> de <strong id="q-num-total">—</strong></span>
+      <div class="sim-timer" id="sim-timer">—</div>
+      <button class="btn-entregar" onclick="confirmarEntrega()">Entregar</button>
+    </div>
+    <div class="sim-prog-bar"><div class="sim-prog-fill" id="sim-prog-fill" style="width:0%"></div></div>
+    <div class="q-indicators" id="q-indicators"></div>
+    <div id="questao-wrap"></div>
+  </div>
+
+  <!-- ══ RESULTADO ══ -->
+  <div id="tela-resultado" style="display:none">
+    <div class="resultado-hero">
+      <div class="rh-label">Sua taxa de acerto</div>
+      <div class="rh-nota" id="r-nota">—</div>
+      <div class="rh-sub" id="r-sub">—</div>
+      <div class="rh-stats">
+        <div class="rhs"><div class="rhs-num" id="r-acertos" style="color:var(--green)">0</div><div class="rhs-label">Acertos</div></div>
+        <div class="rhs"><div class="rhs-num" id="r-erros" style="color:var(--red)">0</div><div class="rhs-label">Erros</div></div>
+        <div class="rhs"><div class="rhs-num" id="r-tempo" style="color:var(--accent2)">—</div><div class="rhs-label">Tempo</div></div>
+      </div>
+    </div>
+    <div class="resultado-discs" id="resultado-discs"></div>
+    <div class="gabarito-list" id="gabarito-list"></div>
+    <div class="resultado-actions">
+      <button class="btn-novo" onclick="novoSimulado()">🔄 Novo simulado</button>
+      <button class="btn-erros" onclick="verErros()">Ver apenas erros</button>
+    </div>
+  </div>
+
+</div><!-- /main-with-sidebar -->
+</div>
+
+<script>
+const sb=supabase.createClient('https://lklmzhunhiwqsbhnymaw.supabase.co','sb_publishable_DvhwDRaB-L4kO9gOYXgtxw_0jVdsuHU');
+const DISC_ICONS={"Biologia": "🧬", "Química": "⚗️", "Física": "⚡", "Matemática": "📐", "Português": "📝", "História": "📜", "Geografia": "🌍"};
+const DISCS_DEFAULT=["Biologia", "Química", "Física", "Matemática", "Português", "História", "Geografia"];
+let userId=null, perfil=null;
+let cfg={qtd:10,timer:0,disciplinas:[...DISCS_DEFAULT]};
+let questoes=[],respostas={},qAtual=0;
+let timerInterval=null,timerSecs=0,inicioSim=null;
+const PERFIL_TABLE='medicina_perfis';
+const Q_TABLE='medicina_questoes';
+const SAIR_URL='medicina.html';
+const PERFIL_REDIRECT='med-perfil.html';
+const TOPIC='vestibular de medicina';
+const BANCA_FIELD='vestibular_alvo';
+
+async function init(){
+  const{data:{session}}=await sb.auth.getSession();
+  if(!session){window.location.href=PERFIL_REDIRECT;return;}
+  userId=session.user.id;
+  const nome=session.user.user_metadata?.full_name||session.user.email.split('@')[0];
+  const ini=nome.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('nav-avatar-sb').textContent=ini;
+  document.getElementById('nav-user-sb').textContent=nome;
+  document.getElementById('topbar-nome').textContent=nome.split(' ')[0];
+
+  const{data:p}=await sb.from(PERFIL_TABLE).select('*').eq('id',userId).single();
+  if(!p){window.location.href=PERFIL_REDIRECT;return;}
+  if(!p.diagnostico_completo){window.location.href=PERFIL_REDIRECT.replace('perfil','diagnostico');return;}
+  perfil=p;
+
+  renderDiscs();
+  carregarHistorico();
+}
+
+function renderDiscs(){
+  const el=document.getElementById('disc-checks');
+  el.innerHTML=DISCS_DEFAULT.map(d=>`
+    <div class="dci checked" onclick="toggleDisc('${d}',this)">
+      <div class="dci-box"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+      <span style="font-size:14px">${DISC_ICONS[d]||'📚'}</span>
+      <span class="dci-name">${d}</span>
+    </div>`).join('');
+}
+
+function toggleDisc(nome,el){
+  el.classList.toggle('checked');
+  if(el.classList.contains('checked')){if(!cfg.disciplinas.includes(nome))cfg.disciplinas.push(nome);}
+  else{cfg.disciplinas=cfg.disciplinas.filter(d=>d!==nome);}
+}
+
+function toggleTodas(){
+  const items=document.querySelectorAll('.dci');
+  const todas=[...items].every(i=>i.classList.contains('checked'));
+  items.forEach(i=>{
+    const nome=i.querySelector('.dci-name').textContent;
+    if(todas){i.classList.remove('checked');cfg.disciplinas=[];}
+    else{i.classList.add('checked');if(!cfg.disciplinas.includes(nome))cfg.disciplinas.push(nome);}
+  });
+}
+
+function setQty(v,btn){
+  document.querySelectorAll('.qty-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  const inp=document.getElementById('custom-qty');
+  if(v==='custom'){inp.style.display='block';inp.focus();}
+  else{inp.style.display='none';cfg.qtd=v;}
+}
+
+function setTimer(mins,btn){
+  document.querySelectorAll('.timer-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  cfg.timer=mins*60;
+}
+
+async function iniciar(){
+  if(!cfg.disciplinas.length){alert('Selecione pelo menos uma disciplina.');return;}
+  const cqv=document.getElementById('custom-qty');
+  if(cqv.style.display!=='none')cfg.qtd=parseInt(cqv.value)||10;
+
+  document.getElementById('tela-config').style.display='none';
+  document.getElementById('tela-simulado').style.display='block';
+  document.getElementById('questao-wrap').innerHTML=`<div class="loading-sim"><div class="ls-spinner"></div><div class="ls-txt">Gerando ${cfg.qtd} questões...</div><div class="ls-sub">Calibrando para ${TOPIC}</div></div>`;
+
+  questoes=[];respostas={};qAtual=0;inicioSim=Date.now();
+
+  const perDisc=Math.ceil(cfg.qtd/cfg.disciplinas.length);
+  const promises=cfg.disciplinas.map(async disc=>{
+    const n=Math.min(perDisc,5);
+    try{
+      const r=await fetch('/api/gerar-questao',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          sistema:'medicina',
+          vestibular:perfil[BANCA_FIELD]||null,
+          disciplina:disc,
+          dificuldade:'medio',
+          usar_banco:true
+        })
+      });
+      const txt=await r.text();
+      let d;try{d=JSON.parse(txt);}catch{return[];}
+      if(!d.enunciado)return[];
+      // Retorna array com 1 questão para manter padrão
+      return [{...d,disciplina:disc}];
+    }catch{return[];}
+  });
+
+  // Para preencher a qtd, chama em paralelo com mais questões
+  const rounds=Math.ceil(cfg.qtd/cfg.disciplinas.length);
+  const allPromises=[];
+  for(let i=0;i<rounds;i++){
+    cfg.disciplinas.forEach(disc=>{
+      allPromises.push(fetch('/api/gerar-questao',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          sistema:'medicina',
+          vestibular:perfil[BANCA_FIELD]||null,
+          disciplina:disc,
+          dificuldade:'medio',
+          usar_banco:true
+        })
+      }).then(r=>r.text()).then(txt=>{
+        try{const d=JSON.parse(txt);return d.enunciado?{...d,disciplina:disc}:null;}catch{return null;}
+      }).catch(()=>null));
+    });
+  }
+
+  const results=await Promise.all(allPromises);
+  questoes=results.filter(Boolean).slice(0,cfg.qtd);
+  questoes.sort(()=>Math.random()-.5);
+
+  if(!questoes.length){
+    document.getElementById('questao-wrap').innerHTML='<div style="text-align:center;padding:40px;color:var(--red)">Erro ao gerar questões. Tente novamente.</div>';
+    document.getElementById('tela-config').style.display='block';
+    document.getElementById('tela-simulado').style.display='none';
+    return;
+  }
+
+  // Timer
+  if(cfg.timer>0){
+    timerSecs=cfg.timer;
+    timerInterval=setInterval(()=>{timerSecs--;atualizarTimer();if(timerSecs<=0){clearInterval(timerInterval);entregar();}},1000);
+  }else{
+    timerSecs=0;
+    timerInterval=setInterval(()=>{timerSecs++;atualizarTimer();},1000);
+    document.getElementById('sim-timer').textContent='00:00';
+  }
+
+  renderIndicadores();
+  renderQuestao(0);
+}
+
+function atualizarTimer(){
+  const secs=Math.abs(timerSecs);
+  const m=Math.floor(secs/60),s=secs%60;
+  document.getElementById('sim-timer').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  if(cfg.timer>0&&timerSecs<=300)document.getElementById('sim-timer').classList.add('alerta');
+}
+
+function renderIndicadores(){
+  document.getElementById('q-indicators').innerHTML=questoes.map((_,i)=>`<div class="qi${i===qAtual?' atual':''}${respostas[i]!==undefined?' respondida':''}" onclick="irQ(${i})">${i+1}</div>`).join('');
+}
+
+function renderQuestao(i){
+  qAtual=i;
+  const q=questoes[i];
+  const tot=questoes.length;
+  document.getElementById('q-num-atual').textContent=i+1;
+  document.getElementById('q-num-total').textContent=tot;
+  document.getElementById('sim-prog-fill').style.width=((i+1)/tot*100)+'%';
+  renderIndicadores();
+
+  const resp=respostas[i];
+  const gab=(q.gabarito||'').toUpperCase();
+  const opcoes=Array.isArray(q.opcoes)?q.opcoes:[];
+
+  let opcoesHtml=opcoes.map(op=>{
+    const letra=typeof op==='object'?op.letra:op.substring(0,1).toUpperCase();
+    const texto=typeof op==='object'?op.texto:op.replace(/^[A-E]\)\s*/,'');
+    let cls='';
+    if(resp!==undefined){
+      if(letra===gab)cls=' correta';
+      else if(letra===resp&&letra!==gab)cls=' errada';
+    }else if(letra===resp)cls=' selecionada';
+    const click=resp===undefined?`onclick="responder(${i},'${letra}')"`:'' ;
+    return `<div class="opcao${cls}" ${click}><div class="opcao-letra">${letra}</div><div class="opcao-texto">${texto}</div></div>`;
+  }).join('');
+
+  document.getElementById('questao-wrap').innerHTML=`
+    <div class="questao-card">
+      <div class="q-header">
+        <span class="q-num">Questão ${i+1}</span>
+        <span class="q-disc">${DISC_ICONS[q.disciplina]||'📚'} ${q.disciplina||'—'}</span>
+        ${q.banca||q.vestibular?`<span class="q-disc">${q.banca||q.vestibular}</span>`:''}
+      </div>
+      ${q.texto_base?`<div class="q-texto-base">${q.texto_base}</div>`:''}
+      <div class="q-texto">${q.enunciado}</div>
+      <div class="opcoes">${opcoesHtml}</div>
+      ${resp&&q.explicacao_curta?`<div style="margin-top:12px;padding:10px 14px;background:rgba(255,255,255,.03);border-left:2px solid var(--accent2);border-radius:0 7px 7px 0;font-size:.82rem;color:var(--muted);line-height:1.7"><strong style="color:var(--text)">Gabarito: ${gab}</strong> — ${q.explicacao_curta}</div>`:''}
+    </div>
+    <div class="q-nav">
+      <button class="btn-nav btn-prev" onclick="irQ(${i-1})" ${i===0?'style="visibility:hidden"':''}>← Anterior</button>
+      ${i<tot-1?`<button class="btn-nav btn-next" onclick="irQ(${i+1})">Próxima →</button>`:`<button class="btn-nav btn-next" onclick="confirmarEntrega()">Entregar →</button>`}
+    </div>`;
+}
+
+function responder(i,letra){respostas[i]=letra;renderQuestao(i);}
+function irQ(i){if(i>=0&&i<questoes.length)renderQuestao(i);}
+
+function confirmarEntrega(){
+  const nao=questoes.length-Object.keys(respostas).length;
+  if(nao>0&&!confirm(`${nao} questão(ões) sem resposta. Entregar assim mesmo?`))return;
+  entregar();
+}
+
+async function entregar(){
+  clearInterval(timerInterval);
+  const tempo=cfg.timer>0?(cfg.timer-timerSecs):timerSecs;
+  let acertos=0;
+  const porDisc={};
+
+  questoes.forEach((q,i)=>{
+    const minha=respostas[i];
+    const gab=(q.gabarito||'').toUpperCase();
+    const ok=minha&&minha===gab;
+    if(ok)acertos++;
+    if(!porDisc[q.disciplina])porDisc[q.disciplina]={a:0,t:0};
+    porDisc[q.disciplina].t++;
+    if(ok)porDisc[q.disciplina].a++;
+    if(minha){
+      sb.from(Q_TABLE).insert({
+        user_id:userId,
+        disciplina:q.disciplina||'—',
+        assunto:q.assunto||'—',
+        vestibular:perfil[BANCA_FIELD]||null,
+        acertou:ok,
+        enunciado:(q.enunciado||'').substring(0,300),
+        gabarito:gab,
+        tempo_segundos:0
+      }).then(()=>{});
+    }
+  });
+
+  const taxa=questoes.length>0?Math.round(acertos/questoes.length*100):0;
+  const cor=taxa>=70?'var(--green)':taxa>=50?'var(--gold)':'var(--red)';
+
+  // Salva histórico
+  const key=`vofor_sims_med_${userId}`;
+  const hist=JSON.parse(localStorage.getItem(key)||'[]');
+  hist.unshift({data:new Date().toISOString(),qtd:questoes.length,taxa,acertos,erros:questoes.length-acertos,tempo,disciplinas:cfg.disciplinas.join(', ')});
+  localStorage.setItem(key,JSON.stringify(hist.slice(0,20)));
+
+  document.getElementById('tela-simulado').style.display='none';
+  document.getElementById('tela-resultado').style.display='block';
+  document.getElementById('r-nota').textContent=taxa+'%';
+  document.getElementById('r-nota').style.color=cor;
+  document.getElementById('r-sub').textContent=`${acertos} acertos em ${questoes.length} questões`;
+  document.getElementById('r-acertos').textContent=acertos;
+  document.getElementById('r-erros').textContent=questoes.length-acertos;
+  const m=Math.floor(tempo/60),s=tempo%60;
+  document.getElementById('r-tempo').textContent=`${m}:${String(s).padStart(2,'0')}`;
+
+  const discSorted=Object.entries(porDisc).sort((a,b)=>b[1].t-a[1].t);
+  document.getElementById('resultado-discs').innerHTML=`<div class="rd-title">Desempenho por disciplina / área</div>
+    ${discSorted.map(([d,v])=>{const p=Math.round(v.a/v.t*100);const c=p>=70?'var(--green)':p>=50?'var(--gold)':'var(--red)';
+    return `<div class="rd-row"><div class="rd-label">${d}</div><div class="rd-track"><div class="rd-fill" style="width:${p}%;background:${c}"></div></div><div class="rd-pct" style="color:${c}">${p}%</div></div>`;
+  }).join('')}`;
+
+  document.getElementById('gabarito-list').innerHTML=`<div class="gab-title">Gabarito comentado</div>
+    ${questoes.map((q,i)=>{
+      const minha=respostas[i]||'—';const gab=(q.gabarito||'').toUpperCase();const ok=minha===gab;
+      return `<div class="gab-item"><div class="gab-header"><span class="gab-num">Q${i+1}</span><span class="gab-disc">${q.disciplina||'—'}</span><span class="gab-result ${ok?'gab-ok':'gab-err'}">${ok?'✓ Certa':'✗ Errada'}</span></div>
+      <div class="gab-enunciado">${(q.enunciado||'').substring(0,180)}...</div>
+      <div class="gab-resposta">Sua resposta: <strong>${minha}</strong> · Gabarito: <strong style="color:var(--green)">${gab}</strong></div>
+      ${(q.explicacao_curta||q.explicacao_didatica)?`<div class="gab-explicacao">${q.explicacao_curta||''}</div>`:''}
+      </div>`;
+    }).join('')}`;
+}
+
+function verErros(){
+  const erradas=questoes.filter((q,i)=>respostas[i]!==(q.gabarito||'').toUpperCase());
+  if(!erradas.length){alert('Parabéns! Nenhum erro.');return;}
+  questoes=erradas;respostas={};qAtual=0;
+  document.getElementById('tela-resultado').style.display='none';
+  document.getElementById('tela-simulado').style.display='block';
+  renderIndicadores();renderQuestao(0);
+}
+
+function novoSimulado(){
+  document.getElementById('tela-resultado').style.display='none';
+  document.getElementById('tela-config').style.display='block';
+  questoes=[];respostas={};qAtual=0;
+  carregarHistorico();
+}
+
+function carregarHistorico(){
+  const hist=JSON.parse(localStorage.getItem(`vofor_sims_med_${userId}`)||'[]');
+  const sec=document.getElementById('hist-section');
+  const list=document.getElementById('hist-list');
+  if(!hist.length){sec.style.display='none';return;}
+  sec.style.display='block';
+  list.innerHTML=hist.slice(0,5).map(s=>{
+    const cor=s.taxa>=70?'var(--green)':s.taxa>=50?'var(--gold)':'var(--red)';
+    const data=new Date(s.data).toLocaleDateString('pt-BR');
+    const badge=s.taxa>=70?'✓ Aprovado':s.taxa>=50?'Regular':'Abaixo';
+    return `<div class="sim-hist-item">
+      <div class="shi-score" style="color:${cor}">${s.taxa}%</div>
+      <div class="shi-info"><div class="shi-name">${s.qtd} questões · ${s.acertos} acertos</div><div class="shi-meta">${data}</div></div>
+      <span class="shi-badge" style="background:${cor}18;color:${cor};border:1px solid ${cor}33">${badge}</span>
+    </div>`;
+  }).join('');
+}
+
+async function sair(){await sb.auth.signOut();window.location.href=SAIR_URL;}
+
+document.getElementById('mobile-topbar-btn')?.addEventListener('click',()=>{
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('overlay-sb').classList.add('show');
+});
+document.getElementById('overlay-sb')?.addEventListener('click',()=>{
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay-sb').classList.remove('show');
+});
+(()=>{const d=new Date();const dias=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];const meses=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];const el=document.getElementById('topbar-date');if(el)el.textContent=dias[d.getDay()]+', '+d.getDate()+' '+meses[d.getMonth()]})();
+init();
+</script>
+</body>
+</html>
