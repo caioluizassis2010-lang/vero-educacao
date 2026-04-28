@@ -10,10 +10,10 @@ const GROQ_API_KEY         = process.env.GROQ_API_KEY;
 
 // Modelos em ordem — cada um tem limite diário SEPARADO no Groq
 const MODELOS_GROQ = [
-  { id: 'llama-3.3-70b-versatile', max_tokens: 1200 },
-  { id: 'llama-3.1-70b-versatile', max_tokens: 1200 },
-  { id: 'llama-3.1-8b-instant',    max_tokens: 1000 },
-  { id: 'gemma2-9b-it',            max_tokens: 1000 },
+  { id: 'llama-3.3-70b-versatile', max_tokens: 1800, temperature: 0.4 },
+  { id: 'llama-3.1-70b-versatile', max_tokens: 1800, temperature: 0.4 },
+  { id: 'llama-3.1-8b-instant',    max_tokens: 1400, temperature: 0.4 },
+  { id: 'gemma2-9b-it',            max_tokens: 1400, temperature: 0.4 },
 ];
 
 // Cache em memória — TTL 30min, máx 200 entradas, até 5 variações por chave
@@ -134,20 +134,34 @@ async function buscar_no_banco(supabase, { sistema, disciplina, assunto, dificul
 // ─── Gera via IA com fallback de modelos ─────────────────────────────────────
 async function gerar_via_ia({ sistema, banca, disciplina, assunto, dificuldade }) {
   const estilo   = ESTILOS_BANCA[banca] || `${banca}: questão objetiva, 5 alternativas A-E.`;
-  const gabarito = gabarito_aleatorio();
   const difLabel = { facil:'fácil', medio:'médio', dificil:'difícil' }[dificuldade] || 'médio';
-  const textoBaseInstr =
-    sistema === 'enem'      ? 'Texto-base: OBRIGATÓRIO, 60-100 palavras, terminar com "Adaptado de [fonte]".' :
-    sistema === 'medicina'  ? 'Texto-base: caso clínico quando relevante (30-60 palavras).' :
-                              'Texto-base: incluir apenas se enriquecer.';
 
+  const textoBaseInstr =
+    sistema === 'enem'      ? 'OBRIGATÓRIO: inclua texto_base de 60-100 palavras terminando com "Adaptado de [fonte real]".' :
+    sistema === 'medicina'  ? 'Inclua texto_base com caso clínico quando relevante (30-60 palavras).' :
+                              'Inclua texto_base apenas se enriquecer a questão.';
+
+  // Prompt em 2 etapas dentro de 1 chamada:
+  // 1. IA cria enunciado + 5 alternativas SEM saber o gabarito
+  // 2. IA analisa cada alternativa e determina o gabarito corretamente
   const prompt =
-`Questão para ${sistema === 'concursos' ? `concurso (${banca})` : sistema === 'medicina' ? `medicina (${banca})` : 'ENEM'}.
+`Você é elaborador de questões para ${sistema === 'concursos' ? `concurso público (banca ${banca})` : sistema === 'medicina' ? `vestibular de medicina (${banca})` : 'ENEM (INEP)'}.
+
 Estilo: ${estilo}
 Disciplina: ${disciplina} | Assunto: ${assunto} | Dificuldade: ${difLabel}
-Gabarito OBRIGATÓRIO: ${gabarito}. ${textoBaseInstr}
-Responda SOMENTE JSON sem markdown:
-{"texto_base":null,"enunciado":"","opcoes":[{"letra":"A","texto":""},{"letra":"B","texto":""},{"letra":"C","texto":""},{"letra":"D","texto":""},{"letra":"E","texto":""}],"gabarito":"${gabarito}","explicacao_curta":"","explicacao_didatica":""}`;
+${textoBaseInstr}
+
+PROCESSO OBRIGATÓRIO — siga exatamente nessa ordem:
+1. Crie um enunciado claro e preciso sobre o assunto
+2. Crie 5 alternativas (A a E): UMA correta e QUATRO incorretas mas plausíveis
+3. Para questões de cálculo: CALCULE cada alternativa antes de definir qual é a correta
+4. Para questões de interpretação: RELEIA o texto e cada opção antes de decidir
+5. Para questões de legislação/conceito: VERIFIQUE se a alternativa correta é tecnicamente precisa
+6. Defina o gabarito SOMENTE após verificar todas as alternativas
+7. Escreva a explicação confirmando por que a correta está certa e as outras estão erradas
+
+Responda SOMENTE com JSON válido (sem markdown, sem texto fora do JSON):
+{"texto_base":null,"enunciado":"","opcoes":[{"letra":"A","texto":""},{"letra":"B","texto":""},{"letra":"C","texto":""},{"letra":"D","texto":""},{"letra":"E","texto":""}],"gabarito":"A","explicacao_curta":"1 frase confirmando a resposta correta","explicacao_didatica":"Por que a correta está certa. Por que cada incorreta está errada. Resumo do conteúdo."}`;
 
   let ultimo_erro = 'nenhum modelo disponível';
 
@@ -157,7 +171,7 @@ Responda SOMENTE JSON sem markdown:
       const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
-        body: JSON.stringify({ model: modelo.id, temperature: 0.8, max_tokens: modelo.max_tokens, messages: [{ role: 'user', content: prompt }] }),
+        body: JSON.stringify({ model: modelo.id, temperature: modelo.temperature ?? 0.4, max_tokens: modelo.max_tokens, messages: [{ role: 'user', content: prompt }] }),
       });
 
       const txt = await resp.text();
