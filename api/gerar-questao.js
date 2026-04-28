@@ -166,30 +166,49 @@ Responda SOMENTE JSON válido:
 {"texto_base":"[contexto clínico se aplicável, senão null]","enunciado":"[questão técnica e precisa]","opcoes":[{"letra":"A","texto":""},{"letra":"B","texto":""},{"letra":"C","texto":""},{"letra":"D","texto":""},{"letra":"E","texto":""}],"gabarito":"A","explicacao_curta":"","explicacao_didatica":"[explicação técnica com base científica]"}`;
   }
 
-  // ── Vestibulares de medicina (federais: UFBA, UFMG, UFRJ, UFC, UFPE, etc) ──
+  // ── Vestibulares de medicina (federais/estaduais) ──
   if (sistema === 'medicina') {
-    return `Você elabora questões para vestibular de medicina federal/estadual (${banca}).
+    // Disciplinas de linguagens/humanas em medicina têm viés científico-social
+    const contexto_med = {
+      'Português':          'questão de interpretação de texto científico ou de saúde pública (artigo médico, bula, manual)',
+      'Literatura Brasileira': 'questão sobre obra literária com temática de saúde, corpo, vida ou morte (Machado de Assis, Graciliano Ramos, etc)',
+      'Inglês':             'questão de leitura e interpretação de abstract científico ou artigo médico em inglês',
+      'Espanhol':           'questão de leitura de texto científico ou de saúde em espanhol',
+      'História':           'questão sobre história da medicina, epidemias, descobertas científicas ou saúde pública histórica',
+      'História do Brasil': 'questão sobre história sanitária do Brasil, vacinação, epidemias (gripe espanhola, varíola), reforma Oswaldo Cruz',
+      'Geografia':          'questão sobre distribuição geográfica de doenças, biomas e saúde, epidemiologia regional',
+      'Filosofia':          'questão sobre bioética, dilemas médicos, filosofia da ciência ou ética profissional',
+      'Sociologia':         'questão sobre determinantes sociais da saúde, desigualdade e acesso à saúde, SUS',
+    };
+    const ctx = contexto_med[disciplina] || 'questão técnica de ciências da natureza com aplicação médica';
+
+    return `Você elabora questões para vestibular de medicina (${banca}).
+
+IMPORTANTE: Esta é uma questão de "${disciplina}" no contexto de vestibular de medicina.
+Contexto esperado: ${ctx}
 
 Características:
-- Texto-base: trecho científico, dado epidemiológico ou situação-problema de saúde (40-80 palavras, com fonte)
-- Questões interdisciplinares: biologia + química, ou física + biologia
-- Exige interpretação e raciocínio científico, não só memorização
-- Alternativas elaboradas, plausíveis, com erros técnicos sutis
-- Contexto regional/nacional quando aplicável (saúde pública brasileira, biomas)
+- Texto-base: 40-80 palavras — científico, clínico, epidemiológico ou literário conforme a disciplina
+- A questão deve ter relevância para a área médica ou científica
+- Para ciências (Bio/Quím/Fís/Mat): rigor técnico, cálculos corretos, nomenclatura precisa
+- Para linguagens/humanas: texto-base com viés científico-médico-social
+- Alternativas elaboradas, com erros técnicos sutis nas incorretas
+- Dificuldade compatível com o nível de aprovação em medicina (alta exigência)
 
 Disciplina: ${disciplina}
 Assunto: ${assunto}
-Dificuldade: ${dif}
+Dificuldade: ${dif} (lembre: vestibular de medicina é naturalmente difícil)
 
 PROCESSO:
-1. Crie texto-base científico realista com fonte
-2. Formule questão que exige raciocínio e aplicação do conhecimento
-3. Crie 5 alternativas tecnicamente elaboradas
-4. Verifique cada alternativa rigorosamente
-5. Defina o gabarito correto
+1. Escolha contexto relevante para medicina dentro da disciplina
+2. Crie texto-base rico e pertinente com fonte
+3. Formule questão que exige raciocínio, não memorização
+4. Para cálculos: calcule a resposta antes de criar as alternativas
+5. Crie 5 alternativas elaboradas — verifique cada uma
+6. Defina o gabarito após verificação completa
 
 Responda SOMENTE JSON válido:
-{"texto_base":"[texto científico 40-80 palavras + Adaptado de fonte]","enunciado":"[questão de raciocínio aplicado]","opcoes":[{"letra":"A","texto":""},{"letra":"B","texto":""},{"letra":"C","texto":""},{"letra":"D","texto":""},{"letra":"E","texto":""}],"gabarito":"A","explicacao_curta":"","explicacao_didatica":"[análise científica completa de cada alternativa]"}`;
+{"texto_base":"[texto 40-80 palavras + Adaptado de fonte]","enunciado":"[questão de raciocínio aplicado à medicina/ciências]","opcoes":[{"letra":"A","texto":""},{"letra":"B","texto":""},{"letra":"C","texto":""},{"letra":"D","texto":""},{"letra":"E","texto":""}],"gabarito":"A","explicacao_curta":"","explicacao_didatica":"[análise científica completa + por que cada alternativa está certa ou errada]"}`;
   }
 
   // ── FCC ──
