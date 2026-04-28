@@ -119,10 +119,43 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   opacity:.7;
 }
 .q-explicacao-didatica br+br{margin-top:8px;}
+
+/* ══ SIDEBAR PADRÃO VOFOR ══ */
+.sidebar{width:240px;min-height:100vh;background:linear-gradient(180deg,#04030a 0%,#030208 100%);border-right:1px solid rgba(167,139,250,0.12);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:100;transition:transform .25s}
+.sidebar-header{padding:22px 18px;border-bottom:1px solid rgba(167,139,250,0.12);display:flex;align-items:center;gap:12px;cursor:pointer;}
+.sb-section{font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(139,125,168,0.4);padding:0 18px;margin:20px 0 7px;}
+.nav-item{display:flex;align-items:center;gap:11px;padding:9px 14px;margin:1px 8px;border-radius:9px;color:#8b7da8;text-decoration:none;font-size:.85rem;font-weight:500;transition:all .15s;cursor:pointer;position:relative;}
+.nav-item:hover{background:rgba(167,139,250,0.07);color:#f5f3ff}
+.nav-item.active{background:rgba(124,58,237,0.15);color:#a78bfa;border:1px solid rgba(167,139,250,0.2);}
+.nav-item.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;border-radius:0 3px 3px 0;background:linear-gradient(180deg,#8b5cf6,#a78bfa);}
+.nav-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(167,139,250,0.07);flex-shrink:0;}
+.nav-item.active .nav-icon{background:rgba(124,58,237,0.2)}
+.nav-icon svg{stroke:#8b7da8;transition:stroke .15s}
+.nav-item.active .nav-icon svg,.nav-item:hover .nav-icon svg{stroke:#a78bfa}
+.nav-label{flex:1;white-space:nowrap;overflow:hidden}
+.nav-badge{font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:20px;background:rgba(124,58,237,0.2);color:#a78bfa;border:1px solid rgba(167,139,250,0.3);}
+.sidebar-footer{padding:12px 8px;border-top:1px solid rgba(167,139,250,0.12);margin-top:auto}
+.nup-sb{display:flex;align-items:center;gap:10px;padding:10px;border-radius:9px;cursor:pointer;transition:background .15s}
+.nup-sb:hover{background:rgba(167,139,250,0.07)}
+.nup-avatar-sb{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#4c1d95,#6d28d9);border:1px solid rgba(167,139,250,0.35);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:600;color:#fff;flex-shrink:0;}
+.nup-info-sb{overflow:hidden}
+.nup-name-sb{font-size:.82rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nup-sub-sb{font-size:.68rem;color:#8b7da8}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none}
+.overlay.show{display:block}
+.mobile-topbar-btn{display:none;background:none;border:none;color:#f5f3ff;cursor:pointer;padding:4px}
+.main-with-sidebar{margin-left:240px;min-height:100vh}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main-with-sidebar{margin-left:0}
+  .mobile-topbar-btn{display:flex!important}
+}
+
 </style>
 </head>
 <body>
-<aside class="sidebar">
+<aside class="sidebar" id="sidebar">
   <div class="sidebar-header" style="cursor:pointer" onclick="window.location.href='enem.html'">
     <span class="nav-vofor">VOFOR</span>
     <span class="nav-divider"></span>
@@ -145,6 +178,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </div>
   </div>
 </aside>
+<div class="overlay" id="overlay-sb"></div>
 
 <div class="main">
   <div class="topbar">
@@ -336,5 +370,27 @@ function mostrarSessaoConcluida(){
 async function sair(){await sb.auth.signOut();window.location.href='enem.html';}
 init();
 </script>
+<script>
+document.getElementById('mobile-topbar-btn')?.addEventListener('click',()=>{
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('overlay-sb').classList.add('show');
+});
+document.getElementById('overlay-sb')?.addEventListener('click',()=>{
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay-sb').classList.remove('show');
+});
+(async()=>{
+  if(typeof sb!=='undefined'){
+    const{data:{session}}=await sb.auth.getSession();
+    if(session){
+      const nome=session.user.user_metadata?.full_name||session.user.email.split('@')[0];
+      const ini=nome.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+      const av=document.getElementById('nav-avatar-sb');
+      const nu=document.getElementById('nav-user-sb');
+      if(av)av.textContent=ini;
+      if(nu)nu.textContent=nome;
+    }
+  }
+})();</script>
 </body>
 </html>
